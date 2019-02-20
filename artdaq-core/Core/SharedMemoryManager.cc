@@ -123,16 +123,25 @@ void artdaq::SharedMemoryManager::Attach()
 	last_seen_id_ = 0;
 	size_t shmSize = requested_shm_parameters_.buffer_count * (requested_shm_parameters_.buffer_size + sizeof(ShmBuffer)) + sizeof(ShmStruct);
 
+	bool mark_shm_for_removal = false;
 	shm_segment_id_ = shmget(shm_key_, shmSize, 0666);
-	if (shm_segment_id_ == -1 && requested_shm_parameters_.buffer_count > 0 && manager_id_ <= 0)
+	if (requested_shm_parameters_.buffer_count > 0 && manager_id_ <= 0)
 	{
-		TLOG(TLVL_DEBUG) << "Creating shared memory segment with key 0x" << std::hex << shm_key_ << " and size " << std::dec << shmSize;
-		shm_segment_id_ = shmget(shm_key_, shmSize, IPC_CREAT | 0666);
-		manager_id_ = 0;
-
 		if (shm_segment_id_ == -1)
 		{
-			TLOG(TLVL_ERROR) << "Error creating shared memory segment with key 0x" << std::hex << shm_key_ << ", errno=" << errno << " (" << strerror(errno) << ")";
+			TLOG(TLVL_DEBUG) << "Creating shared memory segment with key 0x" << std::hex << shm_key_ << " and size " << std::dec << shmSize;
+			shm_segment_id_ = shmget(shm_key_, shmSize, IPC_CREAT | 0666);
+			manager_id_ = 0;
+
+			if (shm_segment_id_ == -1)
+			{
+				TLOG(TLVL_ERROR) << "Error creating shared memory segment with key 0x" << std::hex << shm_key_ << ", errno=" << std::dec << errno << " (" << strerror(errno) << ")";
+			}
+		}
+		else
+		{
+			TLOG(TLVL_WARNING) << "This process is re-using an existing shared memory segment with key 0x" << std::hex << shm_key_ << " and ID " << std::dec << shm_segment_id_ << " instead of creating a new one. This may or may not work. If stale data is transfered, please try again. This shared memory segment will be marked for removal once all processes disconnect, so hopefully, this problem will not persist.";
+			mark_shm_for_removal = true;
 		}
 	}
 	else
@@ -140,10 +149,9 @@ void artdaq::SharedMemoryManager::Attach()
 		while (shm_segment_id_ == -1 && TimeUtils::GetElapsedTimeMilliseconds(start_time) < 1000)
 		{
 			shm_segment_id_ = shmget(shm_key_, shmSize, 0666);
-
 		}
 	}
-	TLOG(TLVL_DEBUG) << "shm_key == 0x" << std::hex << shm_key_ << ", shm_segment_id == " << shm_segment_id_;
+	TLOG(TLVL_DEBUG) << "shm_key == 0x" << std::hex << shm_key_ << std::dec << ", shm_segment_id == " << shm_segment_id_;
 
 	if (shm_segment_id_ > -1)
 	{
@@ -202,6 +210,16 @@ void artdaq::SharedMemoryManager::Attach()
 				<< ", manager ID: " << std::dec << manager_id_
 				<< ", Buffer size: " << shm_ptr_->buffer_size
 				<< ", Buffer count: " << shm_ptr_->buffer_count;
+
+			// If this process is the owner of the shared memory segment, but it didn't create
+			// it in this session, mark it for removal after all processes have disconnected.
+			// We'll continue to use the segment in this session, in the hope that it works,
+			// but if it doesn't, the future removal should help.
+			if (mark_shm_for_removal)
+			{
+				shmctl(shm_segment_id_, IPC_RMID, NULL);
+			}
+
 			return;
 		}
 		else
@@ -213,7 +231,7 @@ void artdaq::SharedMemoryManager::Attach()
 	else
 	{
 		TLOG(TLVL_ERROR) << "Failed to connect to shared memory segment with key 0x" << std::hex << shm_key_
-			<< ", errno=" << errno << " (" << strerror(errno) << ")" << ".  Please check "
+			<< ", errno=" << std::dec << errno << " (" << strerror(errno) << ")" << ".  Please check "
 			<< "if a stale shared memory segment needs to "
 			<< "be cleaned up. (ipcs, ipcrm -m <segId>)";
 	}
@@ -418,7 +436,7 @@ int artdaq::SharedMemoryManager::GetBufferForWriting(bool overwrite)
 size_t artdaq::SharedMemoryManager::ReadReadyCount()
 {
 	if (!IsValid()) return 0;
-	TLOG(23) << "0x" << std::hex << shm_key_ << " ReadReadyCount BEGIN";
+	TLOG(23) << "0x" << std::hex << shm_key_ << " ReadReadyCount BEGIN" << std::dec;
 	std::unique_lock<std::mutex> lk(search_mutex_);
 	TLOG(23) << "ReadReadyCount lock acquired, scanning " << shm_ptr_->buffer_count << " buffers";
 	//TraceLock lk(search_mutex_, 14, "ReadReadyCountSearch");
@@ -443,7 +461,7 @@ size_t artdaq::SharedMemoryManager::ReadReadyCount()
 size_t artdaq::SharedMemoryManager::WriteReadyCount(bool overwrite)
 {
 	if (!IsValid()) return 0;
-	TLOG(28) << "0x" << std::hex << shm_key_ << " ReadReadyCount BEGIN";
+	TLOG(28) << "0x" << std::hex << shm_key_ << " ReadReadyCount BEGIN" << std::dec;
 	std::unique_lock<std::mutex> lk(search_mutex_);
 	//TraceLock lk(search_mutex_, 15, "WriteReadyCountSearch");
 	TLOG(28) << "WriteReadyCount(" << overwrite << ") lock acquired, scanning " << shm_ptr_->buffer_count << " buffers";
@@ -467,7 +485,7 @@ size_t artdaq::SharedMemoryManager::WriteReadyCount(bool overwrite)
 bool artdaq::SharedMemoryManager::ReadyForRead()
 {
 	if (!IsValid()) return false;
-	TLOG(23) << "0x" << std::hex << shm_key_ << " ReadyForRead BEGIN";
+	TLOG(23) << "0x" << std::hex << shm_key_ << " ReadyForRead BEGIN" << std::dec;
 	std::unique_lock<std::mutex> lk(search_mutex_);
 	//TraceLock lk(search_mutex_, 14, "ReadyForReadSearch");
 
@@ -496,7 +514,7 @@ bool artdaq::SharedMemoryManager::ReadyForRead()
 bool artdaq::SharedMemoryManager::ReadyForWrite(bool overwrite)
 {
 	if (!IsValid()) return false;
-	TLOG(28) << "0x" << std::hex << shm_key_ << " ReadyForWrite BEGIN";
+	TLOG(28) << "0x" << std::hex << shm_key_ << " ReadyForWrite BEGIN" << std::dec;
 
 	std::unique_lock<std::mutex> lk(search_mutex_);
 	//TraceLock lk(search_mutex_, 15, "ReadyForWriteSearch");
@@ -655,7 +673,7 @@ bool artdaq::SharedMemoryManager::IncrementWritePos(int buffer, size_t written)
 	touchBuffer_(buf);
 	if (buf->writePos + written > shm_ptr_->buffer_size)
 	{
-		TLOG(TLVL_ERROR) << "Requested write size is larger than the buffer size! (sz=" << std::hex << shm_ptr_->buffer_size << ", cur + req=" << buf->writePos + written << ")";
+		TLOG(TLVL_ERROR) << "Requested write size is larger than the buffer size! (sz=" << std::hex << shm_ptr_->buffer_size << ", cur + req=" << std::dec << buf->writePos + written << ")";
 		return false;
 	}
 	TLOG(16) << "IncrementWritePos: buffer= " << buffer << ", writePos=" << buf->writePos << ", bytes written=" << written;
@@ -716,7 +734,7 @@ void artdaq::SharedMemoryManager::MarkBufferFull(int buffer, int destination)
 
 void artdaq::SharedMemoryManager::MarkBufferEmpty(int buffer, bool force)
 {
-	TLOG(18) << "MarkBufferEmpty BEGIN";
+	TLOG(18) << "MarkBufferEmpty BEGIN, buffer=" << buffer << ", force=" << force << ", manager_id_=" << manager_id_;
 	if (buffer >= shm_ptr_->buffer_count)  Detach(true, "ArgumentOutOfRange", "The specified buffer does not exist!");
 	std::unique_lock<std::mutex> lk(buffer_mutexes_[buffer]);
 	//TraceLock lk(buffer_mutexes_[buffer], 24, "EmptyBuffer" + std::to_string(buffer));
@@ -743,7 +761,7 @@ void artdaq::SharedMemoryManager::MarkBufferEmpty(int buffer, bool force)
 		}
 	}
 	shmBuf->sem_id = -1;
-	TLOG(18) << "MarkBufferEmpty END";
+	TLOG(18) << "MarkBufferEmpty END, buffer=" << buffer << ", force=" << force;;
 }
 
 bool artdaq::SharedMemoryManager::ResetBuffer(int buffer)
@@ -915,7 +933,7 @@ std::string artdaq::SharedMemoryManager::toString()
 		<< "Buffer Size: " << std::to_string(shm_ptr_->buffer_size) << " bytes" << std::endl
 		<< "Buffers Written: " << std::to_string(shm_ptr_->next_sequence_id) << std::endl
 		<< "Rank of Writer: " << shm_ptr_->rank << std::endl
-		<< "Ready Magic Bytes: 0x" << std::hex << shm_ptr_->ready_magic << std::endl << std::endl;
+		<< "Ready Magic Bytes: 0x" << std::hex << shm_ptr_->ready_magic << std::dec << std::endl << std::endl;
 
 	for (auto ii = 0; ii < shm_ptr_->buffer_count; ++ii)
 	{
