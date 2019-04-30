@@ -203,7 +203,7 @@ void artdaq::SharedMemoryEventReceiver::ReleaseBuffer()
 	{
 		if(current_data_source_) current_data_source_->MarkBufferEmpty(current_read_buffer_);
 	}
-	catch (cet::exception e)
+	catch (cet::exception const& e)
 	{
 		TLOG(TLVL_WARNING) << "A cet::exception occured while trying to release the buffer: " << e ;
 	}

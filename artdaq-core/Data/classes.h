@@ -4,9 +4,3 @@
 #include "canvas/Persistency/Common/Wrapper.h"
 #include "artdaq-core/Data/PackageBuildInfo.hh"
 #include <vector>
-
-template class std::vector<artdaq::Fragment>;
-template struct artdaq::QuickVec<artdaq::RawDataType>;
-template class art::Wrapper<std::vector<artdaq::Fragment>>;
-template class art::Wrapper<std::vector<artdaq::PackageBuildInfo>>;
-template class art::Wrapper<artdaq::PackageBuildInfo>;

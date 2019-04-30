@@ -20,8 +20,9 @@ namespace artdaq
 class artdaq::ContainerFragment
 {
 public:
-
+	/// The current version of the ContainerFragmentHeader
 	static constexpr uint8_t CURRENT_VERSION = 1;
+	/// Marker word used in index
 	static constexpr size_t CONTAINER_MAGIC = 0x00BADDEED5B1BEE5;
 
 	/**
@@ -59,20 +60,25 @@ public:
 
 		count_t block_count : 16; ///< The number of Fragment objects stored in the ContainerFragment
 		count_t fragment_type : 8; ///< The Fragment::type_t of stored Fragment objects
-		count_t version : 4;
+		count_t version : 4;		///< Version number of ContainerFragment
 		count_t missing_data : 1; ///< Flag if the ContainerFragment knows that it is missing data
-		count_t has_index : 1;
-		count_t unused_flag1 : 1;
-		count_t unused_flag2 : 1;
-		count_t unused : 32;
+		count_t has_index : 1; ///< Whether the ContainerFragment has an index at the end of the payload
+		count_t unused_flag1 : 1; ///< Unused
+		count_t unused_flag2 : 1; ///< Unused
+		count_t unused : 32; ///< Unused
 
-		uint64_t index_offset;
+		uint64_t index_offset; ///< Index starts this many bytes after the beginning of the payload (is also the total size of contained Fragments)
 				
 		/// Size of the Metadata object
 		static size_t const size_words = 16ul; // Units of Header::data_t
 	};
 	static_assert (sizeof(Metadata) == Metadata::size_words * sizeof(Metadata::data_t), "ContainerFragment::Metadata size changed");
 
+	/**
+	 * \brief Upgrade the Metadata of a fixed-size ContainerFragment to the new standard
+	 * \param in Metadata to upgrade
+	 * \return Upgraded Metadata
+	 */
 	Metadata const* UpgradeMetadata(MetadataV0 const* in) const
 	{
 		TLOG(TLVL_DEBUG, "ContainerFragment") << "Upgrading ContainerFragment::MetadataV0 into new ContainerFragment::Metadata";
@@ -243,6 +249,10 @@ protected:
 		return sizeof(Fragment::value_type) / sizeof(Metadata::data_t);
 	}
 
+	/**
+	 * \brief Create an index for the currently-contained Fragments
+	 * \return Array of block_count size_t words containing index
+	 */
 	const size_t* create_index_() const
 	{
 		TLOG(TLVL_TRACE, "ContainerFragment") << "Creating new index for ContainerFragment";
@@ -261,6 +271,10 @@ protected:
 		return tmp;
 	}
 
+	/**
+	 * \brief Reset the index pointer, creating a new index if necessary. ContainerFragmentLoader uses this functionality to implant new indicies into the ContainerFragment,
+	 * other code should simply use the get_index_ function.
+	 */
 	void reset_index_ptr_() const
 	{
 		TLOG(TLVL_TRACE, "ContainerFragment") << "Request to reset index_ptr recieved. has_index=" << metadata()->has_index << ", Check word = " << std::hex
@@ -283,6 +297,10 @@ protected:
 		}
 	}
 
+	/**
+	 * \brief Get a pointer to the index
+	 * \return pointer to size_t array of Fragment offsets in payload, terminating with CONTAINER_MAGIC
+	 */
 	const size_t* get_index_() const
 	{
 		if (index_ptr_ != nullptr) return index_ptr_;

@@ -14,40 +14,65 @@
 #include <fstream>
 #include "trace.h"
 
-namespace mfplugins
-{
-	using mf::service::ELdestination;
+namespace mfplugins {
 	using mf::ELseverityLevel;
 	using mf::ErrorObj;
+using mf::service::ELdestination;
 
 	/// <summary>
 	/// Message Facility destination which generates the output file name based on some combination of 
 	/// PID, hostname, application name, and/or timestamp
 	/// </summary>
-	class ELGenFileOutput : public ELdestination
-	{
-		struct Config
-		{
+class ELGenFileOutput : public ELdestination {
+ public:
+  /**
+   * \brief Parameters used to configure GenFileOutput
+   */
+  struct Config {
+    /// ELDestination common configuration parameters
 			fhicl::TableFragment<ELdestination::Config> elDestConfig;
-			fhicl::Atom<bool> append{ fhicl::Name{"append"},fhicl::Comment {"Whether to append to the file or recreate it"},true };
-			fhicl::Atom<std::string> baseDir{ fhicl::Name{"directory"},fhicl::Comment{"The directory into which files will be saved"},"/tmp" };
-			fhicl::Atom<std::string> sep{ fhicl::Name{"seperator"},fhicl::Comment{"Separator to use after optional replacement parameters"}, "-" };
-			fhicl::Atom<std::string> timePattern{ fhicl::Name{"timestamp_pattern"},fhicl::Comment{"Pattern to use for %t strftime replacement"},"%Y%m%d%H%M%S" };
-			fhicl::Atom<std::string> filePattern{ fhicl::Name{ "pattern" },fhicl::Comment{ "Pattern to use for file naming.\n"
+    /// "append" (Default: true"): Whether to append to the file or recreate it
+    fhicl::Atom<bool> append = fhicl::Atom<bool>{
+        fhicl::Name{"append"}, fhicl::Comment{"Whether to append to the file or recreate it"}, true};
+    /// "directory" (Default: "/tmp"): The directory into which files will be saved
+    fhicl::Atom<std::string> baseDir = fhicl::Atom<std::string>{
+        fhicl::Name{"directory"}, fhicl::Comment{"The directory into which files will be saved"}, "/tmp"};
+    /// "seperator" (Default: "-"): Separator to use after optional replacement parameters
+    fhicl::Atom<std::string> sep = fhicl::Atom<std::string>{
+        fhicl::Name{"seperator"}, fhicl::Comment{"Separator to use after optional replacement parameters"}, "-"};
+    /// "timestamp_pattern" (Default: "%Y%m%d%H%M%S"): Pattern to use for %t strftime replacement
+    fhicl::Atom<std::string> timePattern = fhicl::Atom<std::string>{
+        fhicl::Name{"timestamp_pattern"}, fhicl::Comment{"Pattern to use for %t strftime replacement"}, "%Y%m%d%H%M%S"};
+    /**
+     * \brief "pattern" (Default: "%N-%?H%t-%p.log"): Pattern to use for file naming.
+     *
+     * " Supported parameters are:\n"
+     * %%: Print a % sign
+     * %N: Print the executable name, as retrieved from /proc/$pid/exe
+     * %?N: Print the executable name only if it does not already appear in the parsed format. Format is parsed left-to-right.
+     * These options add a seperator AFTER if they are filled and if they are not the last token in the file pattern, before the last '.' character.
+     * %H: Print the hostname, without any domain specifiers (i.e. work.fnal.gov will become work)
+     * %?H: Print the hostname only if it does not already appear in the parsed format.
+     * %p: Print the PID of the application configuring MessageFacility
+     * %t: Print the timestamp using the format specified by timestamp_pattern
+     * %T: Print the timestamp in ISO format
+     */
+    fhicl::Atom<std::string> filePattern = fhicl::Atom<std::string>{        fhicl::Name{"pattern"},        fhicl::Comment{"Pattern to use for file naming.\n"
 			" Supported parameters are:\n"
 				" %%: Print a % sign\n"
 				" %N: Print the executable name, as retrieved from /proc/<pid>/exe\n"
-				" %?N: Print the executable name only if it does not already appear in the parsed format. Format is parsed left-to-right.\n"
-				" These options add a seperator AFTER if they are filled and if they are not the last token in the file pattern, before the last '.' character.\n"
+                       " %?N: Print the executable name only if it does not already appear in the parsed format. "
+                       "Format is parsed left-to-right.\n"
+                       " These options add a seperator AFTER if they are filled and if they are not the last token in "
+                       "the file pattern, before the last '.' character.\n"
 				" %H: Print the hostname, without any domain specifiers (i.e. work.fnal.gov will become work)\n"
 				" %?H: Print the hostname only if it does not already appear in the parsed format.\n"
 				" %p: Print the PID of the application configuring MessageFacility\n"
 				" %t: Print the timestamp using the format specified by timestamp_pattern\n"
-				" %T: Print the timestamp in ISO format"
-			},"%N-%?H%t-%p.log" };
-
-
+                       " %T: Print the timestamp in ISO format"},
+        "%N-%?H%t-%p.log"};
 		};
+  /// Used for ParameterSet validation
 		using Parameters = fhicl::WrappedTable<Config>;
 
 	public:
