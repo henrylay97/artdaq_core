@@ -18,9 +18,16 @@ class artdaqtest::FragmentGeneratorTest :
 public:
 	FragmentGeneratorTest();
 
-	bool getNext(artdaq::FragmentPtrs& output) override
+	bool getNext(artdaq::PostmarkedFragmentPtrs& output) override
 	{
-		return getNext_(output);
+		artdaq::FragmentPtrs frags;
+		bool sts = getNext_(frags);
+		for (auto& fragptr : frags)
+		{
+			std::pair<artdaq::FragmentPtr, int> fragptr_wdest = std::make_pair(std::move(fragptr), artdaq::Fragment::InvalidDestinationRank);
+			output.emplace_back(std::move(fragptr_wdest));
+		}
+		return sts;
 	}
 
 	std::vector<artdaq::Fragment::fragment_id_t> fragmentIDs() override
@@ -56,9 +63,9 @@ BOOST_AUTO_TEST_SUITE(FragmentGenerator_t)
 	{
 		artdaqtest::FragmentGeneratorTest testGen;
 		artdaq::FragmentGenerator& baseGen(testGen);
-		artdaq::FragmentPtrs fps;
-		baseGen.getNext(fps);
-		BOOST_REQUIRE_EQUAL(fps.size(), 1u);
+		artdaq::PostmarkedFragmentPtrs pm_fps;
+		baseGen.getNext(pm_fps);
+		BOOST_REQUIRE_EQUAL(pm_fps.size(), 1u);
 	}
 
 BOOST_AUTO_TEST_SUITE_END()

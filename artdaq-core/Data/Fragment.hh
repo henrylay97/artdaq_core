@@ -58,6 +58,17 @@ namespace artdaq {
 	typedef std::list<FragmentPtr> FragmentPtrs;
 
 	/**
+	* \brief A std::pair of a FragmentPtr and the destination rank that
+	* the fragment should be sent to
+	*/
+	typedef std::pair<FragmentPtr, int> PostmarkedFragmentPtr;
+
+	/**
+	* \brief A std::list of PostmarkedFragmentPtr objects
+	*/
+	typedef std::list<PostmarkedFragmentPtr> PostmarkedFragmentPtrs;
+
+	/**
 	 * \brief Comparator for Fragment objects, based on their sequence_id
 	 * \param i First Fragment to compare
 	 * \param j Second Fragment to comapre
@@ -154,6 +165,8 @@ public:
 	static constexpr type_t EmptyFragmentType = detail::RawFragmentHeader::EmptyFragmentType; ///< Copy EmptyFragmentType from RawFragmentHeader
 	static constexpr type_t ContainerFragmentType = detail::RawFragmentHeader::ContainerFragmentType; ///< Copy ContainerFragmentType from RawFragmentHeader
 	static constexpr type_t ErrorFragmentType = detail::RawFragmentHeader::ErrorFragmentType; ///< Copy ErrorFragmentType from RawFragmentHeader
+
+	static constexpr int InvalidDestinationRank = -1;
 
 	/**
 	 * \brief Returns whether the given type is in the range of user types
