@@ -1,7 +1,7 @@
 # The parent line must be the first non-comment line in the file
 # This line defines the product name and version
-parent artdaq_core  v3_04_16
-defaultqual	e15:s67
+parent artdaq_core  v2019_07_03_protoDFO_testing
+defaultqual	e15:s64
 
 # These optional lines define the installed directories where
 # headers, libraries, and executables will be found
@@ -32,7 +32,8 @@ canvas_root_io  v1_01_08        s70
 canvas_root_io  v1_01_07        s69
 canvas_root_io  v1_01_06        s68
 canvas_root_io  v1_01_05        s67
-TRACE           v3_13_13
+canvas_root_io  v1_01_02        s64
+TRACE           v3_13_07
 cetbuildtools	v7_12_01	-	only_for_build
 end_product_list
 
@@ -143,6 +144,8 @@ e17:s67:debug		-		e17:debug	-nq-	-std=c++17
 e17:s67:prof		-		e17:prof	-nq-	-std=c++17
 e15:s67:debug		-		e15:debug	-nq-	-std=c++14
 e15:s67:prof		-		e15:prof	-nq-	-std=c++14
+e15:s64:debug		-		e15:debug	-nq-	-std=c++14
+e15:s64:prof		-		e15:prof	-nq-	-std=c++14
 end_qualifier_list
 
 
