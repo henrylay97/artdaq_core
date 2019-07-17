@@ -1,6 +1,6 @@
 # The parent line must be the first non-comment line in the file
 # This line defines the product name and version
-parent artdaq_core  v2019_07_03_protoDFO_testing
+parent artdaq_core  v2019_07_17_protoDFO_testing
 defaultqual	e15:s64
 
 # These optional lines define the installed directories where
