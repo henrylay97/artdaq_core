@@ -31,7 +31,7 @@ BOOST_AUTO_TEST_CASE(Attach)
 	TLOG(TLVL_DEBUG) << "BEGIN TEST Attach" ;
 	uint32_t key = GetRandomKey(0x7357);
 	artdaq::SharedMemoryManager man(key, 10, 0x1000, 0x10000);
-	artdaq::SharedMemoryManager man2(key, 10, 0x1000, 0x10000);
+	artdaq::SharedMemoryManager man2(key);
 
 	BOOST_REQUIRE_EQUAL(man.IsValid(), true);
 	BOOST_REQUIRE_EQUAL(man.GetMyId(), 0);
@@ -53,7 +53,7 @@ BOOST_AUTO_TEST_CASE(DataFlow)
 	TLOG(TLVL_DEBUG) << "BEGIN TEST DataFlow" ;
 	uint32_t key = GetRandomKey(0x7357);
 	artdaq::SharedMemoryManager man(key, 10, 0x1000);
-	artdaq::SharedMemoryManager man2(key, 10, 0x1000);
+	artdaq::SharedMemoryManager man2(key);
 
 	BOOST_REQUIRE_EQUAL(man.ReadyForWrite(false), true);
 	BOOST_REQUIRE_EQUAL(man.WriteReadyCount(false), 10);
@@ -119,7 +119,7 @@ BOOST_AUTO_TEST_CASE(Exceptions)
 	TLOG(TLVL_DEBUG) << "BEGIN TEST Exceptions" ;
 	uint32_t key = GetRandomKey(0x7357);
 	artdaq::SharedMemoryManager man(key, 10, 0x1000);
-	artdaq::SharedMemoryManager man2(key, 10, 0x1000);
+	artdaq::SharedMemoryManager man2(key);
 	BOOST_REQUIRE_EQUAL(man.ReadyForWrite(false), true);
 	BOOST_REQUIRE_EQUAL(man.WriteReadyCount(false), 10);
 	BOOST_REQUIRE_EQUAL(man.ReadyForRead(), false);
@@ -205,8 +205,8 @@ BOOST_AUTO_TEST_CASE(Broadcast)
 	TLOG(TLVL_DEBUG) << "BEGIN TEST Broadcast" ;
 	uint32_t key = GetRandomKey(0x7357);
 	artdaq::SharedMemoryManager man(key, 10, 0x1000, 0x10000, false);
-	artdaq::SharedMemoryManager man2(key, 10, 0x1000, 0x10000, false);
-	artdaq::SharedMemoryManager man3(key, 10, 0x1000, 0x10000, false);
+	artdaq::SharedMemoryManager man2(key);
+	artdaq::SharedMemoryManager man3(key);
 
 	BOOST_REQUIRE_EQUAL(man.ReadyForWrite(false), true);
 	BOOST_REQUIRE_EQUAL(man.WriteReadyCount(false), 10);
