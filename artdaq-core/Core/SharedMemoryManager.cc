@@ -123,15 +123,21 @@ void artdaq::SharedMemoryManager::Attach()
 	last_seen_id_ = 0;
 	size_t shmSize = requested_shm_parameters_.buffer_count * (requested_shm_parameters_.buffer_size + sizeof(ShmBuffer)) + sizeof(ShmStruct);
 
-	bool mark_shm_for_removal = false;
-	shm_segment_id_ = shmget(shm_key_, shmSize, 0666);
+	// 19-Feb-2019, KAB: separating out the determination of whether a given process owns the shared
+	// memory (indicated by manager_id_ == 0) and whether or not the shared memory already exists.
 	if (requested_shm_parameters_.buffer_count > 0 && manager_id_ <= 0)
 	{
-		if (shm_segment_id_ == -1)
+		manager_id_ = 0;
+	}
+
+    bool mark_shm_for_removal = false;
+	shm_segment_id_ = shmget(shm_key_, shmSize, 0666);
+	if (shm_segment_id_ == -1)
+	{
+		if (manager_id_ == 0)
 		{
 			TLOG(TLVL_DEBUG) << "Creating shared memory segment with key 0x" << std::hex << shm_key_ << " and size " << std::dec << shmSize;
 			shm_segment_id_ = shmget(shm_key_, shmSize, IPC_CREAT | 0666);
-			manager_id_ = 0;
 
 			if (shm_segment_id_ == -1)
 			{
@@ -169,8 +175,11 @@ void artdaq::SharedMemoryManager::Attach()
 			{
 				if (shm_ptr_->ready_magic == 0xCAFE1111)
 				{
-					TLOG(TLVL_ERROR) << "Owner encountered already-initialized Shared Memory!";
-					exit(-2);
+					TLOG(TLVL_WARNING) << "Owner encountered already-initialized Shared Memory! "
+                                                           << "Once the system is shut down, you can use one of the following commands "
+                                                           << "to clean up this shared memory: 'ipcrm -M 0x" << std::hex << shm_key_
+                                                           << "' or 'ipcrm -m " << std::dec << shm_segment_id_ << "'.";
+					//exit(-2);
 				}
 				TLOG(TLVL_DEBUG) << "Owner initializing Shared Memory";
 				shm_ptr_->next_id = 1;

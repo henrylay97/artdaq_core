@@ -1,6 +1,6 @@
 # The parent line must be the first non-comment line in the file
 # This line defines the product name and version
-parent artdaq_core  v3_04_16
+parent artdaq_core  v3_05_00
 defaultqual	e15:s67
 
 # These optional lines define the installed directories where
@@ -19,6 +19,11 @@ perllib  product_dir
 
 #
 product		version		optional
+canvas_root_io  v1_04_00        s89
+canvas_root_io  v1_04_00        s87
+canvas_root_io  v1_03_04	s86
+canvas_root_io  v1_01_11        s85
+canvas_root_io  v1_03_04	s84
 canvas_root_io  v1_03_03	s83
 canvas_root_io  v1_03_03	s82
 canvas_root_io  v1_03_03	s81
@@ -32,13 +37,81 @@ canvas_root_io  v1_01_08        s70
 canvas_root_io  v1_01_07        s69
 canvas_root_io  v1_01_06        s68
 canvas_root_io  v1_01_05        s67
-TRACE           v3_13_13
-cetbuildtools	v7_12_01	-	only_for_build
+TRACE           v3_14_02
+cetbuildtools	v7_13_02	-	only_for_build
 end_product_list
 
 # -nq- means there is no qualifier
 # a "-" means the dependent product is not required by the parent and will not be setup
 qualifier		canvas		canvas_root_io	TRACE	notes
+c7:s89:py3:debug        -               c7:py3:debug    -nq-    -std=c++17
+c7:s89:py3:prof         -               c7:py3:prof     -nq-    -std=c++17
+c7:s89:debug            -               c7:debug        -nq-    -std=c++17
+c7:s89:prof             -               c7:prof         -nq-    -std=c++17
+c2:s89:py3:debug        -               c2:py3:debug    -nq-    -std=c++17
+c2:s89:py3:prof         -               c2:py3:prof     -nq-    -std=c++17
+c2:s89:debug            -               c2:debug        -nq-    -std=c++17
+c2:s89:prof             -               c2:prof         -nq-    -std=c++17
+e19:s89:py3:debug	-		e19:py3:debug	-nq-	-std=c++17
+e19:s89:py3:prof	-		e19:py3:prof	-nq-	-std=c++17
+e19:s89:debug		-		e19:debug	-nq-	-std=c++17
+e19:s89:prof		-		e19:prof	-nq-	-std=c++17
+e17:s89:py3:debug	-		e17:py3:debug	-nq-	-std=c++17
+e17:s89:py3:prof	-		e17:py3:prof	-nq-	-std=c++17
+e17:s89:debug		-		e17:debug	-nq-	-std=c++17
+e17:s89:prof		-		e17:prof	-nq-	-std=c++17
+c7:s87:py3:debug        -               c7:py3:debug    -nq-    -std=c++17
+c7:s87:py3:prof         -               c7:py3:prof     -nq-    -std=c++17
+c7:s87:debug            -               c7:debug        -nq-    -std=c++17
+c7:s87:prof             -               c7:prof         -nq-    -std=c++17
+c2:s87:py3:debug        -               c2:py3:debug    -nq-    -std=c++17
+c2:s87:py3:prof         -               c2:py3:prof     -nq-    -std=c++17
+c2:s87:debug            -               c2:debug        -nq-    -std=c++17
+c2:s87:prof             -               c2:prof         -nq-    -std=c++17
+e19:s87:py3:debug	-		e19:py3:debug	-nq-	-std=c++17
+e19:s87:py3:prof	-		e19:py3:prof	-nq-	-std=c++17
+e19:s87:debug		-		e19:debug	-nq-	-std=c++17
+e19:s87:prof		-		e19:prof	-nq-	-std=c++17
+e17:s87:py3:debug	-		e17:py3:debug	-nq-	-std=c++17
+e17:s87:py3:prof	-		e17:py3:prof	-nq-	-std=c++17
+e17:s87:debug		-		e17:debug	-nq-	-std=c++17
+e17:s87:prof		-		e17:prof	-nq-	-std=c++17
+c7:s86:py3:debug        -               c7:py3:debug    -nq-    -std=c++17
+c7:s86:py3:prof         -               c7:py3:prof     -nq-    -std=c++17
+c7:s86:debug            -               c7:debug        -nq-    -std=c++17
+c7:s86:prof             -               c7:prof         -nq-    -std=c++17
+c2:s86:py3:debug        -               c2:py3:debug    -nq-    -std=c++17
+c2:s86:py3:prof         -               c2:py3:prof     -nq-    -std=c++17
+c2:s86:debug            -               c2:debug        -nq-    -std=c++17
+c2:s86:prof             -               c2:prof         -nq-    -std=c++17
+e19:s86:py3:debug	-		e19:py3:debug	-nq-	-std=c++17
+e19:s86:py3:prof	-		e19:py3:prof	-nq-	-std=c++17
+e19:s86:debug		-		e19:debug	-nq-	-std=c++17
+e19:s86:prof		-		e19:prof	-nq-	-std=c++17
+e17:s86:py3:debug	-		e17:py3:debug	-nq-	-std=c++17
+e17:s86:py3:prof	-		e17:py3:prof	-nq-	-std=c++17
+e17:s86:debug		-		e17:debug	-nq-	-std=c++17
+e17:s86:prof		-		e17:prof	-nq-	-std=c++17
+c2:s85:debug            -               c2:debug        -nq-    -std=c++17
+c2:s85:prof             -               c2:prof         -nq-    -std=c++17
+e17:s85:debug		-		e17:debug	-nq-	-std=c++17
+e17:s85:prof		-		e17:prof	-nq-	-std=c++17
+c7:s84:py3:debug        -               c7:py3:debug    -nq-    -std=c++17
+c7:s84:py3:prof         -               c7:py3:prof     -nq-    -std=c++17
+c7:s84:debug            -               c7:debug        -nq-    -std=c++17
+c7:s84:prof             -               c7:prof         -nq-    -std=c++17
+c2:s84:py3:debug        -               c2:py3:debug    -nq-    -std=c++17
+c2:s84:py3:prof         -               c2:py3:prof     -nq-    -std=c++17
+c2:s84:debug            -               c2:debug        -nq-    -std=c++17
+c2:s84:prof             -               c2:prof         -nq-    -std=c++17
+e19:s84:py3:debug	-		e19:py3:debug	-nq-	-std=c++17
+e19:s84:py3:prof	-		e19:py3:prof	-nq-	-std=c++17
+e19:s84:debug		-		e19:debug	-nq-	-std=c++17
+e19:s84:prof		-		e19:prof	-nq-	-std=c++17
+e17:s84:py3:debug	-		e17:py3:debug	-nq-	-std=c++17
+e17:s84:py3:prof	-		e17:py3:prof	-nq-	-std=c++17
+e17:s84:debug		-		e17:debug	-nq-	-std=c++17
+e17:s84:prof		-		e17:prof	-nq-	-std=c++17
 c7:s83:py3:debug        -               c7:py3:debug    -nq-    -std=c++17
 c7:s83:py3:prof         -               c7:py3:prof     -nq-    -std=c++17
 c7:s83:debug            -               c7:debug        -nq-    -std=c++17
@@ -113,8 +186,6 @@ c2:s73:debug            -               c2:debug        -nq-    -std=c++17
 c2:s73:prof             -               c2:prof         -nq-    -std=c++17
 e17:s73:debug		-		e17:debug	-nq-	-std=c++17
 e17:s73:prof		-		e17:prof	-nq-	-std=c++17
-e15:s73:debug		-		e15:debug	-nq-	-std=c++14
-e15:s73:prof		-		e15:prof	-nq-	-std=c++14
 c2:s72:debug            -               c2:debug        -nq-    -std=c++17
 c2:s72:prof             -               c2:prof         -nq-    -std=c++17
 e17:s72:debug		-		e17:debug	-nq-	-std=c++17

@@ -19,7 +19,7 @@ namespace artdaq {
 		* \param buffer_timeout_us The maximum amount of time a buffer may be locked
 		* before being returned to its previous state. This timer is reset upon any operation by the owning SharedMemoryManager.
 		*/
-		SharedMemoryFragmentManager(uint32_t shm_key, size_t buffer_count, size_t max_buffer_size, size_t buffer_timeout_us = 100 * 1000000);
+		SharedMemoryFragmentManager(uint32_t shm_key, size_t buffer_count = 0, size_t max_buffer_size = 0, size_t buffer_timeout_us = 100 * 1000000);
 
 		/**
 		 * \brief SharedMemoryFragmentManager destructor

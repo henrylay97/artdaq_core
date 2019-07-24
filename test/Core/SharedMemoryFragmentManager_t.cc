@@ -29,7 +29,7 @@ BOOST_AUTO_TEST_CASE(Attach)
 	TLOG(TLVL_INFO) << "BEGIN TEST Attach";
 	uint32_t key = GetRandomKey(0xF4A6);
 	artdaq::SharedMemoryFragmentManager man(key, 10, 0x1000);
-	artdaq::SharedMemoryFragmentManager man2(key, 10, 0x1000);
+	artdaq::SharedMemoryFragmentManager man2(key);
 
 	BOOST_REQUIRE_EQUAL(man.IsValid(), true);
 	BOOST_REQUIRE_EQUAL(man.GetMyId(), 0);
@@ -50,7 +50,7 @@ BOOST_AUTO_TEST_CASE(DataFlow)
 	TLOG(TLVL_DEBUG) << "Initializing SharedMemoryFragmentManagers for DataFlow test" ;
 	uint32_t key = GetRandomKey(0xF4A6);
 	artdaq::SharedMemoryFragmentManager man(key, 10, 0x1000);
-	artdaq::SharedMemoryFragmentManager man2(key, 10, 0x1000);
+	artdaq::SharedMemoryFragmentManager man2(key);
 
 	auto fragSizeWords = 0x1000 / sizeof(artdaq::RawDataType) - artdaq::detail::RawFragmentHeader::num_words() - 1;
 
@@ -101,7 +101,7 @@ BOOST_AUTO_TEST_CASE(WholeFragment)
 	TLOG(TLVL_DEBUG) << "Initializing SharedMemoryFragmentManagers for WholeFragment Test" ;
 	uint32_t key = GetRandomKey(0xF4A6);
 	artdaq::SharedMemoryFragmentManager man(key, 10, 0x1000);
-	artdaq::SharedMemoryFragmentManager man2(key, 10, 0x1000);
+	artdaq::SharedMemoryFragmentManager man2(key);
 
 	auto fragSizeWords = 0x1000 / sizeof(artdaq::RawDataType) - artdaq::detail::RawFragmentHeader::num_words() - 1;
 

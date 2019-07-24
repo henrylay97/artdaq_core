@@ -10,21 +10,23 @@ bool artdaq::fragmentSequenceIDCompare(Fragment i, Fragment j)
 	return i.sequenceID() < j.sequenceID();
 }
 
-artdaq::Fragment::Fragment() :
-	vals_(RawFragmentHeader::num_words(), -1)
+artdaq::Fragment::Fragment()
+    : vals_(RawFragmentHeader::num_words(), -1)
 {
 	fragmentHeader()->version = RawFragmentHeader::CurrentVersion;
 	updateFragmentHeaderWC_();
 	fragmentHeader()->type = InvalidFragmentType;
 	fragmentHeader()->metadata_word_count = 0;
+	fragmentHeader()->touch();
 }
 
-artdaq::Fragment::Fragment(std::size_t n) :
-	vals_(n + RawFragmentHeader::num_words())
+artdaq::Fragment::Fragment(std::size_t n)
+    : vals_(n + RawFragmentHeader::num_words())
 {
 	// vals ctor w/o init val is used; make sure header is ALL initialized.
 	for (iterator ii = vals_.begin();
-		 ii != (vals_.begin() + RawFragmentHeader::num_words()); ++ii) {
+	     ii != (vals_.begin() + RawFragmentHeader::num_words()); ++ii)
+	{
 		*ii = -1;
 	}
 	fragmentHeader()->version = RawFragmentHeader::CurrentVersion;
@@ -34,13 +36,14 @@ artdaq::Fragment::Fragment(std::size_t n) :
 	fragmentHeader()->fragment_id = Fragment::InvalidFragmentID;
 	fragmentHeader()->timestamp = Fragment::InvalidTimestamp;
 	fragmentHeader()->metadata_word_count = 0;
+	fragmentHeader()->touch();
 }
 
 artdaq::Fragment::Fragment(sequence_id_t sequenceID,
-						   fragment_id_t fragID,
-						   type_t type,
-						   timestamp_t timestamp) :
-	vals_(RawFragmentHeader::num_words(), -1)
+                           fragment_id_t fragID,
+                           type_t type,
+                           timestamp_t timestamp)
+    : vals_(RawFragmentHeader::num_words(), -1)
 {
 	fragmentHeader()->version = RawFragmentHeader::CurrentVersion;
 	updateFragmentHeaderWC_();
@@ -58,23 +61,23 @@ artdaq::Fragment::Fragment(sequence_id_t sequenceID,
 	fragmentHeader()->fragment_id = fragID;
 	fragmentHeader()->timestamp = timestamp;
 	fragmentHeader()->metadata_word_count = 0;
+	fragmentHeader()->touch();
 }
 
 #if HIDE_FROM_ROOT
-void
-artdaq::Fragment::print(std::ostream& os) const
+void artdaq::Fragment::print(std::ostream& os) const
 {
 	os << " Fragment " << fragmentID()
-		<< ", WordCount " << size()
-		<< ", Event " << sequenceID()
-		<< '\n';
+	   << ", WordCount " << size()
+	   << ", Event " << sequenceID()
+	   << '\n';
 }
 
 artdaq::FragmentPtr
 artdaq::Fragment::eodFrag(size_t nFragsToExpect)
 {
 	artdaq::FragmentPtr result(new Fragment(static_cast<size_t>(ceil(sizeof(nFragsToExpect) /
-																				   static_cast<double>(sizeof(value_type))))));
+	                                                                 static_cast<double>(sizeof(value_type))))));
 	result->setSystemType(Fragment::EndOfDataFragmentType);
 	*result->dataBegin() = nFragsToExpect;
 	return result;
@@ -82,11 +85,11 @@ artdaq::Fragment::eodFrag(size_t nFragsToExpect)
 
 artdaq::FragmentPtr
 artdaq::Fragment::
-dataFrag(sequence_id_t sequenceID,
-		 fragment_id_t fragID,
-		 RawDataType const* dataPtr,
-		 size_t dataSize,
-		 timestamp_t timestamp)
+    dataFrag(sequence_id_t sequenceID,
+             fragment_id_t fragID,
+             RawDataType const* dataPtr,
+             size_t dataSize,
+             timestamp_t timestamp)
 {
 	FragmentPtr result(new Fragment(sequenceID, fragID, Fragment::DataFragmentType, timestamp));
 	result->resize(dataSize);

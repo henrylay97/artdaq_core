@@ -1,6 +1,7 @@
 cet_make(
 NO_DICTIONARY
   LIBRARIES
+  artdaq-core_Utilities
   ${CETLIB_LIBS}
   )
 
