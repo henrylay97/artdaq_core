@@ -9,7 +9,7 @@ inline unsigned GetRandomKey(uint16_t identifier)
 
 	static std::mt19937 rng(artdaq::TimeUtils::gettimeofday_us());
 	static std::uniform_int_distribution<unsigned> gen(0x00000000, 0x0000FFFF);
-	return gen(rng) + (identifier << 16);
+	return gen(rng) + (identifier << 16) + getpid();
 }
 
 #endif

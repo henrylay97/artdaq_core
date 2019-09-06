@@ -4,7 +4,7 @@
 namespace BPT = boost::posix_time;
 
 std::string artdaq::TimeUtils::
-convertUnixTimeToString(time_t inputUnixTime)
+    convertUnixTimeToString(time_t inputUnixTime)
 {
 	// whole seconds
 	BPT::ptime posixTime = BPT::from_time_t(inputUnixTime);
@@ -15,7 +15,7 @@ convertUnixTimeToString(time_t inputUnixTime)
 }
 
 std::string artdaq::TimeUtils::
-convertUnixTimeToString(struct timeval const& inputUnixTime)
+    convertUnixTimeToString(struct timeval const& inputUnixTime)
 {
 	// deal with whole seconds first
 	BPT::ptime posixTime = BPT::from_time_t(inputUnixTime.tv_sec);
@@ -32,7 +32,7 @@ convertUnixTimeToString(struct timeval const& inputUnixTime)
 }
 
 std::string artdaq::TimeUtils::
-convertUnixTimeToString(struct timespec const& inputUnixTime)
+    convertUnixTimeToString(struct timespec const& inputUnixTime)
 {
 	// deal with whole seconds first
 	BPT::ptime posixTime = BPT::from_time_t(inputUnixTime.tv_sec);
@@ -56,19 +56,19 @@ uint64_t artdaq::TimeUtils::gettimeofday_us()
 }
 
 double artdaq::TimeUtils::
-convertUnixTimeToSeconds(time_t inputUnixTime)
+    convertUnixTimeToSeconds(time_t inputUnixTime)
 {
 	return static_cast<double>(inputUnixTime);
 }
 
 double artdaq::TimeUtils::
-convertUnixTimeToSeconds(struct timeval const& inputUnixTime)
+    convertUnixTimeToSeconds(struct timeval const& inputUnixTime)
 {
 	return static_cast<double>(inputUnixTime.tv_sec) + inputUnixTime.tv_usec / 1000000.0;
 }
 
 double artdaq::TimeUtils::
-convertUnixTimeToSeconds(struct timespec const& inputUnixTime)
+    convertUnixTimeToSeconds(struct timespec const& inputUnixTime)
 {
-	return static_cast<double>(inputUnixTime.tv_sec) + inputUnixTime.tv_nsec / 1000000000.0; // Mr. Billion
+	return static_cast<double>(inputUnixTime.tv_sec) + inputUnixTime.tv_nsec / 1000000000.0;  // Mr. Billion
 }

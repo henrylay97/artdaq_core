@@ -14,7 +14,7 @@ function(create_pdf_documentation)
 	endif(EPSTOPDF_FOUND)
 	if(LATEX_FOUND AND EPSTOPDF_FOUND)
 	add_custom_command(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/latex/${product}_API_Documentation.pdf
-						   COMMAND make > pdflatex.log 2>&1 WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/latex
+						   COMMAND make > pdflatex.log 2>&1 WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/latex 
 					   COMMAND mv refman.pdf ${product}_API_Documentation.pdf
 				   DEPENDS ${product}_doc
 				   COMMENT "Generating ${project} PDF API Documentation file" VERBATIM)
@@ -22,6 +22,7 @@ function(create_pdf_documentation)
 			   install(FILES ${CMAKE_CURRENT_BINARY_DIR}/latex/${product}_API_Documentation.pdf DESTINATION ${product}/${version}/doc/ OPTIONAL)
 	endif(LATEX_FOUND AND EPSTOPDF_FOUND)
 endfunction()
+
 
 macro (create_doxygen_documentation)
 if(DOXYGEN_FOUND)
@@ -48,6 +49,8 @@ if(DOXYGEN_FOUND)
         endif()
 	endif()
 	
+	string(REPLACE ";" " " DOXYGEN_INCLUDE_PATH "${CMAKE_CXX_IMPLICIT_INCLUDE_DIRECTORIES}")
+
 	configure_file(${DOXYFILE_DIR}/Doxyfile.in ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile @ONLY)
 	configure_file(${DOXYFILE_DIR}/header.html.in ${CMAKE_CURRENT_BINARY_DIR}/header.html @ONLY)
 	add_custom_command(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/${product}.tag

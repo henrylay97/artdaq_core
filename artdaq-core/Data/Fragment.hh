@@ -16,6 +16,7 @@
 
 #include "artdaq-core/Data/detail/RawFragmentHeader.hh"
 #include "artdaq-core/Data/detail/RawFragmentHeaderV0.hh"
+#include "artdaq-core/Data/detail/RawFragmentHeaderV1.hh"
 #include "artdaq-core/Data/dictionarycontrol.hh"
 #include "artdaq-core/Core/QuickVec.hh"
 #include <iostream>
@@ -346,6 +347,24 @@ public:
 	 * \param timestamp The Timestamp to set
 	 */
 	void setTimestamp(timestamp_t timestamp);
+
+	/**
+	 * \brief Update the access time of the Fragment
+	 */
+	void touch();
+
+	/**
+	 * \brief Get the last access time of the Fragment
+	 * \return struct timespec with last access time of the Fragment
+	 */
+	 struct timespec atime();
+
+	 /**
+	  * \brief Get the difference between the current time and the last access time of the Fragment.
+	  * \param touch Whether to also perform a touch operation
+	  * \return struct timespec representing the difference between current time and the last access time
+	  */
+	 struct timespec getLatency(bool touch);
 
 	/**
 	 * \brief Size of vals_ vector ( header + (optional) metadata + payload) in bytes.
@@ -810,6 +829,8 @@ Fragment(std::size_t payload_size, sequence_id_t sequence_id,
 	fragmentHeader()->timestamp = timestamp;
 	fragmentHeader()->type = type;
 
+	fragmentHeader()->touch();
+
 	fragmentHeader()->metadata_word_count =
 		vals_.size() -
 		(fragmentHeader()->num_words() + payload_size);
@@ -900,6 +921,21 @@ void
 artdaq::Fragment::setTimestamp(timestamp_t timestamp)
 {
 	fragmentHeader()->timestamp = timestamp;
+}
+
+
+inline void artdaq::Fragment::touch()
+{
+	fragmentHeader()->touch();
+}
+
+inline struct timespec artdaq::Fragment::atime()
+{
+	return fragmentHeader()->atime();
+}
+
+inline struct timespec artdaq::Fragment::getLatency(bool touch) {
+	return fragmentHeader()->getLatency(touch);
 }
 
 inline
@@ -1177,8 +1213,19 @@ artdaq::Fragment::fragmentHeader()
 			auto szDiff = hdr->num_words() - old_hdr->num_words();
 			if (szDiff > 0) vals_.insert(vals_.begin(), szDiff, 0);
 			memcpy(&vals_[0], &new_hdr, hdr->num_words() * sizeof(RawDataType));
+			break;
 		}
-		break;
+		case 1:
+		{
+			std::cout << "Upgrading RawFragmentHeaderV1 (non const)" << std::endl;
+			auto old_hdr = reinterpret_cast_checked<detail::RawFragmentHeaderV1 *>(&vals_[0]);
+			auto new_hdr = old_hdr->upgrade();
+
+			auto szDiff = hdr->num_words() - old_hdr->num_words();
+			if (szDiff > 0) vals_.insert(vals_.begin(), szDiff, 0);
+			memcpy(&vals_[0], &new_hdr, hdr->num_words() * sizeof(RawDataType));
+			break;
+		}
 		default:
 			throw cet::exception("Fragment") << "A Fragment with an unknown version (" << std::to_string(hdr->version) << ") was received!";
 			break;
@@ -1209,8 +1256,20 @@ artdaq::Fragment::fragmentHeader() const
 			auto vals_nc = const_cast<DATAVEC_T*>(&vals_);
 			if (szDiff > 0) vals_nc->insert(vals_nc->begin(), szDiff, 0);
 			memcpy(&(*vals_nc)[0], &new_hdr, hdr->num_words() * sizeof(RawDataType));
+			break;
 		}
-		break;
+		case 1:
+		{
+			std::cout << "Upgrading RawFragmentHeaderV1 (const)" << std::endl;
+			auto old_hdr = reinterpret_cast_checked<detail::RawFragmentHeaderV1 const*>(&vals_[0]);
+			auto new_hdr = old_hdr->upgrade();
+
+			auto szDiff = hdr->num_words() - old_hdr->num_words();
+			auto vals_nc = const_cast<DATAVEC_T*>(&vals_);
+			if (szDiff > 0) vals_nc->insert(vals_nc->begin(), szDiff, 0);
+			memcpy(&(*vals_nc)[0], &new_hdr, hdr->num_words() * sizeof(RawDataType));
+			break;
+		}
 		default:
 			throw cet::exception("Fragment") << "A Fragment with an unknown version (" << std::to_string(hdr->version) << ") was received!";
 			break;
