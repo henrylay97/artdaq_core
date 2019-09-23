@@ -8,8 +8,8 @@
 //#include <cstddef>
 #include <map>
 #include "artdaq-core/Data/dictionarycontrol.hh"
-#include "cetlib_except/exception.h"
 #include "artdaq-core/Utilities/TimeUtils.hh"
+#include "cetlib_except/exception.h"
 
 extern "C" {
 #include <stdint.h>

@@ -9,9 +9,8 @@
 
 // Implementation of "ContainerFragment", an artdaq::Fragment overlay class
 
-namespace artdaq
-{
-	class ContainerFragment;
+namespace artdaq {
+class ContainerFragment;
 }
 
 /**
@@ -35,44 +34,44 @@ public:
 		 */
 		static constexpr int CONTAINER_FRAGMENT_COUNT_MAX = 100;
 
-		typedef uint8_t data_t; ///< Basic unit of data-retrieval
-		typedef uint64_t count_t; ///< Size of block_count variables
+		typedef uint8_t data_t;    ///< Basic unit of data-retrieval
+		typedef uint64_t count_t;  ///< Size of block_count variables
 
-		count_t block_count : 55; ///< The number of Fragment objects stored in the ContainerFragment
-		count_t fragment_type : 8; ///< The Fragment::type_t of stored Fragment objects
-		count_t missing_data : 1; ///< Flag if the ContainerFragment knows that it is missing data
+		count_t block_count : 55;   ///< The number of Fragment objects stored in the ContainerFragment
+		count_t fragment_type : 8;  ///< The Fragment::type_t of stored Fragment objects
+		count_t missing_data : 1;   ///< Flag if the ContainerFragment knows that it is missing data
 
 		/// Offset of each Fragment within the ContainerFragment
 		size_t index[CONTAINER_FRAGMENT_COUNT_MAX];
 
 		/// Size of the Metadata object
-		static size_t const size_words = 8ul + CONTAINER_FRAGMENT_COUNT_MAX * sizeof(size_t) / sizeof(data_t); // Units of Header::data_t
+		static size_t const size_words = 8ul + CONTAINER_FRAGMENT_COUNT_MAX * sizeof(size_t) / sizeof(data_t);  // Units of Header::data_t
 	};
-	static_assert (sizeof(MetadataV0) == MetadataV0::size_words * sizeof(MetadataV0::data_t), "ContainerFragment::MetadataV0 size changed");
+	static_assert(sizeof(MetadataV0) == MetadataV0::size_words * sizeof(MetadataV0::data_t), "ContainerFragment::MetadataV0 size changed");
 
 	/**
 	 * \brief Contains the information necessary for retrieving Fragment objects from the ContainerFragment
 	 */
 	struct Metadata
 	{
-		typedef uint8_t data_t; ///< Basic unit of data-retrieval
-		typedef uint64_t count_t; ///< Size of block_count variables
+		typedef uint8_t data_t;    ///< Basic unit of data-retrieval
+		typedef uint64_t count_t;  ///< Size of block_count variables
 
-		count_t block_count : 16; ///< The number of Fragment objects stored in the ContainerFragment
-		count_t fragment_type : 8; ///< The Fragment::type_t of stored Fragment objects
-		count_t version : 4;		///< Version number of ContainerFragment
-		count_t missing_data : 1; ///< Flag if the ContainerFragment knows that it is missing data
-		count_t has_index : 1; ///< Whether the ContainerFragment has an index at the end of the payload
-		count_t unused_flag1 : 1; ///< Unused
-		count_t unused_flag2 : 1; ///< Unused
-		count_t unused : 32; ///< Unused
+		count_t block_count : 16;   ///< The number of Fragment objects stored in the ContainerFragment
+		count_t fragment_type : 8;  ///< The Fragment::type_t of stored Fragment objects
+		count_t version : 4;        ///< Version number of ContainerFragment
+		count_t missing_data : 1;   ///< Flag if the ContainerFragment knows that it is missing data
+		count_t has_index : 1;      ///< Whether the ContainerFragment has an index at the end of the payload
+		count_t unused_flag1 : 1;   ///< Unused
+		count_t unused_flag2 : 1;   ///< Unused
+		count_t unused : 32;        ///< Unused
 
-		uint64_t index_offset; ///< Index starts this many bytes after the beginning of the payload (is also the total size of contained Fragments)
-				
+		uint64_t index_offset;  ///< Index starts this many bytes after the beginning of the payload (is also the total size of contained Fragments)
+
 		/// Size of the Metadata object
-		static size_t const size_words = 16ul; // Units of Header::data_t
+		static size_t const size_words = 16ul;  // Units of Header::data_t
 	};
-	static_assert (sizeof(Metadata) == Metadata::size_words * sizeof(Metadata::data_t), "ContainerFragment::Metadata size changed");
+	static_assert(sizeof(Metadata) == Metadata::size_words * sizeof(Metadata::data_t), "ContainerFragment::Metadata size changed");
 
 	/**
 	 * \brief Upgrade the Metadata of a fixed-size ContainerFragment to the new standard
@@ -101,7 +100,8 @@ public:
 	 * The constructor simply sets its const private member "artdaq_Fragment_"
 	 * to refer to the artdaq::Fragment object
 	*/
-	explicit ContainerFragment(Fragment const& f) : artdaq_Fragment_(f), index_ptr_(nullptr), index_alloc_(false),metadata_(nullptr), metadata_alloc_(false) { }
+	explicit ContainerFragment(Fragment const& f)
+	    : artdaq_Fragment_(f), index_ptr_(nullptr), index_alloc_(false), metadata_(nullptr), metadata_alloc_(false) {}
 
 	virtual ~ContainerFragment()
 	{
@@ -119,8 +119,8 @@ public:
 	 * \brief const getter function for the Metadata
 	 * \return const pointer to the Metadata
 	 */
-	Metadata const* metadata() const 
-	{ 
+	Metadata const* metadata() const
+	{
 		if (metadata_alloc_) return metadata_;
 
 		if (artdaq_Fragment_.sizeBytes() - artdaq_Fragment_.dataSizeBytes() - sizeof(detail::RawFragmentHeader) == sizeof(MetadataV0))
@@ -130,7 +130,7 @@ public:
 
 		return artdaq_Fragment_.metadata<Metadata>();
 	}
-	
+
 	/**
 	 * \brief Gets the number of fragments stored in the ContainerFragment
 	 * \return The number of Fragment objects stored in the ContainerFragment
@@ -153,7 +153,7 @@ public:
 	 */
 	void const* dataBegin() const
 	{
-		return reinterpret_cast<void const *>(&*artdaq_Fragment_.dataBegin());
+		return reinterpret_cast<void const*>(&*artdaq_Fragment_.dataBegin());
 	}
 
 	/**
@@ -162,7 +162,7 @@ public:
 	 */
 	void const* dataEnd() const
 	{
-		return reinterpret_cast<void const *>(reinterpret_cast<uint8_t const *>(dataBegin()) + lastFragmentIndex());
+		return reinterpret_cast<void const*>(reinterpret_cast<uint8_t const*>(dataBegin()) + lastFragmentIndex());
 	}
 
 	/**
@@ -178,7 +178,7 @@ public:
 			throw cet::exception("ArgumentOutOfRange") << "Buffer overrun detected! ContainerFragment::at was asked for a non-existent Fragment!";
 		}
 		FragmentPtr frag(new Fragment(fragSize(index) / sizeof(RawDataType) - detail::RawFragmentHeader::num_words()));
-		memcpy(frag->headerAddress(), reinterpret_cast<uint8_t const *>(dataBegin()) + fragmentIndex(index), fragSize(index));
+		memcpy(frag->headerAddress(), reinterpret_cast<uint8_t const*>(dataBegin()) + fragmentIndex(index), fragSize(index));
 		return frag;
 	}
 
@@ -205,7 +205,7 @@ public:
 	 * \return Pointer to the specified Fragment in the ContainerFragment
 	 * \exception cet::exception if the index is out-of-range
 	 */
-    FragmentPtr operator[](size_t index) const
+	FragmentPtr operator[](size_t index) const
 	{
 		return this->at(index);
 	}
@@ -239,7 +239,6 @@ public:
 	}
 
 protected:
-
 	/**
 	 * \brief Gets the ratio between the fundamental data storage type and the representation within the Fragment
 	 * \return The ratio between the fundamental data storage type and the representation within the Fragment
@@ -278,7 +277,7 @@ protected:
 	void reset_index_ptr_() const
 	{
 		TLOG(TLVL_TRACE, "ContainerFragment") << "Request to reset index_ptr recieved. has_index=" << metadata()->has_index << ", Check word = " << std::hex
-			<< *(reinterpret_cast<size_t const*>(artdaq_Fragment_.dataBeginBytes() + metadata()->index_offset) + metadata()->block_count);
+		                                      << *(reinterpret_cast<size_t const*>(artdaq_Fragment_.dataBeginBytes() + metadata()->index_offset) + metadata()->block_count);
 		if (metadata()->has_index && *(reinterpret_cast<size_t const*>(artdaq_Fragment_.dataBeginBytes() + metadata()->index_offset) + metadata()->block_count) == CONTAINER_MAGIC)
 		{
 			TLOG(TLVL_TRACE, "ContainerFragment") << "Setting index_ptr to found valid index";

@@ -2,7 +2,7 @@
 #include "cetlib/filesystem.h"
 
 artdaq::SimpleLookupPolicy::
-SimpleLookupPolicy(std::string const& paths, ArgType argType)
+    SimpleLookupPolicy(std::string const& paths, ArgType argType)
 {
 	// the cetlib search_path constructor expects either the name of
 	// an environmental variable that contains the search path *or* a
@@ -33,7 +33,7 @@ SimpleLookupPolicy(std::string const& paths, ArgType argType)
 	}
 
 	else
-	{ // argType == ENV_VAR
+	{  // argType == ENV_VAR
 		fallbackPaths_.reset(new cet::search_path(paths));
 	}
 }
@@ -49,7 +49,8 @@ std::string artdaq::SimpleLookupPolicy::operator()(std::string const& filename)
 	{
 		return cwdPath_->find_file(filename);
 	}
-	catch (...) {}
+	catch (...)
+	{}
 
 	return fallbackPaths_->find_file(filename);
 }

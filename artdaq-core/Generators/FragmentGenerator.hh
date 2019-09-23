@@ -12,8 +12,7 @@
 
 #include "artdaq-core/Data/Fragment.hh"
 
-namespace artdaq
-{
+namespace artdaq {
 	/**
    * \brief Base class for all FragmentGenerators.
    *
@@ -25,7 +24,6 @@ namespace artdaq
 	class FragmentGenerator
 	{
 	public:
-
 		/**
 		 * \brief Default Constructor
 		 */
@@ -48,7 +46,6 @@ namespace artdaq
 	   */
 		virtual bool getNext(PostmarkedFragmentPtrs& output) = 0;
 
-
 		/**
 	   * \brief Which fragment IDs does this FragmentGenerator generate?
 	   * \return A std::vector of fragment_id_t
@@ -58,6 +55,6 @@ namespace artdaq
 	   */
 		virtual std::vector<Fragment::fragment_id_t> fragmentIDs() = 0;
 	};
-}
+}  // namespace artdaq
 
 #endif /* artdaq_core_Generators_FragmentGenerator_hh */

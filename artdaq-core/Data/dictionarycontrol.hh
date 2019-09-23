@@ -13,7 +13,7 @@
 //
 
 #undef HIDE_FROM_ROOT
-#if !defined(__GCCXML__) && !defined(__ROOTCLING__) //&& defined(__GXX_EXPERIMENTAL_CXX0X__)
+#if !defined(__GCCXML__) && !defined(__ROOTCLING__)  //&& defined(__GXX_EXPERIMENTAL_CXX0X__)
 #define HIDE_FROM_ROOT 1
 #endif
 

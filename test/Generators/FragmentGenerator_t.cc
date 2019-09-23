@@ -4,16 +4,14 @@
 #include "artdaq-core/Data/Fragment.hh"
 #include "artdaq-core/Generators/FragmentGenerator.hh"
 
-namespace artdaqtest
-{
+namespace artdaqtest {
 	class FragmentGeneratorTest;
 }
 
 /**
  * \brief Tests the functionality of the artdaq::FragmentGenerator class
  */
-class artdaqtest::FragmentGeneratorTest :
-	public artdaq::FragmentGenerator
+class artdaqtest::FragmentGeneratorTest : public artdaq::FragmentGenerator
 {
 public:
 	FragmentGeneratorTest();
@@ -41,10 +39,10 @@ private:
 	std::vector<artdaq::Fragment::fragment_id_t> fragmentIDs_();
 };
 
-artdaqtest::FragmentGeneratorTest::FragmentGeneratorTest() : FragmentGenerator() {}
+artdaqtest::FragmentGeneratorTest::FragmentGeneratorTest()
+    : FragmentGenerator() {}
 
-bool
-artdaqtest::FragmentGeneratorTest::getNext_(artdaq::FragmentPtrs& frags)
+bool artdaqtest::FragmentGeneratorTest::getNext_(artdaq::FragmentPtrs& frags)
 {
 	frags.emplace_back(new artdaq::Fragment);
 	return true;

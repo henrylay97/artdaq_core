@@ -3,18 +3,17 @@
 
 #include <string>
 
-namespace artdaq
-{
-	/**
+namespace artdaq {
+/**
    * \brief Controls whether the ExceptionHandler will rethrow after printing exception details
    */
-	enum class ExceptionHandlerRethrow
-	{
-		yes, ///< Rethrow the exception after sending details to MessageFacility
-		no ///< Consume the exception and proceed
-	};
+enum class ExceptionHandlerRethrow
+{
+	yes,  ///< Rethrow the exception after sending details to MessageFacility
+	no    ///< Consume the exception and proceed
+};
 
-	/**
+/**
    * \brief The ExceptionHandler class prints out all available information about an excection, then
    * optionally re-throws.
    * \param decision Controls whether the ExceptionHandler will rethrow (ExceptionHandlerRethrow::yes) or not (ExceptionHandlerRethow::no)
@@ -48,7 +47,7 @@ namespace artdaq
    * - If artdaq::ExceptionHandlerRethrow::yes was passed to
    * ExceptionHandler(), re-throw the exception rather than swallow it
    */
-	void ExceptionHandler(ExceptionHandlerRethrow decision, std::string optional_message = "");
-}
+void ExceptionHandler(ExceptionHandlerRethrow decision, std::string optional_message = "");
+}  // namespace artdaq
 
 #endif

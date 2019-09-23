@@ -1,30 +1,30 @@
 
 #include "artdaq-core/Core/SharedMemoryEventReceiver.hh"
 
-#include "artdaq-core/Data/Fragment.hh"
 #include <sys/time.h>
+#include "artdaq-core/Data/Fragment.hh"
 #define TRACE_NAME "SharedMemoryEventReceiver"
 #include "tracemf.h"
 
 using std::string;
 
 artdaq::SharedMemoryEventReceiver::SharedMemoryEventReceiver(uint32_t shm_key, uint32_t broadcast_shm_key)
-	: current_read_buffer_(-1)
-	, initialized_(false)
-	, current_header_(nullptr)
-	, current_data_source_(nullptr)
-	, data_(shm_key)
-	, broadcasts_(broadcast_shm_key)
+    : current_read_buffer_(-1)
+    , initialized_(false)
+    , current_header_(nullptr)
+    , current_data_source_(nullptr)
+    , data_(shm_key)
+    , broadcasts_(broadcast_shm_key)
 {
-	TLOG(TLVL_TRACE) << "SharedMemoryEventReceiver CONSTRUCTOR" ;
+	TLOG(TLVL_TRACE) << "SharedMemoryEventReceiver CONSTRUCTOR";
 }
 
 bool artdaq::SharedMemoryEventReceiver::ReadyForRead(bool broadcast, size_t timeout_us)
 {
-	TLOG(TLVL_TRACE) << "ReadyForRead BEGIN timeout_us=" << timeout_us ;
+	TLOG(TLVL_TRACE) << "ReadyForRead BEGIN timeout_us=" << timeout_us;
 	if (current_read_buffer_ != -1 && current_data_source_ && current_header_)
 	{
-		TLOG(TLVL_TRACE) << "ReadyForRead Returning true because already reading buffer" ;
+		TLOG(TLVL_TRACE) << "ReadyForRead Returning true because already reading buffer";
 		return true;
 	}
 
@@ -73,28 +73,28 @@ bool artdaq::SharedMemoryEventReceiver::ReadyForRead(bool broadcast, size_t time
 		first = false;
 
 		time_diff = TimeUtils::gettimeofday_us() - start_time;
-		usleep(time_diff < 10000 ? time_diff : 10000 );
+		usleep(time_diff < 10000 ? time_diff : 10000);
 	}
-	TLOG(TLVL_TRACE) << "ReadyForRead returning false" ;
+	TLOG(TLVL_TRACE) << "ReadyForRead returning false";
 	return false;
 }
 
 artdaq::detail::RawEventHeader* artdaq::SharedMemoryEventReceiver::ReadHeader(bool& err)
 {
-	TLOG(TLVL_TRACE) << "ReadHeader BEGIN" ;
+	TLOG(TLVL_TRACE) << "ReadHeader BEGIN";
 	if (current_read_buffer_ != -1 && current_data_source_)
 	{
 		err = !current_data_source_->CheckBuffer(current_read_buffer_, SharedMemoryManager::BufferSemaphoreFlags::Reading);
 		if (err)
 		{
-			TLOG(TLVL_WARNING) << "Buffer was in incorrect state, resetting" ;
+			TLOG(TLVL_WARNING) << "Buffer was in incorrect state, resetting";
 			current_data_source_ = nullptr;
 			current_read_buffer_ = -1;
 			current_header_ = nullptr;
 			return nullptr;
 		}
 	}
-	TLOG(TLVL_TRACE) << "Already have buffer, returning stored header" ;
+	TLOG(TLVL_TRACE) << "Already have buffer, returning stored header";
 	return current_header_;
 }
 
@@ -120,7 +120,6 @@ std::set<artdaq::Fragment::type_t> artdaq::SharedMemoryEventReceiver::GetFragmen
 
 	return output;
 }
-
 
 std::unique_ptr<artdaq::Fragments> artdaq::SharedMemoryEventReceiver::GetFragmentsByType(bool& err, Fragment::type_t type)
 {
@@ -174,7 +173,6 @@ std::string artdaq::SharedMemoryEventReceiver::printBuffers_(SharedMemoryManager
 			ostr << ", Size: " << fragHdr->word_count << " words." << std::endl;
 			data_source->IncrementReadPos(ii, fragHdr->word_count * sizeof(RawDataType));
 		}
-
 	}
 	return ostr.str();
 }
@@ -198,21 +196,21 @@ std::string artdaq::SharedMemoryEventReceiver::toString()
 
 void artdaq::SharedMemoryEventReceiver::ReleaseBuffer()
 {
-	TLOG(TLVL_TRACE) << "ReleaseBuffer BEGIN" ;
+	TLOG(TLVL_TRACE) << "ReleaseBuffer BEGIN";
 	try
 	{
-		if(current_data_source_) current_data_source_->MarkBufferEmpty(current_read_buffer_);
+		if (current_data_source_) current_data_source_->MarkBufferEmpty(current_read_buffer_);
 	}
 	catch (cet::exception const& e)
 	{
-		TLOG(TLVL_WARNING) << "A cet::exception occured while trying to release the buffer: " << e ;
+		TLOG(TLVL_WARNING) << "A cet::exception occured while trying to release the buffer: " << e;
 	}
 	catch (...)
 	{
-		TLOG(TLVL_ERROR) << "An unknown exception occured while trying to release the buffer" ;
+		TLOG(TLVL_ERROR) << "An unknown exception occured while trying to release the buffer";
 	}
 	current_read_buffer_ = -1;
 	current_header_ = nullptr;
 	current_data_source_ = nullptr;
-	TLOG(TLVL_TRACE) << "ReleaseBuffer END" ;
+	TLOG(TLVL_TRACE) << "ReleaseBuffer END";
 }
