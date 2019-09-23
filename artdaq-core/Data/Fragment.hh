@@ -21,69 +21,69 @@
 #include "artdaq-core/Data/detail/RawFragmentHeaderV1.hh"
 #include "artdaq-core/Data/dictionarycontrol.hh"
 #if HIDE_FROM_ROOT
-#include "trace.h"		// TRACE
+#include "trace.h"  // TRACE
 #endif
 
 /**
  * \brief The artdaq namespace.
  */
 namespace artdaq {
-# define DATAVEC_T QuickVec<RawDataType>
-	//#define DATAVEC_T std::vector<RawDataType>
+#define DATAVEC_T QuickVec<RawDataType>
+//#define DATAVEC_T std::vector<RawDataType>
 
-	/**
+/**
 	 * \brief The RawDataType (currently a 64-bit integer) is the basic unit of data representation within _artdaq_
 	 *
 	 * The RawDataType (currently a 64-bit integer) is the basic unit of data representation within _artdaq_
 	 * Copied from RawFragmentHeader into Fragment
 	 */
-	typedef detail::RawFragmentHeader::RawDataType RawDataType;
+typedef detail::RawFragmentHeader::RawDataType RawDataType;
 
-	class Fragment;
-	/**
+class Fragment;
+/**
 	* \brief A std::vector of Fragment objects
 	*/
-	typedef std::vector<Fragment> Fragments;
+typedef std::vector<Fragment> Fragments;
 
-	/**
+/**
 	* \brief A std::unique_ptr to a Fragment object
 	*
 	* To reduce move or copy operations, most artdaq processing is done
 	* using FragmentPtr objects.
 	*/
-	typedef std::unique_ptr<Fragment> FragmentPtr;
+typedef std::unique_ptr<Fragment> FragmentPtr;
 
-	/**
+/**
 	* \brief A std::list of FragmentPtrs
 	*/
-	typedef std::list<FragmentPtr> FragmentPtrs;
+typedef std::list<FragmentPtr> FragmentPtrs;
 
-	/**
+/**
 	* \brief A std::pair of a FragmentPtr and the destination rank that
 	* the fragment should be sent to
 	*/
-	typedef std::pair<FragmentPtr, int> PostmarkedFragmentPtr;
+typedef std::pair<FragmentPtr, int> PostmarkedFragmentPtr;
 
-	/**
+/**
 	* \brief A std::list of PostmarkedFragmentPtr objects
 	*/
-	typedef std::list<PostmarkedFragmentPtr> PostmarkedFragmentPtrs;
+typedef std::list<PostmarkedFragmentPtr> PostmarkedFragmentPtrs;
 
-	/**
+/**
 	 * \brief Comparator for Fragment objects, based on their sequence_id
 	 * \param i First Fragment to compare
 	 * \param j Second Fragment to comapre
 	 * \return i.sequenceID() < j.sequenceID()
 	 */
-	bool fragmentSequenceIDCompare(Fragment i, Fragment j);
+bool fragmentSequenceIDCompare(Fragment i, Fragment j);
 
-	/**
+/**
 	 * \brief Prints the given Fragment to the stream
 	 * \param os Stream to print Fragment to
 	 * \param f Fragment to print
 	 * \return Reference to the stream
 	 */
-	std::ostream& operator<<(std::ostream& os, Fragment const& f);
+std::ostream& operator<<(std::ostream& os, Fragment const& f);
 }  // namespace artdaq
 
 /**
@@ -144,28 +144,28 @@ public:
 	 */
 	Fragment& operator=(Fragment&&) noexcept;
 
-	typedef detail::RawFragmentHeader::version_t version_t; ///< typedef for version_t from RawFragmentHeader
-	typedef detail::RawFragmentHeader::type_t type_t; ///< typedef for type_t from RawFragmentHeader
-	typedef detail::RawFragmentHeader::sequence_id_t sequence_id_t; ///< typedef for sequence_id_t from RawFragmentHeader
-	typedef detail::RawFragmentHeader::fragment_id_t fragment_id_t; ///< typedef for fragment_id_t from RawFragmentHeader
-	typedef detail::RawFragmentHeader::timestamp_t timestamp_t; ///< typedef for timestamp_t from RawFragmentHeader
+	typedef detail::RawFragmentHeader::version_t version_t;          ///< typedef for version_t from RawFragmentHeader
+	typedef detail::RawFragmentHeader::type_t type_t;                ///< typedef for type_t from RawFragmentHeader
+	typedef detail::RawFragmentHeader::sequence_id_t sequence_id_t;  ///< typedef for sequence_id_t from RawFragmentHeader
+	typedef detail::RawFragmentHeader::fragment_id_t fragment_id_t;  ///< typedef for fragment_id_t from RawFragmentHeader
+	typedef detail::RawFragmentHeader::timestamp_t timestamp_t;      ///< typedef for timestamp_t from RawFragmentHeader
 
-	static constexpr version_t InvalidVersion = detail::RawFragmentHeader::InvalidVersion; ///< Copy InvalidVersion from RawFragmentHeader
-	static constexpr sequence_id_t InvalidSequenceID = detail::RawFragmentHeader::InvalidSequenceID; ///< Copy InvalidSequenceID from RawFragmentHeader
-	static constexpr fragment_id_t InvalidFragmentID = detail::RawFragmentHeader::InvalidFragmentID; ///< Copy InvalidFragmentID from RawFragmentHeader
-	static constexpr timestamp_t InvalidTimestamp = detail::RawFragmentHeader::InvalidTimestamp; ///< Copy InvalidTimestamp from RawFragmentHeader
+	static constexpr version_t InvalidVersion = detail::RawFragmentHeader::InvalidVersion;            ///< Copy InvalidVersion from RawFragmentHeader
+	static constexpr sequence_id_t InvalidSequenceID = detail::RawFragmentHeader::InvalidSequenceID;  ///< Copy InvalidSequenceID from RawFragmentHeader
+	static constexpr fragment_id_t InvalidFragmentID = detail::RawFragmentHeader::InvalidFragmentID;  ///< Copy InvalidFragmentID from RawFragmentHeader
+	static constexpr timestamp_t InvalidTimestamp = detail::RawFragmentHeader::InvalidTimestamp;      ///< Copy InvalidTimestamp from RawFragmentHeader
 
-	static constexpr type_t InvalidFragmentType = detail::RawFragmentHeader::InvalidFragmentType; ///< Copy InvalidFragmentType from RawFragmentHeader
-	static constexpr type_t EndOfDataFragmentType = detail::RawFragmentHeader::EndOfDataFragmentType; ///< Copy EndOfDataFragmentType from RawFragmentHeader
-	static constexpr type_t DataFragmentType = detail::RawFragmentHeader::DataFragmentType; ///< Copy DataFragmentType from RawFragmentHeader
-	static constexpr type_t InitFragmentType = detail::RawFragmentHeader::InitFragmentType; ///< Copy InitFragmentType from RawFragmentHeader
-	static constexpr type_t EndOfRunFragmentType = detail::RawFragmentHeader::EndOfRunFragmentType; ///< Copy EndOfRunFragmentType from RawFragmentHeader
-	static constexpr type_t EndOfSubrunFragmentType = detail::RawFragmentHeader::EndOfSubrunFragmentType; ///< Copy EndOfSubrunFragmentType from RawFragmentHeader
-	static constexpr type_t ShutdownFragmentType = detail::RawFragmentHeader::ShutdownFragmentType; ///< Copy ShutdownFragmentType from RawFragmentHeader
-	static constexpr type_t FirstUserFragmentType = detail::RawFragmentHeader::FIRST_USER_TYPE; ///< Copy FIRST_USER_TYPE from RawFragmentHeader
-	static constexpr type_t EmptyFragmentType = detail::RawFragmentHeader::EmptyFragmentType; ///< Copy EmptyFragmentType from RawFragmentHeader
-	static constexpr type_t ContainerFragmentType = detail::RawFragmentHeader::ContainerFragmentType; ///< Copy ContainerFragmentType from RawFragmentHeader
-	static constexpr type_t ErrorFragmentType = detail::RawFragmentHeader::ErrorFragmentType; ///< Copy ErrorFragmentType from RawFragmentHeader
+	static constexpr type_t InvalidFragmentType = detail::RawFragmentHeader::InvalidFragmentType;          ///< Copy InvalidFragmentType from RawFragmentHeader
+	static constexpr type_t EndOfDataFragmentType = detail::RawFragmentHeader::EndOfDataFragmentType;      ///< Copy EndOfDataFragmentType from RawFragmentHeader
+	static constexpr type_t DataFragmentType = detail::RawFragmentHeader::DataFragmentType;                ///< Copy DataFragmentType from RawFragmentHeader
+	static constexpr type_t InitFragmentType = detail::RawFragmentHeader::InitFragmentType;                ///< Copy InitFragmentType from RawFragmentHeader
+	static constexpr type_t EndOfRunFragmentType = detail::RawFragmentHeader::EndOfRunFragmentType;        ///< Copy EndOfRunFragmentType from RawFragmentHeader
+	static constexpr type_t EndOfSubrunFragmentType = detail::RawFragmentHeader::EndOfSubrunFragmentType;  ///< Copy EndOfSubrunFragmentType from RawFragmentHeader
+	static constexpr type_t ShutdownFragmentType = detail::RawFragmentHeader::ShutdownFragmentType;        ///< Copy ShutdownFragmentType from RawFragmentHeader
+	static constexpr type_t FirstUserFragmentType = detail::RawFragmentHeader::FIRST_USER_TYPE;            ///< Copy FIRST_USER_TYPE from RawFragmentHeader
+	static constexpr type_t EmptyFragmentType = detail::RawFragmentHeader::EmptyFragmentType;              ///< Copy EmptyFragmentType from RawFragmentHeader
+	static constexpr type_t ContainerFragmentType = detail::RawFragmentHeader::ContainerFragmentType;      ///< Copy ContainerFragmentType from RawFragmentHeader
+	static constexpr type_t ErrorFragmentType = detail::RawFragmentHeader::ErrorFragmentType;              ///< Copy ErrorFragmentType from RawFragmentHeader
 
 	static constexpr int InvalidDestinationRank = -1;
 
@@ -192,12 +192,12 @@ public:
 		return detail::RawFragmentHeader::MakeSystemTypeMap();
 	}
 
-	typedef DATAVEC_T::reference reference; ///< Alias reference type from QuickVec<RawDataType>
-	typedef DATAVEC_T::iterator iterator; ///< Alias iterator type from QuickVec<RawDataType>
-	typedef DATAVEC_T::const_iterator const_iterator; ///< Alias const_iterator type from QuickVec<RawDataType>
-	typedef DATAVEC_T::value_type value_type; ///< Alias value_type type from QuickVec<RawDataType>
-	typedef DATAVEC_T::difference_type difference_type; ///< Alias difference_type type from QuickVec<RawDataType>
-	typedef DATAVEC_T::size_type size_type; ///< Alias size_type type from QuickVec<RawDataType>
+	typedef DATAVEC_T::reference reference;              ///< Alias reference type from QuickVec<RawDataType>
+	typedef DATAVEC_T::iterator iterator;                ///< Alias iterator type from QuickVec<RawDataType>
+	typedef DATAVEC_T::const_iterator const_iterator;    ///< Alias const_iterator type from QuickVec<RawDataType>
+	typedef DATAVEC_T::value_type value_type;            ///< Alias value_type type from QuickVec<RawDataType>
+	typedef DATAVEC_T::difference_type difference_type;  ///< Alias difference_type type from QuickVec<RawDataType>
+	typedef DATAVEC_T::size_type size_type;              ///< Alias size_type type from QuickVec<RawDataType>
 
 	/**
 	 * \brief Create a Fragment ready to hold n words (RawDataTypes) of payload, and with
@@ -228,10 +228,10 @@ public:
 	 * \param metadata Metadata object
 	 * \param timestamp Timestamp of Fragment
 	 */
-	template <class T>
+	template<class T>
 	Fragment(std::size_t payload_size, sequence_id_t sequence_id,
-			 fragment_id_t fragment_id, type_t type, const T& metadata,
-			 timestamp_t timestamp = Fragment::InvalidTimestamp);
+	         fragment_id_t fragment_id, type_t type, const T& metadata,
+	         timestamp_t timestamp = Fragment::InvalidTimestamp);
 
 	/**
 	 * \brief Create a Fragment with the given header values. Uses static factory function instead of constructor
@@ -246,15 +246,15 @@ public:
 	 * \param timestamp Timestamp of Fragment
 	 * \return FragmentPtr to created Fragment
 	 */
-	template <class T>
+	template<class T>
 	static FragmentPtr FragmentBytes(std::size_t payload_size_in_bytes,
-									 sequence_id_t sequence_id,
-									 fragment_id_t fragment_id,
-									 type_t type, const T& metadata,
-									 timestamp_t timestamp = Fragment::InvalidTimestamp)
+	                                 sequence_id_t sequence_id,
+	                                 fragment_id_t fragment_id,
+	                                 type_t type, const T& metadata,
+	                                 timestamp_t timestamp = Fragment::InvalidTimestamp)
 	{
 		RawDataType nwords = ceil(payload_size_in_bytes /
-								  static_cast<double>(sizeof(RawDataType)));
+		                          static_cast<double>(sizeof(RawDataType)));
 		return FragmentPtr(new Fragment(nwords, sequence_id, fragment_id, type, metadata, timestamp));
 	}
 
@@ -266,9 +266,9 @@ public:
 	 * \param timestamp Timestamp of Fragment
 	 */
 	Fragment(sequence_id_t sequenceID,
-			 fragment_id_t fragID,
-			 type_t type = Fragment::DataFragmentType,
-			 timestamp_t timestamp = Fragment::InvalidTimestamp);
+	         fragment_id_t fragID,
+	         type_t type = Fragment::DataFragmentType,
+	         timestamp_t timestamp = Fragment::InvalidTimestamp);
 
 	/**
 	 * \brief Print out summary information for this Fragment to the given stream.
@@ -357,14 +357,14 @@ public:
 	 * \brief Get the last access time of the Fragment
 	 * \return struct timespec with last access time of the Fragment
 	 */
-	 struct timespec atime();
+	struct timespec atime();
 
-	 /**
+	/**
 	  * \brief Get the difference between the current time and the last access time of the Fragment.
 	  * \param touch Whether to also perform a touch operation
 	  * \return struct timespec representing the difference between current time and the last access time
 	  */
-	 struct timespec getLatency(bool touch);
+	struct timespec getLatency(bool touch);
 
 	/**
 	 * \brief Size of vals_ vector ( header + (optional) metadata + payload) in bytes.
@@ -402,7 +402,7 @@ public:
 	 * \return Pointer to the metadata
 	 * \exception cet::exception if no metadata is present
 	 */
-	template <class T>
+	template<class T>
 	T* metadata();
 
 	/**
@@ -412,7 +412,7 @@ public:
 	 * \return const Pointer to the metadata
 	 * \exception cet::exception if no metadata is present
 	 */
-	template <class T>
+	template<class T>
 	T const* metadata() const;
 
 	/**
@@ -423,7 +423,7 @@ public:
 	 * \param md Metadata to store in Fragment
 	 * \exception cet::exception if metadata already present in Fragment
 	 */
-	template <class T>
+	template<class T>
 	void setMetadata(const T& md);
 
 	/**
@@ -433,7 +433,7 @@ public:
 	 * \exception cet::exception if no metadata stored in Fragment
 	 * \exception cet::exception if new metadata has different size than existing metadata
 	 */
-	template <class T>
+	template<class T>
 	void updateMetadata(const T& md);
 
 	/**
@@ -465,7 +465,7 @@ public:
 	 * \param szbytes The new size of the payload portion of the Fragment, in bytes
 	 * \param growthFactor The requested growth factor in the capacity of storage
 	 */
-	void resizeBytesWithCushion(std::size_t szbytes, double growthFactor=1.3);
+	void resizeBytesWithCushion(std::size_t szbytes, double growthFactor = 1.3);
 
 	/**
 	* \brief Resize the data payload to hold sz bytes (padded by the
@@ -512,7 +512,7 @@ public:
 	 * qualifier to the pointer you pass as a parameter (i.e.,
 	 * reinterpret_cast_checked<const PtrType*>, not reinterpret_cast_checked<PtrType*>)
 	 */
-	template <typename T>
+	template<typename T>
 	T reinterpret_cast_checked(const RawDataType* in) const
 	{
 		T newpointer = reinterpret_cast<T>(in);
@@ -540,7 +540,7 @@ public:
 	* reinterpret_cast could be disastrous, I've wrapped it in this
 	* function and added a check just to be completely safe.
 	*/
-	template <typename T>
+	template<typename T>
 	T reinterpret_cast_checked(RawDataType* in)
 	{
 		T newpointer = reinterpret_cast<T>(in);
@@ -561,7 +561,7 @@ public:
 	 * than an iterator is that we don't need to take the address of the
 	 * dereferenced iterator (e.g., via &*dataBegin() ) to get ahold of the memory
 	 */
-	byte_t* dataBeginBytes() { return reinterpret_cast_checked<byte_t*>(&* dataBegin()); }
+	byte_t* dataBeginBytes() { return reinterpret_cast_checked<byte_t*>(&*dataBegin()); }
 
 	/**
 	* \brief Return Fragment::byte_t* pointing at the end of the payload
@@ -571,7 +571,7 @@ public:
 	* than an iterator is that we don't need to take the address of the
 	* dereferenced iterator (e.g., via &*dataEnd() ) to get ahold of the memory
 	*/
-	byte_t* dataEndBytes() { return reinterpret_cast_checked<byte_t*>(&* dataEnd()); }
+	byte_t* dataEndBytes() { return reinterpret_cast_checked<byte_t*>(&*dataEnd()); }
 
 	/**
 	 * \brief Return an iterator to the beginning of the header (should be used
@@ -584,7 +584,7 @@ public:
 	 * \brief Return a Fragment::byte_t pointer pointing to the beginning of the header
 	 * \return byte_t pointer to the beginning of the header
 	 */
-	byte_t* headerBeginBytes() { return reinterpret_cast_checked<byte_t*>(&* headerBegin()); }
+	byte_t* headerBeginBytes() { return reinterpret_cast_checked<byte_t*>(&*headerBegin()); }
 
 	/**
 	 * \brief Returns a const_iterator to the beginning of the data payload
@@ -608,7 +608,7 @@ public:
 	*/
 	const byte_t* dataBeginBytes() const
 	{
-		return reinterpret_cast_checked<const byte_t*>(&* dataBegin());
+		return reinterpret_cast_checked<const byte_t*>(&*dataBegin());
 	}
 
 	/**
@@ -621,7 +621,7 @@ public:
 	*/
 	const byte_t* dataEndBytes() const
 	{
-		return reinterpret_cast_checked<const byte_t*>(&* dataEnd());
+		return reinterpret_cast_checked<const byte_t*>(&*dataEnd());
 	}
 
 	/**
@@ -629,7 +629,7 @@ public:
 	* for serialization only: use setters for preference).
 	* \return an const_iterator to the beginning of the header
 	*/
-	const_iterator headerBegin() const; // See note for non-const, above.
+	const_iterator headerBegin() const;  // See note for non-const, above.
 
 	/**
 	* \brief Return a const Fragment::byte_t pointer pointing to the beginning of the header
@@ -637,7 +637,7 @@ public:
 	*/
 	const byte_t* headerBeginBytes() const
 	{
-		return reinterpret_cast_checked<const byte_t*>(&* headerBegin());
+		return reinterpret_cast_checked<const byte_t*>(&*headerBegin());
 	}
 
 	/**
@@ -710,9 +710,9 @@ public:
 	 */
 	template<class InputIterator>
 	static FragmentPtr dataFrag(sequence_id_t sequenceID,
-															  fragment_id_t fragID,
-															  InputIterator i,
-															  InputIterator e)
+	                            fragment_id_t fragID,
+	                            InputIterator i,
+	                            InputIterator e)
 	{
 		FragmentPtr result(new Fragment(sequenceID, fragID));
 		result->vals_.reserve(std::distance(i, e) + detail::RawFragmentHeader::num_words());
@@ -731,14 +731,14 @@ public:
 	 * \return FragmentPtr to created Fragment
 	 */
 	static FragmentPtr dataFrag(sequence_id_t sequenceID,
-								fragment_id_t fragID,
-								RawDataType const* dataPtr,
-								size_t dataSize,
-								timestamp_t timestamp = Fragment::InvalidTimestamp);
+	                            fragment_id_t fragID,
+	                            RawDataType const* dataPtr,
+	                            size_t dataSize,
+	                            timestamp_t timestamp = Fragment::InvalidTimestamp);
 #endif
 
 private:
-	template <typename T>
+	template<typename T>
 	static std::size_t validatedMetadataSize_();
 
 	void updateFragmentHeaderWC_();
@@ -760,53 +760,53 @@ inline artdaq::Fragment::Fragment(artdaq::Fragment&&) noexcept = default;
 inline artdaq::Fragment& artdaq::Fragment::operator=(artdaq::Fragment&&) noexcept = default;
 
 inline bool constexpr artdaq::Fragment::
-isUserFragmentType(type_t fragmentType)
+    isUserFragmentType(type_t fragmentType)
 {
 	return fragmentType >= detail::RawFragmentHeader::FIRST_USER_TYPE &&
-		fragmentType <= detail::RawFragmentHeader::LAST_USER_TYPE;
+	       fragmentType <= detail::RawFragmentHeader::LAST_USER_TYPE;
 }
 
 inline bool constexpr artdaq::Fragment::
-isSystemFragmentType(type_t fragmentType)
+    isSystemFragmentType(type_t fragmentType)
 {
 	return fragmentType >= detail::RawFragmentHeader::FIRST_SYSTEM_TYPE;
 }
 
-template <typename T>
+template<typename T>
 std::size_t
 artdaq::Fragment::
-validatedMetadataSize_()
+    validatedMetadataSize_()
 {
 	// Make sure a size_t is big enough to hold the maximum metadata
 	// size. This *should* always be true, but it is a compile-time check
 	// and therefore cheap.
 	static_assert(sizeof(size_t) >=
-				  sizeof(decltype(std::numeric_limits<detail::RawFragmentHeader::metadata_word_count_t>::max())),
-				  "metadata_word_count_t is too big!");
+	                  sizeof(decltype(std::numeric_limits<detail::RawFragmentHeader::metadata_word_count_t>::max())),
+	              "metadata_word_count_t is too big!");
 
 	static size_t constexpr max_md_wc =
-		std::numeric_limits<detail::RawFragmentHeader::metadata_word_count_t>::max();
+	    std::numeric_limits<detail::RawFragmentHeader::metadata_word_count_t>::max();
 	size_t requested_md_wc =
-		std::ceil(sizeof(T) / static_cast<double>(sizeof(artdaq::RawDataType)));
+	    std::ceil(sizeof(T) / static_cast<double>(sizeof(artdaq::RawDataType)));
 	if (requested_md_wc > max_md_wc)
 	{
 		throw cet::exception("InvalidRequest")
-			<< "The requested metadata structure is too large: "
-			<< "requested word count = " << requested_md_wc
-			<< ", maximum word count = " << max_md_wc;
+		    << "The requested metadata structure is too large: "
+		    << "requested word count = " << requested_md_wc
+		    << ", maximum word count = " << max_md_wc;
 	}
 	return requested_md_wc;
 }
 
-template <class T>
+template<class T>
 artdaq::Fragment::
-Fragment(std::size_t payload_size, sequence_id_t sequence_id,
-		 fragment_id_t fragment_id,
+    Fragment(std::size_t payload_size, sequence_id_t sequence_id,
+             fragment_id_t fragment_id,
              type_t type, const T& metadata, timestamp_t timestamp)
     : vals_((artdaq::detail::RawFragmentHeader::num_words() +  // Header
-		   validatedMetadataSize_<T>() + // Metadata
-		   payload_size) // User data
-		  )
+             validatedMetadataSize_<T>() +                     // Metadata
+             payload_size)                                     // User data
+      )
 {
 	TRACEN("Fragment", 50, "Fragment ctor num_word()=%zu MetadataSize_=%zu payload_size=%zu", artdaq::detail::RawFragmentHeader::num_words(), validatedMetadataSize_<T>(), payload_size);
 	// vals ctor w/o init val is used; make sure header is ALL initialized.
@@ -825,8 +825,8 @@ Fragment(std::size_t payload_size, sequence_id_t sequence_id,
 	fragmentHeader()->touch();
 
 	fragmentHeader()->metadata_word_count =
-		vals_.size() -
-		(fragmentHeader()->num_words() + payload_size);
+	    vals_.size() -
+	    (fragmentHeader()->num_words() + payload_size);
 
 	memcpy(metadataAddress(), &metadata, sizeof(T));
 }
@@ -925,7 +925,7 @@ artdaq::Fragment::updateFragmentHeaderWC_()
 	// Make sure vals_.size() fits inside 32 bits. Left-shift here should
 	// match bitfield size of word_count in RawFragmentHeader.
 	assert(vals_.size() < (1ULL << 32));
-	TRACEN( "Fragment", 50, "Fragment::updateFragmentHeaderWC_ adjusting fragmentHeader()->word_count from %u to %zu", (unsigned)(fragmentHeader()->word_count), vals_.size() );
+	TRACEN("Fragment", 50, "Fragment::updateFragmentHeaderWC_ adjusting fragmentHeader()->word_count from %u to %zu", (unsigned)(fragmentHeader()->word_count), vals_.size());
 	fragmentHeader()->word_count = vals_.size();
 }
 
@@ -933,7 +933,7 @@ inline std::size_t
 artdaq::Fragment::dataSize() const
 {
 	return vals_.size() - fragmentHeader()->num_words() -
-		fragmentHeader()->metadata_word_count;
+	       fragmentHeader()->metadata_word_count;
 }
 
 inline bool
@@ -942,37 +942,37 @@ artdaq::Fragment::hasMetadata() const
 	return fragmentHeader()->metadata_word_count != 0;
 }
 
-template <class T>
+template<class T>
 T* artdaq::Fragment::metadata()
 {
 	if (fragmentHeader()->metadata_word_count == 0)
 	{
 		throw cet::exception("InvalidRequest")
-			<< "No metadata has been stored in this Fragment.";
+		    << "No metadata has been stored in this Fragment.";
 	}
 
 	return reinterpret_cast_checked<T*>(&vals_[fragmentHeader()->num_words()]);
 }
 
-template <class T>
+template<class T>
 T const*
 artdaq::Fragment::metadata() const
 {
 	if (fragmentHeader()->metadata_word_count == 0)
 	{
 		throw cet::exception("InvalidRequest")
-			<< "No metadata has been stored in this Fragment.";
+		    << "No metadata has been stored in this Fragment.";
 	}
 	return reinterpret_cast_checked<T const*>(&vals_[fragmentHeader()->num_words()]);
 }
 
-template <class T>
+template<class T>
 void artdaq::Fragment::setMetadata(const T& metadata)
 {
 	if (fragmentHeader()->metadata_word_count != 0)
 	{
 		throw cet::exception("InvalidRequest")
-			<< "Metadata has already been stored in this Fragment.";
+		    << "Metadata has already been stored in this Fragment.";
 	}
 	auto const mdSize = validatedMetadataSize_<T>();
 	vals_.insert(dataBegin(), mdSize, 0);
@@ -982,13 +982,13 @@ void artdaq::Fragment::setMetadata(const T& metadata)
 	memcpy(metadataAddress(), &metadata, sizeof(T));
 }
 
-template <class T>
+template<class T>
 void artdaq::Fragment::updateMetadata(const T& metadata)
 {
 	if (fragmentHeader()->metadata_word_count == 0)
 	{
 		throw cet::exception("InvalidRequest")
-			<< "No metadata in fragment; please use Fragment::setMetadata instead of Fragment::updateMetadata";
+		    << "No metadata in fragment; please use Fragment::setMetadata instead of Fragment::updateMetadata";
 	}
 
 	auto const mdSize = validatedMetadataSize_<T>();
@@ -996,7 +996,7 @@ void artdaq::Fragment::updateMetadata(const T& metadata)
 	if (fragmentHeader()->metadata_word_count != mdSize)
 	{
 		throw cet::exception("InvalidRequest")
-			<< "Mismatch between type of metadata struct passed to updateMetadata and existing metadata struct";
+		    << "Mismatch between type of metadata struct passed to updateMetadata and existing metadata struct";
 	}
 
 	memcpy(metadataAddress(), &metadata, sizeof(T));
@@ -1006,7 +1006,7 @@ inline void
 artdaq::Fragment::resize(std::size_t sz)
 {
 	vals_.resize(sz + fragmentHeader()->metadata_word_count +
-				 fragmentHeader()->num_words());
+	             fragmentHeader()->num_words());
 	updateFragmentHeaderWC_();
 }
 
@@ -1064,7 +1064,7 @@ inline artdaq::Fragment::iterator
 artdaq::Fragment::dataBegin()
 {
 	return vals_.begin() + fragmentHeader()->num_words() +
-		fragmentHeader()->metadata_word_count;
+	       fragmentHeader()->metadata_word_count;
 }
 
 inline artdaq::Fragment::iterator
@@ -1083,7 +1083,7 @@ inline artdaq::Fragment::const_iterator
 artdaq::Fragment::dataBegin() const
 {
 	return vals_.begin() + fragmentHeader()->num_words() +
-		fragmentHeader()->metadata_word_count;
+	       fragmentHeader()->metadata_word_count;
 }
 
 inline artdaq::Fragment::const_iterator
@@ -1109,14 +1109,14 @@ inline bool
 artdaq::Fragment::empty()
 {
 	return (vals_.size() - fragmentHeader()->num_words() -
-			fragmentHeader()->metadata_word_count) == 0;
+	        fragmentHeader()->metadata_word_count) == 0;
 }
 
 inline void
 artdaq::Fragment::reserve(std::size_t cap)
 {
 	vals_.reserve(cap + fragmentHeader()->num_words() +
-				  fragmentHeader()->metadata_word_count);
+	              fragmentHeader()->metadata_word_count);
 }
 
 inline void
@@ -1129,7 +1129,7 @@ inline artdaq::RawDataType*
 artdaq::Fragment::dataAddress()
 {
 	return &vals_[0] + fragmentHeader()->num_words() +
-		fragmentHeader()->metadata_word_count;
+	       fragmentHeader()->metadata_word_count;
 }
 
 inline artdaq::RawDataType*
@@ -1138,7 +1138,7 @@ artdaq::Fragment::metadataAddress()
 	if (fragmentHeader()->metadata_word_count == 0)
 	{
 		throw cet::exception("InvalidRequest")
-			<< "No metadata has been stored in this Fragment.";
+		    << "No metadata has been stored in this Fragment.";
 	}
 	return &vals_[0] + fragmentHeader()->num_words();
 }
@@ -1152,43 +1152,43 @@ artdaq::Fragment::headerAddress()
 inline artdaq::detail::RawFragmentHeader*
 artdaq::Fragment::fragmentHeader()
 {
-	auto hdr = reinterpret_cast_checked<detail::RawFragmentHeader *>(&vals_[0]);
+	auto hdr = reinterpret_cast_checked<detail::RawFragmentHeader*>(&vals_[0]);
 	if (hdr->version != detail::RawFragmentHeader::CurrentVersion)
 	{
 		switch (hdr->version)
 		{
-		case 0xFFFF:
-			//std::cout << "Not upgrading InvalidVersion Fragment" << std::endl;
-			break;
-		case 0:
-		{
+			case 0xFFFF:
+				//std::cout << "Not upgrading InvalidVersion Fragment" << std::endl;
+				break;
+			case 0:
+			{
 				//std::cout << "Upgrading RawFragmentHeaderV0 (non const)" << std::endl;
 				TRACEN("Fragment", 4, "Upgrading RawFragmentHeaderV0 (non const)");
-			auto old_hdr = reinterpret_cast_checked<detail::RawFragmentHeaderV0 *>(&vals_[0]);
-			auto new_hdr = old_hdr->upgrade();
+				auto old_hdr = reinterpret_cast_checked<detail::RawFragmentHeaderV0*>(&vals_[0]);
+				auto new_hdr = old_hdr->upgrade();
 
-			auto szDiff = hdr->num_words() - old_hdr->num_words();
-			if (szDiff > 0) vals_.insert(vals_.begin(), szDiff, 0);
-			memcpy(&vals_[0], &new_hdr, hdr->num_words() * sizeof(RawDataType));
+				auto szDiff = hdr->num_words() - old_hdr->num_words();
+				if (szDiff > 0) vals_.insert(vals_.begin(), szDiff, 0);
+				memcpy(&vals_[0], &new_hdr, hdr->num_words() * sizeof(RawDataType));
 				hdr = reinterpret_cast_checked<detail::RawFragmentHeader*>(&vals_[0]);  // Update hdr in case vals_->insert call invalidated pointers
-			break;
-		}
-		case 1:
-		{
+				break;
+			}
+			case 1:
+			{
 				//std::cout << "Upgrading RawFragmentHeaderV1 (non const)" << std::endl;
 				TRACEN("Fragment", 4, "Upgrading RawFragmentHeaderV1 (non const)");
-			auto old_hdr = reinterpret_cast_checked<detail::RawFragmentHeaderV1 *>(&vals_[0]);
-			auto new_hdr = old_hdr->upgrade();
+				auto old_hdr = reinterpret_cast_checked<detail::RawFragmentHeaderV1*>(&vals_[0]);
+				auto new_hdr = old_hdr->upgrade();
 
-			auto szDiff = hdr->num_words() - old_hdr->num_words();
-			if (szDiff > 0) vals_.insert(vals_.begin(), szDiff, 0);
-			memcpy(&vals_[0], &new_hdr, hdr->num_words() * sizeof(RawDataType));
+				auto szDiff = hdr->num_words() - old_hdr->num_words();
+				if (szDiff > 0) vals_.insert(vals_.begin(), szDiff, 0);
+				memcpy(&vals_[0], &new_hdr, hdr->num_words() * sizeof(RawDataType));
 				hdr = reinterpret_cast_checked<detail::RawFragmentHeader*>(&vals_[0]);  // Update hdr in case vals_->insert call invalidated pointers
-		break;
-		}
-		default:
-			throw cet::exception("Fragment") << "A Fragment with an unknown version (" << std::to_string(hdr->version) << ") was received!";
-			break;
+				break;
+			}
+			default:
+				throw cet::exception("Fragment") << "A Fragment with an unknown version (" << std::to_string(hdr->version) << ") was received!";
+				break;
 		}
 	}
 	return hdr;
@@ -1202,40 +1202,40 @@ artdaq::Fragment::fragmentHeader() const
 	{
 		switch (hdr->version)
 		{
-		case 0xFFFF:
-			//std::cout << "Not upgrading InvalidVersion Fragment" << std::endl;
-			break;
-		case 0:
-		{
+			case 0xFFFF:
+				//std::cout << "Not upgrading InvalidVersion Fragment" << std::endl;
+				break;
+			case 0:
+			{
 				//std::cout << "Upgrading RawFragmentHeaderV0 (const)" << std::endl;
 				TRACEN("Fragment", 4, "Upgrading RawFragmentHeaderV0 (const)");
-			auto old_hdr = reinterpret_cast_checked<detail::RawFragmentHeaderV0 const*>(&vals_[0]);
-			auto new_hdr = old_hdr->upgrade();
+				auto old_hdr = reinterpret_cast_checked<detail::RawFragmentHeaderV0 const*>(&vals_[0]);
+				auto new_hdr = old_hdr->upgrade();
 
-			auto szDiff = hdr->num_words() - old_hdr->num_words();
-			auto vals_nc = const_cast<DATAVEC_T*>(&vals_);
-			if (szDiff > 0) vals_nc->insert(vals_nc->begin(), szDiff, 0);
-			memcpy(&(*vals_nc)[0], &new_hdr, hdr->num_words() * sizeof(RawDataType));
+				auto szDiff = hdr->num_words() - old_hdr->num_words();
+				auto vals_nc = const_cast<DATAVEC_T*>(&vals_);
+				if (szDiff > 0) vals_nc->insert(vals_nc->begin(), szDiff, 0);
+				memcpy(&(*vals_nc)[0], &new_hdr, hdr->num_words() * sizeof(RawDataType));
 				hdr = reinterpret_cast_checked<detail::RawFragmentHeader const*>(&vals_[0]);  // Update hdr in case vals_nc->insert call invalidated pointers
-			break;
-		}
-		case 1:
-		{
+				break;
+			}
+			case 1:
+			{
 				//std::cout << "Upgrading RawFragmentHeaderV1 (const)" << std::endl;
 				TRACEN("Fragment", 4, "Upgrading RawFragmentHeaderV1 (const)");
-			auto old_hdr = reinterpret_cast_checked<detail::RawFragmentHeaderV1 const*>(&vals_[0]);
-			auto new_hdr = old_hdr->upgrade();
+				auto old_hdr = reinterpret_cast_checked<detail::RawFragmentHeaderV1 const*>(&vals_[0]);
+				auto new_hdr = old_hdr->upgrade();
 
-			auto szDiff = hdr->num_words() - old_hdr->num_words();
-			auto vals_nc = const_cast<DATAVEC_T*>(&vals_);
-			if (szDiff > 0) vals_nc->insert(vals_nc->begin(), szDiff, 0);
-			memcpy(&(*vals_nc)[0], &new_hdr, hdr->num_words() * sizeof(RawDataType));
+				auto szDiff = hdr->num_words() - old_hdr->num_words();
+				auto vals_nc = const_cast<DATAVEC_T*>(&vals_);
+				if (szDiff > 0) vals_nc->insert(vals_nc->begin(), szDiff, 0);
+				memcpy(&(*vals_nc)[0], &new_hdr, hdr->num_words() * sizeof(RawDataType));
 				hdr = reinterpret_cast_checked<detail::RawFragmentHeader const*>(&vals_[0]);  // Update hdr in case vals_nc->insert call invalidated pointers
-		break;
-		}
-		default:
-			throw cet::exception("Fragment") << "A Fragment with an unknown version (" << std::to_string(hdr->version) << ") was received!";
-			break;
+				break;
+			}
+			default:
+				throw cet::exception("Fragment") << "A Fragment with an unknown version (" << std::to_string(hdr->version) << ") was received!";
+				break;
 		}
 	}
 	return hdr;
@@ -1253,6 +1253,6 @@ artdaq::operator<<(std::ostream& os, artdaq::Fragment const& f)
 	f.print(os);
 	return os;
 }
-#endif/* HIDE_FROM_ROOT */
+#endif /* HIDE_FROM_ROOT */
 
 #endif /* artdaq_core_Data_Fragment_hh */
