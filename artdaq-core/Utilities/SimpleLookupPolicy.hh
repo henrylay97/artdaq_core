@@ -1,13 +1,12 @@
 #ifndef artdaq_core_Utilities_SimpleLookupPolicy_h
 #define artdaq_core_Utilities_SimpleLookupPolicy_h
 
+#include <memory>
 #include "cetlib/filepath_maker.h"
 #include "cetlib/search_path.h"
-#include <memory>
 
-namespace artdaq
-{
-	class SimpleLookupPolicy;
+namespace artdaq {
+class SimpleLookupPolicy;
 }
 
 /**
@@ -21,14 +20,13 @@ namespace artdaq
 class artdaq::SimpleLookupPolicy : public cet::filepath_maker
 {
 public:
-
 	/**
 	 * \brief Flag if the constructor argument is a list of paths or the name of an environment variable
 	 */
 	enum class ArgType : int
 	{
-		ENV_VAR = 0, ///< Constructor argument is environment variable name
-		PATH_STRING = 1 ///< Constructor argument is a list of directories
+		ENV_VAR = 0,     ///< Constructor argument is environment variable name
+		PATH_STRING = 1  ///< Constructor argument is a list of directories
 	};
 
 	/**

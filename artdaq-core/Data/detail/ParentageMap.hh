@@ -4,6 +4,6 @@
 #include <map>
 
 namespace art {
-	/// An art::ParentageMap, defined using a std::map
-  typedef std::map<ParentageID const, Parentage> ParentageMap;
-}
+/// An art::ParentageMap, defined using a std::map
+typedef std::map<ParentageID const, Parentage> ParentageMap;
+}  // namespace art

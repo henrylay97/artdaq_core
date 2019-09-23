@@ -11,11 +11,11 @@
 //#include <stdint.h>
 //}
 
-#include <string.h>		// memcpy
+#include <string.h>  // memcpy
 //#include <strings.h>		// bzero
 //#include <stdlib.h>		// posix_memalign
-#include <cstddef>		// ptrdiff_t
-//#include <utility>		// std::swap 
+#include <cstddef>  // ptrdiff_t
+//#include <utility>		// std::swap
 //#include <memory>		// unique_ptr
 /** \cond  */
 #include <cassert>
@@ -24,8 +24,8 @@
 
 //#include "trace.h"		// TRACE
 #ifndef TRACEN
-# define TRACEN( nam, lvl, ... )
-# define UNDEF_TRACE_AT_END
+#define TRACEN(nam, lvl, ...)
+#define UNDEF_TRACE_AT_END
 #endif
 
 #define QV_ALIGN 512
@@ -44,35 +44,35 @@ static inline void* QV_MEMALIGN(size_t boundary, size_t size)
 }
 
 #ifndef QUICKVEC_DO_TEMPLATE
-# define QUICKVEC_DO_TEMPLATE    1
+#define QUICKVEC_DO_TEMPLATE 1
 #endif
 
 #undef NOT_OLD_CXXSTD
 #if !defined(__GCCXML__) && defined(__GXX_EXPERIMENTAL_CXX0X__)
-# define NOT_OLD_CXXSTD 1
+#define NOT_OLD_CXXSTD 1
 #endif
 
 #if QUICKVEC_DO_TEMPLATE == 0
-# ifndef QUICKVEC_TT
-#  define QUICKVEC_TT unsigned long long
-# endif
-# define TT_		 QUICKVEC_TT
-# define QUICKVEC_TEMPLATE
-# define QUICKVEC          QuickVec
-# define QUICKVEC_TN       QuickVec
-# define QUICKVEC_VERSION
+#ifndef QUICKVEC_TT
+#define QUICKVEC_TT unsigned long long
+#endif
+#define TT_ QUICKVEC_TT
+#define QUICKVEC_TEMPLATE
+#define QUICKVEC QuickVec
+#define QUICKVEC_TN QuickVec
+#define QUICKVEC_VERSION
 #else
-# define QUICKVEC_TEMPLATE template <typename TT_>
-# define QUICKVEC          QuickVec<TT_>
-# define QUICKVEC_TN       typename QuickVec<TT_>
-# define QUICKVEC_VERSION \
-	/** \
-	 * \brief Returns the current version of the template code \
-	 * \return The current version of the QuickVec \
-	 * \
+#define QUICKVEC_TEMPLATE template<typename TT_>
+#define QUICKVEC QuickVec<TT_>
+#define QUICKVEC_TN typename QuickVec<TT_>
+#define QUICKVEC_VERSION                                                      \
+	/**                                                                       \
+	 * \brief Returns the current version of the template code                \
+	 * \return The current version of the QuickVec                            \
+	 *                                                                        \
 	 * Class_Version() MUST be updated every time private member data change. \
-*/ \
-static short Class_Version() { return 5; } // proper version for templates
+	 */                                                                       \
+	static short Class_Version() { return 5; }  // proper version for templates
 #endif
 
 namespace artdaq {
@@ -85,13 +85,13 @@ namespace artdaq {
 QUICKVEC_TEMPLATE
 struct QuickVec
 {
-	typedef TT_* iterator; ///< Iterator is pointer-to-member type
-	typedef const TT_* const_iterator; ///< const_iterator is const-pointer-to-member type
-	typedef TT_& reference; ///< reference is reference-to-member tpye
-	typedef const TT_& const_reference; ///< const_reference is const-reference-to-member type
-	typedef TT_ value_type; ///< value_type is member type
-	typedef ptrdiff_t difference_type; ///< difference_type is ptrdiff_t
-	typedef size_t size_type; ///< size_type is size_t
+	typedef TT_* iterator;               ///< Iterator is pointer-to-member type
+	typedef const TT_* const_iterator;   ///< const_iterator is const-pointer-to-member type
+	typedef TT_& reference;              ///< reference is reference-to-member tpye
+	typedef const TT_& const_reference;  ///< const_reference is const-reference-to-member type
+	typedef TT_ value_type;              ///< value_type is member type
+	typedef ptrdiff_t difference_type;   ///< difference_type is ptrdiff_t
+	typedef size_t size_type;            ///< size_type is size_t
 
 	/**
 	 * \brief Allocates a QuickVec object, doing no initialization of allocated memory
@@ -116,13 +116,12 @@ struct QuickVec
 	 * \param other The vector to copy
 	 */
 	QuickVec(std::vector<TT_>& other)
-		: size_(other.size())
-		, data_((TT_*)QV_MEMALIGN(QV_ALIGN, other.capacity() * sizeof(TT_)))
-		, capacity_(other.capacity())
+	    : size_(other.size())
+	    , data_((TT_*)QV_MEMALIGN(QV_ALIGN, other.capacity() * sizeof(TT_)))
+	    , capacity_(other.capacity())
 	{
-		TRACEN("QuickVec", 10, "QuickVec std::vector ctor b4 memcpy this=%p data_=%p &other[0]=%p size_=%d other.size()=%d"
-		      , (void*)this, (void*)data_, (void*)&other[0], size_, other.size());
-		memcpy( data_, (void*)&other[0], size_ * sizeof(TT_));
+		TRACEN("QuickVec", 10, "QuickVec std::vector ctor b4 memcpy this=%p data_=%p &other[0]=%p size_=%d other.size()=%d", (void*)this, (void*)data_, (void*)&other[0], size_, other.size());
+		memcpy(data_, (void*)&other[0], size_ * sizeof(TT_));
 	}
 
 	/**
@@ -135,14 +134,13 @@ struct QuickVec
 	 * \brief Copy Constructor
 	 * \param other QuickVec to copy
 	 */
-	QuickVec(const QuickVec& other) //= delete; // non construction-copyable
-		: size_(other.size_)
-		, data_((TT_*)QV_MEMALIGN(QV_ALIGN, other.capacity() * sizeof(TT_)))
-		, capacity_(other.capacity_)
+	QuickVec(const QuickVec& other)  //= delete; // non construction-copyable
+	    : size_(other.size_)
+	    , data_((TT_*)QV_MEMALIGN(QV_ALIGN, other.capacity() * sizeof(TT_)))
+	    , capacity_(other.capacity_)
 	{
-		TRACEN("QuickVec",10, "QuickVec copy ctor b4 memcpy this=%p data_=%p other.data_=%p size_=%d other.size_=%d"
-			  , (void*)this, (void*)data_, (void*)other.data_, size_, other.size_);
-		memcpy( data_, other.data_, size_ * sizeof(TT_));
+		TRACEN("QuickVec", 10, "QuickVec copy ctor b4 memcpy this=%p data_=%p other.data_=%p size_=%d other.size_=%d", (void*)this, (void*)data_, (void*)other.data_, size_, other.size_);
+		memcpy(data_, other.data_, size_ * sizeof(TT_));
 	}
 
 	/**
@@ -150,26 +148,24 @@ struct QuickVec
 	 * \param other QuickVec to copy
 	 * \return Reference to new QuickVec object
 	 */
-	QUICKVEC& operator=(const QuickVec& other) //= delete; // non copyable
+	QUICKVEC& operator=(const QuickVec& other)  //= delete; // non copyable
 	{
-		TRACEN("QuickVec", 10, "QuickVec copy assign b4 resize/memcpy this=%p data_=%p other.data_=%p size_=%d other.size_=%d"
-			  , (void*)this, (void*)data_, (void*)other.data_, size_, other.size_);
+		TRACEN("QuickVec", 10, "QuickVec copy assign b4 resize/memcpy this=%p data_=%p other.data_=%p size_=%d other.size_=%d", (void*)this, (void*)data_, (void*)other.data_, size_, other.size_);
 		resize(other.size_);
-		memcpy( data_, other.data_, size_ * sizeof(TT_));
+		memcpy(data_, other.data_, size_ * sizeof(TT_));
 		return *this;
 	}
-#  if NOT_OLD_CXXSTD
+#if NOT_OLD_CXXSTD
 	/**
 	 * \brief Move Constructor
 	 * \param other QuickVec to move from
 	 */
-	QuickVec(QuickVec&& other) noexcept // construction-movable
-		: size_(other.size_)
-		, data_(std::move(other.data_))
-		, capacity_(other.capacity_)
+	QuickVec(QuickVec&& other) noexcept  // construction-movable
+	    : size_(other.size_)
+	    , data_(std::move(other.data_))
+	    , capacity_(other.capacity_)
 	{
-		TRACEN("QuickVec", 10, "QuickVec move ctor this=%p data_=%p other.data_=%p"
-			  , (void*)this, (void*)data_, (void*)other.data_ );
+		TRACEN("QuickVec", 10, "QuickVec move ctor this=%p data_=%p other.data_=%p", (void*)this, (void*)data_, (void*)other.data_);
 		other.data_ = nullptr;
 	}
 
@@ -178,10 +174,9 @@ struct QuickVec
 	 * \param other QuickVec to move from
 	 * \return Reference to new QuickVec object
 	 */
-	QUICKVEC& operator=(QuickVec&& other) noexcept // assign movable
+	QUICKVEC& operator=(QuickVec&& other) noexcept  // assign movable
 	{
-		TRACEN("QuickVec", 10, "QuickVec move assign this=%p data_=%p other.data_=%p"
-			  , (void*)this, (void*)data_, (void*)other.data_ );
+		TRACEN("QuickVec", 10, "QuickVec move assign this=%p data_=%p other.data_=%p", (void*)this, (void*)data_, (void*)other.data_);
 		size_ = other.size_;
 		//delete [] data_;
 		free(data_);
@@ -190,7 +185,7 @@ struct QuickVec
 		other.data_ = nullptr;
 		return *this;
 	}
-#  endif
+#endif
 
 	/**
 	 * \brief Returns a reference to a given element
@@ -308,8 +303,7 @@ struct QuickVec
 	 * Note that since the underlying data structure resembles a std::vector,
 	 * insert operations are very inefficient!
 	 */
-	iterator insert(const_iterator position, const_iterator first
-					, const_iterator last);
+	iterator insert(const_iterator position, const_iterator first, const_iterator last);
 
 	/**
 	 * \brief Erases elements in given range from the QuickVec
@@ -342,26 +336,26 @@ private:
 	// Root then needs the [size_] comment after data_.
 	// Note: NO SPACE between "//" and "[size_]"
 	unsigned size_;
-	TT_* data_; //[size_]
+	TT_* data_;  //[size_]
 	unsigned capacity_;
 };
 
 QUICKVEC_TEMPLATE
 inline QUICKVEC::QuickVec(size_t sz)
-	: size_(sz)
-	, data_((TT_*)QV_MEMALIGN(QV_ALIGN, sz * sizeof(TT_)))
-	, capacity_(sz)
+    : size_(sz)
+    , data_((TT_*)QV_MEMALIGN(QV_ALIGN, sz * sizeof(TT_)))
+    , capacity_(sz)
 {
-	TRACEN("QuickVec", 15, "QuickVec %p ctor sz=%d data_=%p", (void*)this, size_, (void*)data_ );
+	TRACEN("QuickVec", 15, "QuickVec %p ctor sz=%d data_=%p", (void*)this, size_, (void*)data_);
 }
 
 QUICKVEC_TEMPLATE
 inline QUICKVEC::QuickVec(size_t sz, TT_ val)
-	: size_(sz)
-	, data_((TT_*)QV_MEMALIGN(QV_ALIGN, sz * sizeof(TT_)))
-	, capacity_(sz)
+    : size_(sz)
+    , data_((TT_*)QV_MEMALIGN(QV_ALIGN, sz * sizeof(TT_)))
+    , capacity_(sz)
 {
-	TRACEN("QuickVec", 15, "QuickVec %p ctor sz=%d/v data_=%p", (void*)this, size_, (void*)data_ );
+	TRACEN("QuickVec", 15, "QuickVec %p ctor sz=%d/v data_=%p", (void*)this, size_, (void*)data_);
 	for (iterator ii = begin(); ii != end(); ++ii) *ii = val;
 	//bzero( &data_[0], (sz<4)?(sz*sizeof(TT_)):(4*sizeof(TT_)) );
 }
@@ -369,8 +363,7 @@ inline QUICKVEC::QuickVec(size_t sz, TT_ val)
 QUICKVEC_TEMPLATE
 inline QUICKVEC::~QuickVec() noexcept
 {
-	TRACEN("QuickVec", 15, "QuickVec %p dtor start data_=%p size_=%d"
-		  , (void*)this, (void*)data_, size_);
+	TRACEN("QuickVec", 15, "QuickVec %p dtor start data_=%p size_=%d", (void*)this, (void*)data_, size_);
 	free(data_);
 	TRACEN("QuickVec", 15, "QuickVec %p dtor return", (void*)this);
 }
@@ -402,22 +395,21 @@ QUICKVEC_TEMPLATE
 inline QUICKVEC_TN::const_iterator QUICKVEC::begin() const { return iterator(data_); }
 
 QUICKVEC_TEMPLATE
-inline QUICKVEC_TN::iterator QUICKVEC::end() { return iterator(data_+size_); }
+inline QUICKVEC_TN::iterator QUICKVEC::end() { return iterator(data_ + size_); }
 
 QUICKVEC_TEMPLATE
-inline QUICKVEC_TN::const_iterator QUICKVEC::end() const { return const_iterator(data_+size_); }
+inline QUICKVEC_TN::const_iterator QUICKVEC::end() const { return const_iterator(data_ + size_); }
 
 QUICKVEC_TEMPLATE
 inline void QUICKVEC::reserve(size_t size)
 {
-	if (size > capacity_) // reallocation if true
+	if (size > capacity_)  // reallocation if true
 	{
 		TT_* old = data_;
 		//data_ = new TT_[size];
 		data_ = (TT_*)QV_MEMALIGN(QV_ALIGN, size * sizeof(TT_));
 		memcpy(data_, old, size_ * sizeof(TT_));
-		TRACEN("QuickVec", 13, "QUICKVEC::reserve after memcpy this=%p old=%p data_=%p capacity=%d"
-                       , (void*)this, (void*)old, (void*)data_, (int)size);
+		TRACEN("QuickVec", 13, "QUICKVEC::reserve after memcpy this=%p old=%p data_=%p capacity=%d", (void*)this, (void*)old, (void*)data_, (int)size);
 		free(old);
 		capacity_ = size;
 	}
@@ -426,15 +418,16 @@ inline void QUICKVEC::reserve(size_t size)
 QUICKVEC_TEMPLATE
 inline void QUICKVEC::resize(size_t size)
 {
-	if (size < size_) size_ = size; // decrease
-	else if (size <= capacity_) size_ = size;
-	else // increase/reallocate 
+	if (size < size_)
+		size_ = size;  // decrease
+	else if (size <= capacity_)
+		size_ = size;
+	else  // increase/reallocate
 	{
 		TT_* old = data_;
 		data_ = (TT_*)QV_MEMALIGN(QV_ALIGN, size * sizeof(TT_));
 		memcpy(data_, old, size_ * sizeof(TT_));
-		TRACEN("QuickVec", 13, "QUICKVEC::resize after memcpy this=%p old=%p data_=%p size=%d"
-                       , (void*)this, (void*)old, (void*)data_, (int)size);
+		TRACEN("QuickVec", 13, "QUICKVEC::resize after memcpy this=%p old=%p data_=%p size=%d", (void*)this, (void*)old, (void*)data_, (int)size);
 		free(old);
 		size_ = capacity_ = size;
 	}
@@ -446,11 +439,20 @@ inline void QUICKVEC::resizeWithCushion(size_t size, double growthFactor)
 	if (size > capacity_)
 	{
 		size_t new_size = std::round(capacity_ * growthFactor);
-		if (new_size < size) {new_size = size;}
-		if (new_size < 512) {new_size = 512;}
-		else if (new_size < 2048) {new_size = 2048;}
-		else if (new_size < 4096) {new_size = 4096;}
-		else if (new_size < 8192) {new_size = 8192;}
+		if (new_size < size) { new_size = size; }
+		if (new_size < 512) { new_size = 512; }
+		else if (new_size < 2048)
+		{
+			new_size = 2048;
+		}
+		else if (new_size < 4096)
+		{
+			new_size = 4096;
+		}
+		else if (new_size < 8192)
+		{
+			new_size = 8192;
+		}
 		reserve(new_size);
 	}
 	resize(size);
@@ -461,23 +463,22 @@ inline void QUICKVEC::resize(size_type size, TT_ val)
 {
 	size_type old_size = size;
 	resize(size);
-	if (size > old_size) {
-		TRACEN("QuickVec", 13, "QUICKVEC::resize initializing %zu elements", size-old_size );
+	if (size > old_size)
+	{
+		TRACEN("QuickVec", 13, "QUICKVEC::resize initializing %zu elements", size - old_size);
 		for (iterator ii = begin() + old_size; ii != end(); ++ii) *ii = val;
 	}
 }
 
 QUICKVEC_TEMPLATE
-inline QUICKVEC_TN::iterator QUICKVEC::insert(const_iterator position
-											  , size_t nn
-											  , const TT_& val)
+inline QUICKVEC_TN::iterator QUICKVEC::insert(const_iterator position, size_t nn, const TT_& val)
 {
-	assert(position <= end()); // the current end
+	assert(position <= end());  // the current end
 	size_t offset = position - begin();
-	reserve(size_ + nn); // may reallocate and invalidate "position"
+	reserve(size_ + nn);  // may reallocate and invalidate "position"
 
-	iterator dst = end() + nn; // for shifting existing data after
-	iterator src = end(); // insertion point
+	iterator dst = end() + nn;  // for shifting existing data after
+	iterator src = end();       // insertion point
 	size_t cnt = end() - (begin() + offset);
 	while (cnt--) *--dst = *--src;
 
@@ -488,17 +489,15 @@ inline QUICKVEC_TN::iterator QUICKVEC::insert(const_iterator position
 }
 
 QUICKVEC_TEMPLATE
-inline QUICKVEC_TN::iterator QUICKVEC::insert(const_iterator position
-											  , const_iterator first
-											  , const_iterator last)
+inline QUICKVEC_TN::iterator QUICKVEC::insert(const_iterator position, const_iterator first, const_iterator last)
 {
-	assert(position <= end()); // the current end
+	assert(position <= end());  // the current end
 	size_t nn = (last - first);
 	size_t offset = position - begin();
-	reserve(size_ + nn); // may reallocate and invalidate "position"
+	reserve(size_ + nn);  // may reallocate and invalidate "position"
 
-	iterator dst = end() + nn; // for shifting existing data after
-	iterator src = end(); // insertion point
+	iterator dst = end() + nn;  // for shifting existing data after
+	iterator src = end();       // insertion point
 	size_t cnt = end() - (begin() + offset);
 	while (cnt--) *--dst = *--src;
 
@@ -509,15 +508,14 @@ inline QUICKVEC_TN::iterator QUICKVEC::insert(const_iterator position
 }
 
 QUICKVEC_TEMPLATE
-inline QUICKVEC_TN::iterator QUICKVEC::erase(const_iterator first
-											 , const_iterator last)
+inline QUICKVEC_TN::iterator QUICKVEC::erase(const_iterator first, const_iterator last)
 {
-	assert(last <= end()); // the current end
+	assert(last <= end());  // the current end
 	size_t nn = (last - first);
 	size_t offset = first - begin();
 
-	iterator dst = begin() + offset; // for shifting existing data from last
-	iterator src = dst + nn; // to first
+	iterator dst = begin() + offset;  // for shifting existing data from last
+	iterator src = dst + nn;          // to first
 	size_t cnt = end() - src;
 	while (cnt--) *dst++ = *src++;
 
@@ -528,13 +526,11 @@ inline QUICKVEC_TN::iterator QUICKVEC::erase(const_iterator first
 QUICKVEC_TEMPLATE
 inline void QUICKVEC::swap(QuickVec& x) noexcept
 {
-	TRACEN("QuickVec", 12, "QUICKVEC::swap this=%p enter data_=%p x.data_=%p"
-		  , (void*)this, (void*)data_, (void*)x.data_ );
+	TRACEN("QuickVec", 12, "QUICKVEC::swap this=%p enter data_=%p x.data_=%p", (void*)this, (void*)data_, (void*)x.data_);
 	std::swap(data_, x.data_);
 	std::swap(size_, x.size_);
 	std::swap(capacity_, x.capacity_);
-	TRACEN("QuickVec", 12, "QUICKVEC::swap return data_=%p x.data_=%p"
-		  , (void*)data_, (void*)x.data_ );
+	TRACEN("QuickVec", 12, "QUICKVEC::swap return data_=%p x.data_=%p", (void*)data_, (void*)x.data_);
 }
 
 QUICKVEC_TEMPLATE
@@ -548,10 +544,10 @@ inline void QUICKVEC::push_back(const value_type& val)
 	++size_;
 }
 
-} // namespace
+}  // namespace artdaq
 
 #ifdef UNDEF_TRACE_AT_END
-# undef TRACEN
-# undef UNDEF_TRACE_AT_END
+#undef TRACEN
+#undef UNDEF_TRACE_AT_END
 #endif
 #endif /* QuickVec_hh */

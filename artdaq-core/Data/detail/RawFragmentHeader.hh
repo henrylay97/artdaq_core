@@ -8,8 +8,8 @@
 //#include <cstddef>
 #include <map>
 #include "artdaq-core/Data/dictionarycontrol.hh"
-#include "cetlib_except/exception.h"
 #include "artdaq-core/Utilities/TimeUtils.hh"
+#include "cetlib_except/exception.h"
 
 extern "C" {
 #include <stdint.h>
@@ -171,8 +171,20 @@ struct artdaq::detail::RawFragmentHeader
 	*/
 	void setSystemType(uint8_t stype);
 
+	/**
+	 * \brief Update the atime fields of the RawFragmentHeader to current time
+	 */
 	void touch();
+	/**
+	 * \brief Get the last access time of this RawFragmentHeader
+	 * \return struct timespec representing last access time of this RawFragmentHeader
+	 */
 	struct timespec atime();
+	/**
+	 * \brief Get the elapsed time between now and the last access time of the RawFragmentHeader, optionally resetting it
+	 * \param touch Whether to also update the access time to current time
+	 * \return struct timespec representing interval between now and last access time of this RawFragmentHeader
+	 */
 	struct timespec getLatency(bool touch);
 
 #endif /* HIDE_FROM_ROOT */

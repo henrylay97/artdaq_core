@@ -3,9 +3,8 @@
 
 #include <string>
 
-namespace artdaq
-{
-	class PackageBuildInfo;
+namespace artdaq {
+class PackageBuildInfo;
 }
 
 /**
@@ -60,7 +59,6 @@ public:
 	void setBuildTimestamp(std::string str) { buildTimestamp_ = str; }
 
 private:
-
 	/**
 	 * \brief The name of the package
 	 */

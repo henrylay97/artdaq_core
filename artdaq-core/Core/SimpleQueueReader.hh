@@ -1,12 +1,11 @@
 #ifndef artdaq_core_Core_SimpleQueueReader_hh
 #define artdaq_core_Core_SimpleQueueReader_hh
 
-#include "artdaq-core/Core/GlobalQueue.hh"
 #include <memory>
+#include "artdaq-core/Core/GlobalQueue.hh"
 
-namespace artdaq
-{
-	/**
+namespace artdaq {
+/**
 	* \brief An application which pops items off a RawEventQueue using the SimpleQueueReader
 	* \param argc Number of arguments (OS-provided)
 	* \param argv Array of argument strings (OS-provided)
@@ -16,38 +15,38 @@ namespace artdaq
 	* artapp(), to read RawEvent objects from the shared RawEvent queue.
 	* Note that it ignores both of its arguments.
 	*/
-	int simpleQueueReaderApp(int argc, char** argv);
+int simpleQueueReaderApp(int argc, char** argv);
 
-	/**
+/**
    * \brief SimpleQueueReader will continue to read RawEvent objects off the queue
    * until it encounters a null pointer, at which point it stops.
    */
-	class SimpleQueueReader
-	{
-	public:
-		/**
+class SimpleQueueReader
+{
+public:
+	/**
 		 * \brief Constructs a SimpleQueueReader
 		 * \param expectedEventCount The number of events the SimpleQueueReader should expect
 		 */
-		explicit SimpleQueueReader(std::size_t expectedEventCount = 0);
+	explicit SimpleQueueReader(std::size_t expectedEventCount = 0);
 
-		/**
+	/**
 		 * \brief Run until a null pointer is popped off of the RawEventQueue. Throws an excpetion
 		 * if expectedEventCount is set and a different number of events come off the queue.
 		 * \exception std::string When the expectedEventCount is set and a different number of events come off the queue.
 		 */
-		void run();
+	void run();
 
-	private:
-		/**
+private:
+	/**
 		 * \brief Reference to the queue of RawEvent_ptr objects
 		 */
-		RawEventQueue& queue_;
-		/**
+	RawEventQueue& queue_;
+	/**
 		 * \brief For testing purposes, the expected number of events
 		 */
-		std::size_t expectedEventCount_;
-	};
-}
+	std::size_t expectedEventCount_;
+};
+}  // namespace artdaq
 
 #endif /* artdaq_core_Core_SimpleQueueReader_hh */

@@ -1,16 +1,14 @@
 #include "artdaq-core/Core/MonitoredQuantity.hh"
 
-#include <algorithm>
 #include <math.h>
+#include <algorithm>
 
 using namespace artdaq;
 
-MonitoredQuantity::MonitoredQuantity
-(
-	DURATION_T expectedCalculationInterval,
-	DURATION_T timeWindowForRecentResults
-) :
-  _expectedCalculationInterval(expectedCalculationInterval)
+MonitoredQuantity::MonitoredQuantity(
+    DURATION_T expectedCalculationInterval,
+    DURATION_T timeWindowForRecentResults)
+    : _expectedCalculationInterval(expectedCalculationInterval)
 {
 	setNewTimeWindowForRecentResults(timeWindowForRecentResults);
 	enabled = true;
@@ -292,9 +290,7 @@ void MonitoredQuantity::setNewTimeWindowForRecentResults(DURATION_T interval)
 		// interval for recent stats, keep the last one.
 		_binCount = std::max(1U,
 		                     static_cast<unsigned int>(
-			                     (_intervalForRecentStats / _expectedCalculationInterval) + 0.5
-		                     )
-		);
+		                         (_intervalForRecentStats / _expectedCalculationInterval) + 0.5));
 		// create the vectors for the binned quantities
 		recentBinnedSampleCounts.reserve(_binCount);
 		recentBinnedValueSums.reserve(_binCount);
@@ -315,7 +311,7 @@ void MonitoredQuantity::setNewTimeWindowForRecentResults(DURATION_T interval)
 }
 
 bool MonitoredQuantity::
-waitUntilAccumulatorsHaveBeenFlushed(DURATION_T timeout) const
+    waitUntilAccumulatorsHaveBeenFlushed(DURATION_T timeout) const
 {
 	timeout /= 10;
 	{
@@ -334,8 +330,7 @@ waitUntilAccumulatorsHaveBeenFlushed(DURATION_T timeout) const
 	return false;
 }
 
-void
-MonitoredQuantity::getStats(MonitoredQuantityStats& s) const
+void MonitoredQuantity::getStats(MonitoredQuantityStats& s) const
 {
 	boost::mutex::scoped_lock results(_resultsMutex);
 	s.fullSampleCount = fullSampleCount;
