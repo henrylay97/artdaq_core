@@ -71,7 +71,7 @@ namespace artdaq
 		/**
 		 * \brief Reconnect to the shared memory segment
 		 */
-		void Attach();
+		bool Attach(size_t timeout_usec = 0);
 
 		/**
 		 * \brief Finds a buffer that is ready to be read, and reserves it for the calling manager.

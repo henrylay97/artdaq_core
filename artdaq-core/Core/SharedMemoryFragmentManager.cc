@@ -3,12 +3,10 @@
 #include "artdaq-core/Core/SharedMemoryFragmentManager.hh"
 #include "tracemf.h"
 
-
 artdaq::SharedMemoryFragmentManager::SharedMemoryFragmentManager(uint32_t shm_key, size_t buffer_count, size_t max_buffer_size, size_t buffer_timeout_us)
 	: SharedMemoryManager(shm_key, buffer_count, max_buffer_size, buffer_timeout_us)
 	, active_buffer_(-1)
 {
-
 }
 
 bool artdaq::SharedMemoryFragmentManager::ReadyForWrite(bool overwrite)
@@ -22,7 +20,16 @@ bool artdaq::SharedMemoryFragmentManager::ReadyForWrite(bool overwrite)
 
 int artdaq::SharedMemoryFragmentManager::WriteFragment(Fragment&& fragment, bool overwrite, size_t timeout_us)
 {
-	if (!IsValid()) { return -1; }
+	if (!IsValid() || IsEndOfData())
+	{
+		TLOG(TLVL_WARNING) << "WriteFragment: Shared memory is not connected! Attempting reconnect...";
+		auto sts = Attach(timeout_us);
+		if (!sts)
+		{
+			return -1;
+		}
+		TLOG(TLVL_INFO) << "WriteFragment: Shared memory was successfully reconnected";
+	}
 
 	auto waitStart = std::chrono::steady_clock::now();
 	while (!ReadyForWrite(overwrite) && TimeUtils::GetElapsedTimeMicroseconds(waitStart) < 1000)
@@ -64,7 +71,6 @@ int artdaq::SharedMemoryFragmentManager::WriteFragment(Fragment&& fragment, bool
 	return -2;
 }
 
-
 // NOT currently (2018-07-22) used! ReadFragmentHeader and ReadFragmentData
 // (below) are called directly
 int artdaq::SharedMemoryFragmentManager::ReadFragment(Fragment& fragment)
@@ -83,7 +89,8 @@ int artdaq::SharedMemoryFragmentManager::ReadFragment(Fragment& fragment)
 
 int artdaq::SharedMemoryFragmentManager::ReadFragmentHeader(detail::RawFragmentHeader& header)
 {
-	if (!IsValid()) {
+	if (!IsValid())
+	{
 		TLOG(22) << "ReadFragmentHeader: !IsValid(), returning -3";
 		return -3;
 	}
@@ -91,13 +98,15 @@ int artdaq::SharedMemoryFragmentManager::ReadFragmentHeader(detail::RawFragmentH
 	size_t hdrSize = artdaq::detail::RawFragmentHeader::num_words() * sizeof(artdaq::RawDataType);
 	active_buffer_ = GetBufferForReading();
 
-	if (active_buffer_ == -1) {
+	if (active_buffer_ == -1)
+	{
 		TLOG(22) << "ReadFragmentHeader: active_buffer==-1, returning -1";
 		return -1;
 	}
 
 	auto sts = Read(active_buffer_, &header, hdrSize);
-	if (!sts) {
+	if (!sts)
+	{
 		TLOG(TLVL_ERROR) << "ReadFragmentHeader: Buffer " << active_buffer_ << " returned bad status code from Read";
 		MarkBufferEmpty(active_buffer_);
 		active_buffer_ = -1;
@@ -110,13 +119,15 @@ int artdaq::SharedMemoryFragmentManager::ReadFragmentHeader(detail::RawFragmentH
 
 int artdaq::SharedMemoryFragmentManager::ReadFragmentData(RawDataType* destination, size_t words)
 {
-	if (!IsValid() || active_buffer_ == -1 || !CheckBuffer(active_buffer_, BufferSemaphoreFlags::Reading)) {
+	if (!IsValid() || active_buffer_ == -1 || !CheckBuffer(active_buffer_, BufferSemaphoreFlags::Reading))
+	{
 		TLOG(TLVL_ERROR) << "ReadFragmentData: Buffer " << active_buffer_ << " failed status checks: IsValid()=" << std::boolalpha << IsValid() << ", CheckBuffer=" << CheckBuffer(active_buffer_, BufferSemaphoreFlags::Reading);
 		return -3;
 	}
 
 	auto sts = Read(active_buffer_, destination, words * sizeof(RawDataType));
-	if (!sts) {
+	if (!sts)
+	{
 		TLOG(TLVL_ERROR) << "ReadFragmentData: Buffer " << active_buffer_ << " returned bad status code from Read";
 		MarkBufferEmpty(active_buffer_);
 		active_buffer_ = -1;

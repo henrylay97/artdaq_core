@@ -1,18 +1,16 @@
+
+#include "tracemf.h"
 #define TRACE_NAME "GenFileOutput"
 
+#include <boost/date_time/posix_time/posix_time.hpp>
+#include <fstream>
 #include "cetlib/PluginTypeDeducer.h"
-#include "cetlib/ostream_handle.h"
 #include "cetlib/ProvideMakePluginMacros.h"
+#include "cetlib/ostream_handle.h"
 #include "fhiclcpp/ParameterSet.h"
-
-#include "boost/date_time/posix_time/posix_time.hpp"
-
 #include "messagefacility/MessageService/ELdestination.h"
 # include "messagefacility/Utilities/ELseverityLevel.h"
 #include "messagefacility/Utilities/exception.h"
-
-#include <fstream>
-#include "trace.h"
 
 namespace mfplugins {
 	using mf::ELseverityLevel;
@@ -23,12 +21,14 @@ using mf::service::ELdestination;
 	/// Message Facility destination which generates the output file name based on some combination of 
 	/// PID, hostname, application name, and/or timestamp
 	/// </summary>
-class ELGenFileOutput : public ELdestination {
+class ELGenFileOutput : public ELdestination
+{
  public:
   /**
    * \brief Parameters used to configure GenFileOutput
    */
-  struct Config {
+	struct Config
+	{
     /// ELDestination common configuration parameters
 			fhicl::TableFragment<ELdestination::Config> elDestConfig;
     /// "append" (Default: true"): Whether to append to the file or recreate it
@@ -105,12 +105,12 @@ class ELGenFileOutput : public ELdestination {
 	//======================================================================
 	// BEGIN IMPLEMENTATION
 
-
 	//======================================================================
 	// ELGenFileOutput c'tor
 	//======================================================================
 
-	ELGenFileOutput::ELGenFileOutput(Parameters const& pset) : ELdestination(pset().elDestConfig())
+ELGenFileOutput::ELGenFileOutput(Parameters const& pset)
+    : ELdestination(pset().elDestConfig())
 	{
 		bool append = pset().append();
 		std::string baseDir = pset().baseDir();
@@ -123,7 +123,6 @@ class ELGenFileOutput : public ELdestination {
 		std::string hostString = "";
 		std::string timeBuffISO = ""; // Using boost::posix_time::to_iso_string (%T)
 		std::string timeBuff = ""; // Using timestamp_pattern (%t)
-
 
 		// Determine image name
 		if (filePattern.find("%N") != std::string::npos || filePattern.find("%?N") != std::string::npos)
@@ -160,7 +159,6 @@ class ELGenFileOutput : public ELdestination {
 		}
 		if (filePattern.find("%t") != std::string::npos)
 		{
-
 			time_t rawtime;
 			struct tm* timeinfo;
 			char timeBuffC[256];
@@ -255,8 +253,7 @@ class ELGenFileOutput : public ELdestination {
 	//======================================================================
 	// Message router ( overriddes ELdestination::routePayload )
 	//======================================================================
-	void ELGenFileOutput::routePayload(const std::ostringstream& oss, const ErrorObj&
-	)
+void ELGenFileOutput::routePayload(const std::ostringstream& oss, const ErrorObj&)
 	{
 		*output_ << oss.str();
 		flush();
@@ -274,12 +271,12 @@ class ELGenFileOutput : public ELdestination {
 	  //
 	  //======================================================================
 
-extern "C"
-{
+extern "C" {
 	MAKE_PLUGIN_START(auto, std::string const&, fhicl::ParameterSet const& pset)
 	{
 		return std::make_unique<mfplugins::ELGenFileOutput>(pset);
-	} MAKE_PLUGIN_END
+}
+MAKE_PLUGIN_END
 }
 
 DEFINE_BASIC_PLUGINTYPE_FUNC(mf::service::ELdestination)

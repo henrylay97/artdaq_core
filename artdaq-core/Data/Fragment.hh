@@ -1206,24 +1206,28 @@ artdaq::Fragment::fragmentHeader()
 			break;
 		case 0:
 		{
-			std::cout << "Upgrading RawFragmentHeaderV0 (non const)" << std::endl;
+			//std::cout << "Upgrading RawFragmentHeaderV0 (non const)" << std::endl;
+			TRACEN("Fragment", 4, "Upgrading RawFragmentHeaderV0 (non const)");
 			auto old_hdr = reinterpret_cast_checked<detail::RawFragmentHeaderV0 *>(&vals_[0]);
 			auto new_hdr = old_hdr->upgrade();
 
 			auto szDiff = hdr->num_words() - old_hdr->num_words();
 			if (szDiff > 0) vals_.insert(vals_.begin(), szDiff, 0);
 			memcpy(&vals_[0], &new_hdr, hdr->num_words() * sizeof(RawDataType));
+			hdr = reinterpret_cast_checked<detail::RawFragmentHeader*>(&vals_[0]); // Update hdr in case vals_->insert call invalidated pointers
 			break;
 		}
 		case 1:
 		{
-			std::cout << "Upgrading RawFragmentHeaderV1 (non const)" << std::endl;
+			//std::cout << "Upgrading RawFragmentHeaderV1 (non const)" << std::endl;
+			TRACEN("Fragment", 4, "Upgrading RawFragmentHeaderV1 (non const)");
 			auto old_hdr = reinterpret_cast_checked<detail::RawFragmentHeaderV1 *>(&vals_[0]);
 			auto new_hdr = old_hdr->upgrade();
 
 			auto szDiff = hdr->num_words() - old_hdr->num_words();
 			if (szDiff > 0) vals_.insert(vals_.begin(), szDiff, 0);
 			memcpy(&vals_[0], &new_hdr, hdr->num_words() * sizeof(RawDataType));
+			hdr = reinterpret_cast_checked<detail::RawFragmentHeader*>(&vals_[0]); // Update hdr in case vals_->insert call invalidated pointers
 			break;
 		}
 		default:
@@ -1248,7 +1252,8 @@ artdaq::Fragment::fragmentHeader() const
 			break;
 		case 0:
 		{
-			std::cout << "Upgrading RawFragmentHeaderV0 (const)" << std::endl;
+			//std::cout << "Upgrading RawFragmentHeaderV0 (const)" << std::endl;
+			TRACEN("Fragment", 4, "Upgrading RawFragmentHeaderV0 (const)");
 			auto old_hdr = reinterpret_cast_checked<detail::RawFragmentHeaderV0 const*>(&vals_[0]);
 			auto new_hdr = old_hdr->upgrade();
 
@@ -1256,11 +1261,13 @@ artdaq::Fragment::fragmentHeader() const
 			auto vals_nc = const_cast<DATAVEC_T*>(&vals_);
 			if (szDiff > 0) vals_nc->insert(vals_nc->begin(), szDiff, 0);
 			memcpy(&(*vals_nc)[0], &new_hdr, hdr->num_words() * sizeof(RawDataType));
+			hdr = reinterpret_cast_checked<detail::RawFragmentHeader const*>(&vals_[0]); // Update hdr in case vals_nc->insert call invalidated pointers
 			break;
 		}
 		case 1:
 		{
-			std::cout << "Upgrading RawFragmentHeaderV1 (const)" << std::endl;
+			//std::cout << "Upgrading RawFragmentHeaderV1 (const)" << std::endl;
+			TRACEN("Fragment", 4, "Upgrading RawFragmentHeaderV1 (const)");
 			auto old_hdr = reinterpret_cast_checked<detail::RawFragmentHeaderV1 const*>(&vals_[0]);
 			auto new_hdr = old_hdr->upgrade();
 
@@ -1268,6 +1275,7 @@ artdaq::Fragment::fragmentHeader() const
 			auto vals_nc = const_cast<DATAVEC_T*>(&vals_);
 			if (szDiff > 0) vals_nc->insert(vals_nc->begin(), szDiff, 0);
 			memcpy(&(*vals_nc)[0], &new_hdr, hdr->num_words() * sizeof(RawDataType));
+			hdr = reinterpret_cast_checked<detail::RawFragmentHeader const*>(&vals_[0]); // Update hdr in case vals_nc->insert call invalidated pointers
 			break;
 		}
 		default:

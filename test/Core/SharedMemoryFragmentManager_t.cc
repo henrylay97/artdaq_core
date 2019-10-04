@@ -5,10 +5,9 @@
 #include "tracemf.h"
 
 #define BOOST_TEST_MODULE(SharedMemoryFragmentManager_t)
+#include "SharedMemoryTestShims.hh"
 #include "cetlib/quiet_unit_test.hpp"
 #include "cetlib_except/exception.h"
-#include "SharedMemoryTestShims.hh"
-
 
 BOOST_AUTO_TEST_SUITE(SharedMemoryFragmentManager_test)
 
@@ -41,7 +40,64 @@ BOOST_AUTO_TEST_CASE(Attach)
 	BOOST_REQUIRE_EQUAL(man2.size(), 10);
 	BOOST_REQUIRE_EQUAL(man2.GetAttachedCount(), 2);
 	TLOG(TLVL_INFO) << "END TEST Attach";
+}
 
+BOOST_AUTO_TEST_CASE(Reattach)
+{
+	TLOG(TLVL_INFO) << "BEGIN TEST Reattach";
+	uint32_t key = GetRandomKey(0xF4A6);
+	std::unique_ptr<artdaq::SharedMemoryFragmentManager> man(new artdaq::SharedMemoryFragmentManager(key, 10, 0x1000));
+	std::unique_ptr<artdaq::SharedMemoryFragmentManager> man2(new artdaq::SharedMemoryFragmentManager(key));
+
+	BOOST_REQUIRE_EQUAL(man->IsValid(), true);
+	BOOST_REQUIRE_EQUAL(man->GetMyId(), 0);
+	BOOST_REQUIRE_EQUAL(man->size(), 10);
+	BOOST_REQUIRE_EQUAL(man->GetAttachedCount(), 2);
+
+	BOOST_REQUIRE_EQUAL(man2->IsValid(), true);
+	BOOST_REQUIRE_EQUAL(man2->GetMyId(), 1);
+	BOOST_REQUIRE_EQUAL(man2->size(), 10);
+	BOOST_REQUIRE_EQUAL(man2->GetAttachedCount(), 2);
+
+	man2.reset(nullptr);
+	BOOST_REQUIRE_EQUAL(man->IsValid(), true);
+	BOOST_REQUIRE_EQUAL(man->GetAttachedCount(), 1);
+
+	man2.reset(new artdaq::SharedMemoryFragmentManager(key));
+	BOOST_REQUIRE_EQUAL(man->IsValid(), true);
+	BOOST_REQUIRE_EQUAL(man->GetMyId(), 0);
+	BOOST_REQUIRE_EQUAL(man->size(), 10);
+	BOOST_REQUIRE_EQUAL(man->GetAttachedCount(), 2);
+
+	BOOST_REQUIRE_EQUAL(man2->IsValid(), true);
+	BOOST_REQUIRE_EQUAL(man2->GetMyId(), 2);
+	BOOST_REQUIRE_EQUAL(man2->size(), 10);
+	BOOST_REQUIRE_EQUAL(man2->GetAttachedCount(), 2);
+
+	man.reset(nullptr);
+	BOOST_REQUIRE_EQUAL(man2->IsValid(), true);
+	BOOST_REQUIRE_EQUAL(man2->IsEndOfData(), true);
+	BOOST_REQUIRE_EQUAL(man2->GetMyId(), 2);
+	BOOST_REQUIRE_EQUAL(man2->size(), 10);
+	BOOST_REQUIRE_EQUAL(man2->GetAttachedCount(), 1);
+
+	man2->Attach();
+	BOOST_REQUIRE_EQUAL(man2->IsValid(), false);
+
+	man.reset(new artdaq::SharedMemoryFragmentManager(key, 10, 0x1000));
+	BOOST_REQUIRE_EQUAL(man->IsValid(), true);
+	BOOST_REQUIRE_EQUAL(man->GetMyId(), 0);
+	BOOST_REQUIRE_EQUAL(man->size(), 10);
+	BOOST_REQUIRE_EQUAL(man->GetAttachedCount(), 1);
+
+	man2->Attach();
+	BOOST_REQUIRE_EQUAL(man2->IsValid(), true);
+	BOOST_REQUIRE_EQUAL(man2->GetMyId(), 1);
+	BOOST_REQUIRE_EQUAL(man2->size(), 10);
+	BOOST_REQUIRE_EQUAL(man->GetAttachedCount(), 2);
+	BOOST_REQUIRE_EQUAL(man2->GetAttachedCount(), 2);
+
+	TLOG(TLVL_INFO) << "END TEST Reattach";
 }
 
 BOOST_AUTO_TEST_CASE(DataFlow)
@@ -141,7 +197,6 @@ BOOST_AUTO_TEST_CASE(WholeFragment)
 	TLOG(TLVL_DEBUG) << "SharedMemoryFragmentManager WholeFragment test complete" ;
 	TLOG(TLVL_INFO) << "END TEST WholeFragment";
 }
-
 
 BOOST_AUTO_TEST_CASE(Timeout)
 {
