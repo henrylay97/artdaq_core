@@ -179,7 +179,7 @@ struct artdaq::detail::RawFragmentHeader
 	 * \brief Get the last access time of this RawFragmentHeader
 	 * \return struct timespec representing last access time of this RawFragmentHeader
 	 */
-	struct timespec atime();
+	struct timespec atime() const;
 	/**
 	 * \brief Get the elapsed time between now and the last access time of the RawFragmentHeader, optionally resetting it
 	 * \param touch Whether to also update the access time to current time
@@ -237,7 +237,7 @@ inline void artdaq::detail::RawFragmentHeader::touch()
 	atime_s = time.tv_sec;
 }
 
-inline struct timespec artdaq::detail::RawFragmentHeader::atime()
+inline struct timespec artdaq::detail::RawFragmentHeader::atime() const
 {
 	struct timespec ts;
 	ts.tv_nsec = atime_ns;

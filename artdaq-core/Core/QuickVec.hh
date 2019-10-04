@@ -19,6 +19,7 @@
 //#include <memory>		// unique_ptr
 /** \cond  */
 #include <cassert>
+#include <cmath>
 #include <vector>
 /** \endcond */
 

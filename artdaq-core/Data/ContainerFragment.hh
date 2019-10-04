@@ -123,7 +123,7 @@ public:
 	{
 		if (metadata_alloc_) return metadata_;
 
-		if (artdaq_Fragment_.sizeBytes() - artdaq_Fragment_.dataSizeBytes() - sizeof(detail::RawFragmentHeader) == sizeof(MetadataV0))
+		if (artdaq_Fragment_.sizeBytes() - artdaq_Fragment_.dataSizeBytes() - artdaq_Fragment_.headerSizeBytes() == sizeof(MetadataV0))
 		{
 			return UpgradeMetadata(artdaq_Fragment_.metadata<MetadataV0>());
 		}
@@ -177,7 +177,8 @@ public:
 		{
 			throw cet::exception("ArgumentOutOfRange") << "Buffer overrun detected! ContainerFragment::at was asked for a non-existent Fragment!";
 		}
-		FragmentPtr frag(new Fragment(fragSize(index) / sizeof(RawDataType) - detail::RawFragmentHeader::num_words()));
+		// Subtract RawFragmentHeader::num_words here as Fragment consturctor will allocate n + detail::RawFragmentHeader::num_words(), and we want fragSize to be allocated.
+		FragmentPtr frag(new Fragment((fragSize(index)) / sizeof(RawDataType) - detail::RawFragmentHeader::num_words()));
 		memcpy(frag->headerAddress(), reinterpret_cast<uint8_t const*>(dataBegin()) + fragmentIndex(index), fragSize(index));
 		return frag;
 	}

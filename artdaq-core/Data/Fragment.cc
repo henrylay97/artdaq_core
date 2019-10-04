@@ -13,11 +13,11 @@ bool artdaq::fragmentSequenceIDCompare(Fragment i, Fragment j)
 artdaq::Fragment::Fragment()
     : vals_(RawFragmentHeader::num_words(), -1)
 {
-	fragmentHeader()->version = RawFragmentHeader::CurrentVersion;
+	fragmentHeaderPtr()->version = RawFragmentHeader::CurrentVersion;
 	updateFragmentHeaderWC_();
-	fragmentHeader()->type = InvalidFragmentType;
-	fragmentHeader()->metadata_word_count = 0;
-	fragmentHeader()->touch();
+	fragmentHeaderPtr()->type = InvalidFragmentType;
+	fragmentHeaderPtr()->metadata_word_count = 0;
+	fragmentHeaderPtr()->touch();
 }
 
 artdaq::Fragment::Fragment(std::size_t n)
@@ -29,14 +29,14 @@ artdaq::Fragment::Fragment(std::size_t n)
 	{
 		*ii = -1;
 	}
-	fragmentHeader()->version = RawFragmentHeader::CurrentVersion;
+	fragmentHeaderPtr()->version = RawFragmentHeader::CurrentVersion;
 	updateFragmentHeaderWC_();
-	fragmentHeader()->type = Fragment::InvalidFragmentType;
-	fragmentHeader()->sequence_id = Fragment::InvalidSequenceID;
-	fragmentHeader()->fragment_id = Fragment::InvalidFragmentID;
-	fragmentHeader()->timestamp = Fragment::InvalidTimestamp;
-	fragmentHeader()->metadata_word_count = 0;
-	fragmentHeader()->touch();
+	fragmentHeaderPtr()->type = Fragment::InvalidFragmentType;
+	fragmentHeaderPtr()->sequence_id = Fragment::InvalidSequenceID;
+	fragmentHeaderPtr()->fragment_id = Fragment::InvalidFragmentID;
+	fragmentHeaderPtr()->timestamp = Fragment::InvalidTimestamp;
+	fragmentHeaderPtr()->metadata_word_count = 0;
+	fragmentHeaderPtr()->touch();
 }
 
 artdaq::Fragment::Fragment(sequence_id_t sequenceID,
@@ -45,23 +45,23 @@ artdaq::Fragment::Fragment(sequence_id_t sequenceID,
                            timestamp_t timestamp)
     : vals_(RawFragmentHeader::num_words(), -1)
 {
-	fragmentHeader()->version = RawFragmentHeader::CurrentVersion;
+	fragmentHeaderPtr()->version = RawFragmentHeader::CurrentVersion;
 	updateFragmentHeaderWC_();
 	if (type == Fragment::DataFragmentType)
 	{
 		// this value is special because it is the default specified
 		// in the constructor declaration
-		fragmentHeader()->setSystemType(type);
+		fragmentHeaderPtr()->setSystemType(type);
 	}
 	else
 	{
-		fragmentHeader()->setUserType(type);
+		fragmentHeaderPtr()->setUserType(type);
 	}
-	fragmentHeader()->sequence_id = sequenceID;
-	fragmentHeader()->fragment_id = fragID;
-	fragmentHeader()->timestamp = timestamp;
-	fragmentHeader()->metadata_word_count = 0;
-	fragmentHeader()->touch();
+	fragmentHeaderPtr()->sequence_id = sequenceID;
+	fragmentHeaderPtr()->fragment_id = fragID;
+	fragmentHeaderPtr()->timestamp = timestamp;
+	fragmentHeaderPtr()->metadata_word_count = 0;
+	fragmentHeaderPtr()->touch();
 }
 
 #if HIDE_FROM_ROOT
