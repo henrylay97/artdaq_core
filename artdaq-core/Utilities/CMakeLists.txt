@@ -1,3 +1,9 @@
+
+find_library(LIBRT NAMES rt) 
+if(LIBRT)
+  set(FOUND_RT ${LIBRT})
+endif()
+
 cet_make(
 	EXCLUDE GenFile_mfPlugin.cc
   LIBRARIES 
@@ -7,6 +13,7 @@ cet_make(
   ${Boost_DATE_TIME_LIBRARY}
   ${Boost_FILESYSTEM_LIBRARY}
   ${Boost_SYSTEM_LIBRARY}
+  ${FOUND_RT}
 )
 
 basic_plugin( "GenFile" "mfPlugin"

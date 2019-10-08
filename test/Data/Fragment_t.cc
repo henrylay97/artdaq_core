@@ -842,7 +842,7 @@ BOOST_AUTO_TEST_CASE(Upgrade_V0)
 
 	hdr0.word_count = artdaq::detail::RawFragmentHeader::num_words() + 7;
 	hdr0.version = 0;
-	hdr0.type = artdaq::detail::RawFragmentHeaderV0::DataFragmentType;
+	hdr0.type = 0xFE;
 	hdr0.metadata_word_count = 0;
 
 	hdr0.sequence_id = 0xFEEDDEADBEEF;
@@ -860,8 +860,8 @@ BOOST_AUTO_TEST_CASE(Upgrade_V0)
 		memcpy(f.headerBegin() + ii, &(++counter), sizeof(counter));
 	}
 
-	BOOST_REQUIRE_EQUAL(f.version(), 2);
-	BOOST_REQUIRE_EQUAL(f.type(), artdaq::detail::RawFragmentHeader::DataFragmentType);
+	BOOST_REQUIRE_EQUAL(f.version(), 0);
+	BOOST_REQUIRE_EQUAL(f.type(), 0xFE);
 	BOOST_REQUIRE_EQUAL(f.hasMetadata(), false);
 
 	BOOST_REQUIRE_EQUAL(f.sequenceID(), 0xFEEDDEADBEEF);
@@ -881,7 +881,7 @@ BOOST_AUTO_TEST_CASE(Upgrade_V1)
 
 	hdr1.word_count = artdaq::detail::RawFragmentHeader::num_words() + 7;
 	hdr1.version = 1;
-	hdr1.type = artdaq::detail::RawFragmentHeaderV1::DataFragmentType;
+	hdr1.type = 0xFE;
 	hdr1.metadata_word_count = 0;
 
 	hdr1.sequence_id = 0xFEEDDEADBEEF;
@@ -896,8 +896,8 @@ BOOST_AUTO_TEST_CASE(Upgrade_V1)
 		memcpy(f.headerBegin() + ii, &(++counter), sizeof(counter));
 	}
 
-	BOOST_REQUIRE_EQUAL(f.version(), 2);
-	BOOST_REQUIRE_EQUAL(f.type(), artdaq::detail::RawFragmentHeader::DataFragmentType);
+	BOOST_REQUIRE_EQUAL(f.version(), 1);
+	BOOST_REQUIRE_EQUAL(f.type(), 0xFE);
 	BOOST_REQUIRE_EQUAL(f.hasMetadata(), false);
 
 	BOOST_REQUIRE_EQUAL(f.sequenceID(), 0xFEEDDEADBEEF);
