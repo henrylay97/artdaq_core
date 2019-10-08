@@ -1167,14 +1167,14 @@ artdaq::Fragment::headerSizeWords() const
 				break;
 			case 0:
 			{
-				TLOG(52,"Fragment") << "Getting size of RawFragmentHeaderV0";
-                auto old_hdr = reinterpret_cast_checked<detail::RawFragmentHeaderV0 const*>(&vals_[0]);
+				TLOG(52, "Fragment") << "Getting size of RawFragmentHeaderV0";
+				auto old_hdr = reinterpret_cast_checked<detail::RawFragmentHeaderV0 const*>(&vals_[0]);
 				return old_hdr->num_words();
 				break;
 			}
 			case 1:
 			{
-				TLOG(52,"Fragment") << "Getting size of RawFragmentHeaderV1";
+				TLOG(52, "Fragment") << "Getting size of RawFragmentHeaderV1";
 				auto old_hdr = reinterpret_cast_checked<detail::RawFragmentHeaderV1 const*>(&vals_[0]);
 				return old_hdr->num_words();
 				break;
@@ -1196,11 +1196,11 @@ artdaq::Fragment::fragmentHeaderPtr()
 		switch (hdr->version)
 		{
 			case 0xFFFF:
-				TLOG(51,"Fragment") << "Not upgrading InvalidVersion Fragment";
+				TLOG(51, "Fragment") << "Not upgrading InvalidVersion Fragment";
 				break;
 			case 0:
 			{
-				TLOG(52,"Fragment") << "Upgrading RawFragmentHeaderV0 (non const)";
+				TLOG(52, "Fragment") << "Upgrading RawFragmentHeaderV0 (non const)";
 				auto old_hdr = reinterpret_cast_checked<detail::RawFragmentHeaderV0*>(&vals_[0]);
 				auto new_hdr = old_hdr->upgrade();
 
@@ -1216,7 +1216,7 @@ artdaq::Fragment::fragmentHeaderPtr()
 			}
 			case 1:
 			{
-				TLOG(52,"Fragment") << "Upgrading RawFragmentHeaderV1 (non const)";
+				TLOG(52, "Fragment") << "Upgrading RawFragmentHeaderV1 (non const)";
 				auto old_hdr = reinterpret_cast_checked<detail::RawFragmentHeaderV1*>(&vals_[0]);
 				auto new_hdr = old_hdr->upgrade();
 
@@ -1251,7 +1251,7 @@ artdaq::Fragment::fragmentHeader() const
 				break;
 			case 0:
 			{
-				TLOG(52,"Fragment") << "Upgrading RawFragmentHeaderV0 (const)";
+				TLOG(52, "Fragment") << "Upgrading RawFragmentHeaderV0 (const)";
 				auto old_hdr = reinterpret_cast_checked<detail::RawFragmentHeaderV0 const*>(&vals_[0]);
 				hdr = old_hdr->upgrade();
 
@@ -1259,7 +1259,7 @@ artdaq::Fragment::fragmentHeader() const
 			}
 			case 1:
 			{
-				TLOG(52,"Fragment") << "Upgrading RawFragmentHeaderV1 (const)";
+				TLOG(52, "Fragment") << "Upgrading RawFragmentHeaderV1 (const)";
 				auto old_hdr = reinterpret_cast_checked<detail::RawFragmentHeaderV1 const*>(&vals_[0]);
 				hdr = old_hdr->upgrade();
 

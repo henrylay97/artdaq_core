@@ -234,12 +234,12 @@ artdaq::detail::RawFragmentHeaderV1::upgrade() const
 	output.valid = true;
 	output.complete = true;
 
-    // ELF 10/1/19: Due to how many times upgrade() gets called during an analysis process, better to just zero these fields
-//	auto time = artdaq::TimeUtils::get_realtime_clock();
-//	output.atime_ns = time.tv_nsec;
-//	output.atime_s = time.tv_sec;
-    output.atime_ns = 0;
-    output.atime_s = 0;
+	// ELF 10/1/19: Due to how many times upgrade() gets called during an analysis process, better to just zero these fields
+	//	auto time = artdaq::TimeUtils::get_realtime_clock();
+	//	output.atime_ns = time.tv_nsec;
+	//	output.atime_s = time.tv_sec;
+	output.atime_ns = 0;
+	output.atime_s = 0;
 
 	return output;
 }
