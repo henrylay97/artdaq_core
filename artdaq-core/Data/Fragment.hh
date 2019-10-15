@@ -627,7 +627,16 @@ public:
 		return reinterpret_cast_checked<const byte_t*>(&*headerBegin());
 	}
 
+	/**
+	 * \brief Get the size of this Fragment's header, in RawDataType words
+	 * \return The on-disk or in-memory size of the Fragment header, in RawDataType words
+	 */
 	size_t headerSizeWords() const;
+
+	/**
+	 * \brief Get the size of this Fragment's header, in bytes
+	 * \return The on-disk or in-memory size of the Fragment header, in bytes
+	 */
 	size_t headerSizeBytes() const { return sizeof(RawDataType) * headerSizeWords(); }
 
 	/**
