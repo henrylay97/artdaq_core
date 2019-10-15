@@ -1,7 +1,7 @@
 # The parent line must be the first non-comment line in the file
 # This line defines the product name and version
-parent artdaq_core  v2019_10_04_protoDFO_testing
-defaultqual	e15:s64
+parent artdaq_core  v2019_10_15_pdune_e17_s83
+defaultqual	e17:s83
 
 # These optional lines define the installed directories where
 # headers, libraries, and executables will be found
@@ -38,7 +38,7 @@ canvas_root_io  v1_01_07        s69
 canvas_root_io  v1_01_06        s68
 canvas_root_io  v1_01_05        s67
 canvas_root_io  v1_01_02        s64
-TRACE           v3_14_02
+TRACE           v3_15_02
 cetbuildtools	v7_13_02	-	only_for_build
 end_product_list
 
