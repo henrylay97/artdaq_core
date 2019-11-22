@@ -378,9 +378,27 @@ private:
 		unsigned ready_magic;
 	};
 
-	uint8_t* dataStart_() const;
-	uint8_t* bufferStart_(int buffer);
-	ShmBuffer* getBufferInfo_(int buffer);
+	inline uint8_t* dataStart_() const
+	{
+		if (shm_ptr_ == nullptr) return nullptr;
+		return reinterpret_cast<uint8_t*>(shm_ptr_ + 1) + shm_ptr_->buffer_count * sizeof(ShmBuffer);
+	}
+
+	inline uint8_t* bufferStart_(int buffer)
+	{
+		if (shm_ptr_ == nullptr) return nullptr;
+		if (buffer >= requested_shm_parameters_.buffer_count && buffer >= shm_ptr_->buffer_count) Detach(true, "ArgumentOutOfRange", "The specified buffer does not exist!");
+		return dataStart_() + buffer * shm_ptr_->buffer_size;
+	}
+
+	inline ShmBuffer* getBufferInfo_(int buffer)
+	{
+		if (shm_ptr_ == nullptr) return nullptr;
+		// Check local variable first, but re-check shared memory
+		if (buffer >= requested_shm_parameters_.buffer_count && buffer >= shm_ptr_->buffer_count)
+			Detach(true, "ArgumentOutOfRange", "The specified buffer does not exist!");
+		return buffer_ptrs_[buffer];
+	}
 	bool checkBuffer_(ShmBuffer* buffer, BufferSemaphoreFlags flags, bool exceptions = true);
 	void touchBuffer_(ShmBuffer* buffer);
 
@@ -390,6 +408,7 @@ private:
 	ShmStruct* shm_ptr_;
 	uint32_t shm_key_;
 	int manager_id_;
+	std::vector<ShmBuffer*> buffer_ptrs_;
 	mutable std::vector<std::mutex> buffer_mutexes_;
 	mutable std::mutex search_mutex_;
 

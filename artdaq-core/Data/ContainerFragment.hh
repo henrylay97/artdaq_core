@@ -177,8 +177,19 @@ public:
 		{
 			throw cet::exception("ArgumentOutOfRange") << "Buffer overrun detected! ContainerFragment::at was asked for a non-existent Fragment!";
 		}
-		// Subtract RawFragmentHeader::num_words here as Fragment consturctor will allocate n + detail::RawFragmentHeader::num_words(), and we want fragSize to be allocated.
-		FragmentPtr frag(new Fragment((fragSize(index)) / sizeof(RawDataType) - detail::RawFragmentHeader::num_words()));
+
+		FragmentPtr frag(nullptr);
+		auto size = fragSize(index);
+		if (size < sizeof(RawDataType) * detail::RawFragmentHeader::num_words())
+		{
+			TLOG(TLVL_WARNING, "ContainerFragment") << "Contained Fragment is below minimum size! Reported Data and Metadata sizes will be incorrect!";
+			frag.reset(new Fragment());
+		}
+		else
+		{
+			// Subtract RawFragmentHeader::num_words here as Fragment consturctor will allocate n + detail::RawFragmentHeader::num_words(), and we want fragSize to be allocated.
+			frag.reset(new Fragment((fragSize(index)) / sizeof(RawDataType) - detail::RawFragmentHeader::num_words()));
+		}
 		memcpy(frag->headerAddress(), reinterpret_cast<uint8_t const*>(dataBegin()) + fragmentIndex(index), fragSize(index));
 		return frag;
 	}
