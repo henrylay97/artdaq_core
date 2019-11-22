@@ -54,7 +54,10 @@ std::string artdaq::generateMessageFacilityConfiguration(char const* progname, b
 			// As long as the top-level directory exists, I don't think we
 			// really care if we have to create application directories...
 			if (!BFS::exists(logfileDir))
+			{
 				BFS::create_directory(logfileDir);
+				BFS::permissions(logfileDir, BFS::add_perms | BFS::owner_all | BFS::group_all | BFS::others_read);
+			}
 
 			time_t rawtime;
 			struct tm* timeinfo;
