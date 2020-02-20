@@ -78,6 +78,10 @@ public:
 		 */
 	int GetMyId() { return data_.GetMyId(); }
 
+	/**
+	 * \brief Determine if the end of data has been reached (from data shared memory segment)
+	 * \return Whether the EndOfData flah has been raised by the data shared memory segment
+	 */
 	bool IsEndOfData() { return data_.IsEndOfData(); }
 
 	/**

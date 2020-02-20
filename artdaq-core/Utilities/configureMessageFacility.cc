@@ -96,8 +96,8 @@ std::string artdaq::generateMessageFacilityConfiguration(char const* progname, b
 	}
 
 	std::ostringstream ss;
-	ss << "debugModules:[\"*\"] "
-	   << "  destinations : { ";
+	//ss << "debugModules:[\"*\"] "
+	ss << "  destinations : { ";
 
 	if (useConsole)
 	{
