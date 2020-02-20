@@ -1030,13 +1030,13 @@ void* artdaq::SharedMemoryManager::GetBufferStart(int buffer)
 	return bufferStart_(buffer);
 }
 
-std::list<std::pair<int, artdaq::SharedMemoryManager::BufferSemaphoreFlags>> artdaq::SharedMemoryManager::GetBufferReport()
+std::vector<std::pair<int, artdaq::SharedMemoryManager::BufferSemaphoreFlags>> artdaq::SharedMemoryManager::GetBufferReport()
 {
-	auto output = std::list<std::pair<int, BufferSemaphoreFlags>>();
+	auto output = std::vector<std::pair<int, BufferSemaphoreFlags>>(size());
 	for (size_t ii = 0; ii < size(); ++ii)
 	{
 		auto buf = getBufferInfo_(ii);
-		output.emplace_back(std::make_pair(buf->sem_id.load(), buf->sem.load()));
+		output[ii] = std::make_pair(buf->sem_id.load(), buf->sem.load());
 	}
 	return output;
 }
