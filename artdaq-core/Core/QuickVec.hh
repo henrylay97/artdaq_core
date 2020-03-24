@@ -39,7 +39,7 @@
  */
 static inline void* QV_MEMALIGN(size_t boundary, size_t size)
 {
-	void* retadr;
+	void* retadr = 0;
 	posix_memalign(&retadr, boundary, size);
 	return retadr;
 }
