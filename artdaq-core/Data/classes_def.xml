@@ -24,6 +24,8 @@
    <version ClassVersion="11" checksum="2965328636"/>
    <version ClassVersion="10" checksum="3107758661"/>
   </class>
+    <class name="artdaq::detail::RawEventHeader"/>
+    <class name="art::Wrapper<artdaq::detail::RawEventHeader>"/>
   <class name="std::vector<artdaq::PackageBuildInfo>"/>
   <class name="art::Wrapper<std::vector<artdaq::PackageBuildInfo>>"/>
   <class name="art::Wrapper<artdaq::PackageBuildInfo>"/>

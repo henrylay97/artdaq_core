@@ -44,19 +44,19 @@ public:
 	 * \brief Sets the package name
 	 * \param str The package name
 	 */
-	void setPackageName(std::string str) { packageName_ = str; }
+	void setPackageName(std::string const& str) { packageName_ = str; }
 
 	/**
 	 * \brief Sets the package version
 	 * \param str The package version
 	 */
-	void setPackageVersion(std::string str) { packageVersion_ = str; }
+	void setPackageVersion(std::string const& str) { packageVersion_ = str; }
 
 	/**
 	 * \brief Sets the build timestamp
 	 * \param str The timestamp of the build
 	 */
-	void setBuildTimestamp(std::string str) { buildTimestamp_ = str; }
+	void setBuildTimestamp(std::string const& str) { buildTimestamp_ = str; }
 
 private:
 	/**

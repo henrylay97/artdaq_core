@@ -79,10 +79,13 @@ private:
 		 */
 	void operator=(StatisticsCollection const&) = delete;  // not implemented
 
+	StatisticsCollection(StatisticsCollection&&) = delete;
+	StatisticsCollection& operator=(StatisticsCollection&&) = delete;
+
 	/**
 		 * \brief Interval for calculation of statistics. Defaulted to 1 second
 		 */
-	double calculationInterval_;
+	double calculationInterval_{1.0};
 	/**
 		 * \brief Lookup map for MonitoredQuantityPtr objects, keyed by name
 		 */

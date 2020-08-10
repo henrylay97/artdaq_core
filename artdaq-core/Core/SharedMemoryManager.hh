@@ -63,7 +63,7 @@ public:
 	/**
 		 * \brief SharedMemoryManager Destructor
 		 */
-	virtual ~SharedMemoryManager() noexcept;
+	virtual ~SharedMemoryManager() noexcept;  // NOLINT(bugprone-exception-escape) See implementation for more details
 
 	/**
 		 * \brief Reconnect to the shared memory segment
@@ -310,7 +310,7 @@ public:
 		 * \param message Message for the cet::exception
 		 * \param force Whether to mark shared memory for destruction even if not owner (i.e. from signal handler)
 		 */
-	void Detach(bool throwException = false, std::string category = "", std::string message = "", bool force = false);
+	void Detach(bool throwException = false, const std::string& category = "", const std::string& message = "", bool force = false);
 
 	/**
 		 * \brief Gets the configured timeout for buffers to be declared "stale"
@@ -353,6 +353,11 @@ public:
 	void TouchBuffer(int buffer) { return touchBuffer_(getBufferInfo_(buffer)); }
 
 private:
+	SharedMemoryManager(SharedMemoryManager const&) = delete;
+	SharedMemoryManager(SharedMemoryManager&&) = delete;
+	SharedMemoryManager& operator=(SharedMemoryManager const&) = delete;
+	SharedMemoryManager& operator=(SharedMemoryManager&&) = delete;
+
 	struct ShmBuffer
 	{
 		size_t writePos;
@@ -382,14 +387,14 @@ private:
 	inline uint8_t* dataStart_() const
 	{
 		if (shm_ptr_ == nullptr) return nullptr;
-		return reinterpret_cast<uint8_t*>(shm_ptr_ + 1) + shm_ptr_->buffer_count * sizeof(ShmBuffer);
+		return reinterpret_cast<uint8_t*>(shm_ptr_ + 1) + shm_ptr_->buffer_count * sizeof(ShmBuffer);  // NOLINT(cppcoreguidelines-pro-type-reinterpret-cast,cppcoreguidelines-pro-bounds-pointer-arithmetic)
 	}
 
 	inline uint8_t* bufferStart_(int buffer)
 	{
 		if (shm_ptr_ == nullptr) return nullptr;
 		if (buffer >= requested_shm_parameters_.buffer_count && buffer >= shm_ptr_->buffer_count) Detach(true, "ArgumentOutOfRange", "The specified buffer does not exist!");
-		return dataStart_() + buffer * shm_ptr_->buffer_size;
+		return dataStart_() + buffer * shm_ptr_->buffer_size;  // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
 	}
 
 	inline ShmBuffer* getBufferInfo_(int buffer)

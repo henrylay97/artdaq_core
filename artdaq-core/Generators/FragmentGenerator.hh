@@ -54,6 +54,12 @@ public:
 	   * Fragment IDs should be unique in an event, and consistent for a given piece of hardware.
 	   */
 	virtual std::vector<Fragment::fragment_id_t> fragmentIDs() = 0;
+
+private:
+	FragmentGenerator(FragmentGenerator const&) = delete;
+	FragmentGenerator(FragmentGenerator&&) = delete;
+	FragmentGenerator& operator=(FragmentGenerator const&) = delete;
+	FragmentGenerator& operator=(FragmentGenerator&&) = delete;
 };
 }  // namespace artdaq
 

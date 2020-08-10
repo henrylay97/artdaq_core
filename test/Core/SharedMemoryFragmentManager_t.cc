@@ -1,5 +1,7 @@
 #define TRACE_NAME "SharedMemoryFragmentManager_t"
 
+#include <memory>
+
 #include "artdaq-core/Core/SharedMemoryFragmentManager.hh"
 #include "artdaq-core/Utilities/configureMessageFacility.hh"
 #include "tracemf.h"
@@ -63,7 +65,7 @@ BOOST_AUTO_TEST_CASE(Reattach)
 	BOOST_REQUIRE_EQUAL(man->IsValid(), true);
 	BOOST_REQUIRE_EQUAL(man->GetAttachedCount(), 1);
 
-	man2.reset(new artdaq::SharedMemoryFragmentManager(key));
+	man2 = std::make_unique<artdaq::SharedMemoryFragmentManager>(key);
 	BOOST_REQUIRE_EQUAL(man->IsValid(), true);
 	BOOST_REQUIRE_EQUAL(man->GetMyId(), 0);
 	BOOST_REQUIRE_EQUAL(man->size(), 10);
@@ -84,7 +86,7 @@ BOOST_AUTO_TEST_CASE(Reattach)
 	man2->Attach();
 	BOOST_REQUIRE_EQUAL(man2->IsValid(), false);
 
-	man.reset(new artdaq::SharedMemoryFragmentManager(key, 10, 0x1000));
+	man = std::make_unique<artdaq::SharedMemoryFragmentManager>(key, 10, 0x1000);
 	BOOST_REQUIRE_EQUAL(man->IsValid(), true);
 	BOOST_REQUIRE_EQUAL(man->GetMyId(), 0);
 	BOOST_REQUIRE_EQUAL(man->size(), 10);
@@ -123,6 +125,7 @@ BOOST_AUTO_TEST_CASE(DataFlow)
 	}
 
 	TLOG(TLVL_DEBUG) << "Writing Test Fragment to Shared Memory";
+	auto fragSize = frag.size();
 	man.WriteFragment(std::move(frag), false, 0);
 
 	TLOG(TLVL_DEBUG) << "Reading Test Fragment Header";
@@ -131,7 +134,7 @@ BOOST_AUTO_TEST_CASE(DataFlow)
 
 	TLOG(TLVL_DEBUG) << "Checking Test Fragment Header Contents";
 	BOOST_REQUIRE_EQUAL(sts, 0);
-	BOOST_REQUIRE_EQUAL(header.word_count, frag.size());
+	BOOST_REQUIRE_EQUAL(header.word_count, fragSize);
 	BOOST_REQUIRE_EQUAL(header.sequence_id, 0x10);
 	BOOST_REQUIRE_EQUAL(header.fragment_id, 0x20);
 	BOOST_REQUIRE_EQUAL(header.type, type);
@@ -145,7 +148,7 @@ BOOST_AUTO_TEST_CASE(DataFlow)
 	BOOST_REQUIRE_EQUAL(sts, 0);
 	for (size_t ii = 0; ii < fragSizeWords; ++ii)
 	{
-		BOOST_REQUIRE_EQUAL(*(frag.dataBegin() + ii), *(frag2.dataBegin() + ii));
+		BOOST_REQUIRE_EQUAL(ii, *(frag2.dataBegin() + ii));
 	}
 	TLOG(TLVL_DEBUG) << "SharedMemoryFragmentManager DataFlow test complete";
 	TLOG(TLVL_INFO) << "END TEST DataFlow";
@@ -174,6 +177,7 @@ BOOST_AUTO_TEST_CASE(WholeFragment)
 	}
 
 	TLOG(TLVL_DEBUG) << "Writing Test Fragment to Shared Memory";
+	auto fragSize = frag.size();
 	man.WriteFragment(std::move(frag), false, 0);
 
 	TLOG(TLVL_DEBUG) << "Reading Test Fragment Header";
@@ -182,7 +186,7 @@ BOOST_AUTO_TEST_CASE(WholeFragment)
 
 	TLOG(TLVL_DEBUG) << "Checking Test Fragment Header Contents";
 	BOOST_REQUIRE_EQUAL(sts, 0);
-	BOOST_REQUIRE_EQUAL(recvdFrag.size(), frag.size());
+	BOOST_REQUIRE_EQUAL(recvdFrag.size(), fragSize);
 	BOOST_REQUIRE_EQUAL(recvdFrag.sequenceID(), 0x10);
 	BOOST_REQUIRE_EQUAL(recvdFrag.fragmentID(), 0x20);
 	BOOST_REQUIRE_EQUAL(recvdFrag.type(), type);
@@ -192,7 +196,7 @@ BOOST_AUTO_TEST_CASE(WholeFragment)
 	for (size_t ii = 0; ii < fragSizeWords; ++ii)
 	{
 		//TLOG(TLVL_DEBUG) << *(frag.dataBegin() + ii) << " =?= " << *(recvdFrag.dataBegin() + ii) ;
-		BOOST_REQUIRE_EQUAL(*(frag.dataBegin() + ii), *(recvdFrag.dataBegin() + ii));
+		BOOST_REQUIRE_EQUAL(ii, *(recvdFrag.dataBegin() + ii));
 	}
 	TLOG(TLVL_DEBUG) << "SharedMemoryFragmentManager WholeFragment test complete";
 	TLOG(TLVL_INFO) << "END TEST WholeFragment";

@@ -15,7 +15,7 @@ int simpleQueueReaderApp(int argc, char** argv)
 		size_t eec(0);
 		if (argc == 2)
 		{
-			std::istringstream ins(argv[1]);
+			std::istringstream ins(argv[1]);  // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
 			ins >> eec;
 		}
 		SimpleQueueReader reader(eec);
@@ -56,19 +56,18 @@ void SimpleQueueReader::run()
 			if (!rawEventPtr) { break; }
 			++eventsSeen;
 			// Otherwise, do our work ...
-			if (doPrint) { std::cout << *rawEventPtr << std::endl; }
+			if (doPrint != nullptr) { std::cout << *rawEventPtr << std::endl; }
 		}
 		else
 		{
 			std::this_thread::sleep_for(std::chrono::milliseconds(250));
 		}
 	}
-	if (expectedEventCount_ && eventsSeen != expectedEventCount_)
+	if ((expectedEventCount_ != 0u) && eventsSeen != expectedEventCount_)
 	{
-		std::ostringstream os;
-		os << "Wrong number of events in SimpleQueueReader ("
-		   << eventsSeen << " != " << expectedEventCount_ << ").\n";
-		throw os.str();
+		throw cet::exception("SimpleQueueReader")  // NOLINT(cert-err60-cpp)
+		    << "Wrong number of events in SimpleQueueReader ("
+		    << eventsSeen << " != " << expectedEventCount_ << ").\n";
 	}
 }
 }  // namespace artdaq

@@ -1,6 +1,7 @@
 #ifndef artdaq_core_Data_ContainerFragment_hh
 #define artdaq_core_Data_ContainerFragment_hh
 
+#include <memory>
 #include "artdaq-core/Data/Fragment.hh"
 #include "cetlib_except/exception.h"
 
@@ -82,7 +83,6 @@ public:
 	{
 		TLOG(TLVL_DEBUG, "ContainerFragment") << "Upgrading ContainerFragment::MetadataV0 into new ContainerFragment::Metadata";
 		assert(in->block_count < std::numeric_limits<Metadata::count_t>::max());
-		metadata_alloc_ = true;
 		Metadata md;
 		md.block_count = in->block_count;
 		md.fragment_type = in->fragment_type;
@@ -90,8 +90,8 @@ public:
 		md.missing_data = in->missing_data;
 		md.version = 0;
 		index_ptr_ = in->index;
-		metadata_ = new Metadata(md);
-		return metadata_;
+		metadata_ = std::make_unique<Metadata>(md);
+		return metadata_.get();
 	}
 
 	/**
@@ -101,18 +101,10 @@ public:
 	 * to refer to the artdaq::Fragment object
 	*/
 	explicit ContainerFragment(Fragment const& f)
-	    : artdaq_Fragment_(f), index_ptr_(nullptr), index_alloc_(false), metadata_(nullptr), metadata_alloc_(false) {}
+	    : artdaq_Fragment_(f), index_ptr_(nullptr), index_ptr_owner_(nullptr), metadata_(nullptr) {}
 
 	virtual ~ContainerFragment()
 	{
-		if (index_alloc_)
-		{
-			delete[] index_ptr_;
-		}
-		if (metadata_alloc_)
-		{
-			delete metadata_;
-		}
 	}
 
 	/**
@@ -121,7 +113,7 @@ public:
 	 */
 	Metadata const* metadata() const
 	{
-		if (metadata_alloc_) return metadata_;
+		if (metadata_) return metadata_.get();
 
 		if (artdaq_Fragment_.sizeBytes() - artdaq_Fragment_.dataSizeBytes() - artdaq_Fragment_.headerSizeBytes() == sizeof(MetadataV0))
 		{
@@ -153,7 +145,7 @@ public:
 	 */
 	void const* dataBegin() const
 	{
-		return reinterpret_cast<void const*>(&*artdaq_Fragment_.dataBegin());
+		return reinterpret_cast<void const*>(&*artdaq_Fragment_.dataBegin());  // NOLINT(cppcoreguidelines-pro-type-reinterpret-cast)
 	}
 
 	/**
@@ -162,7 +154,7 @@ public:
 	 */
 	void const* dataEnd() const
 	{
-		return reinterpret_cast<void const*>(reinterpret_cast<uint8_t const*>(dataBegin()) + lastFragmentIndex());
+		return reinterpret_cast<void const*>(reinterpret_cast<uint8_t const*>(dataBegin()) + lastFragmentIndex());  // NOLINT(cppcoreguidelines-pro-type-reinterpret-cast,cppcoreguidelines-pro-bounds-pointer-arithmetic)
 	}
 
 	/**
@@ -175,7 +167,7 @@ public:
 	{
 		if (index >= block_count() || block_count() == 0)
 		{
-			throw cet::exception("ArgumentOutOfRange") << "Buffer overrun detected! ContainerFragment::at was asked for a non-existent Fragment!";
+			throw cet::exception("ArgumentOutOfRange") << "Buffer overrun detected! ContainerFragment::at was asked for a non-existent Fragment!";  // NOLINT(cert-err60-cpp)
 		}
 
 		FragmentPtr frag(nullptr);
@@ -183,14 +175,14 @@ public:
 		if (size < sizeof(RawDataType) * detail::RawFragmentHeader::num_words())
 		{
 			TLOG(TLVL_WARNING, "ContainerFragment") << "Contained Fragment is below minimum size! Reported Data and Metadata sizes will be incorrect!";
-			frag.reset(new Fragment());
+			frag = std::make_unique<Fragment>();
 		}
 		else
 		{
 			// Subtract RawFragmentHeader::num_words here as Fragment consturctor will allocate n + detail::RawFragmentHeader::num_words(), and we want fragSize to be allocated.
-			frag.reset(new Fragment((fragSize(index)) / sizeof(RawDataType) - detail::RawFragmentHeader::num_words()));
+			frag = std::make_unique<Fragment>((fragSize(index)) / sizeof(RawDataType) - detail::RawFragmentHeader::num_words());
 		}
-		memcpy(frag->headerAddress(), reinterpret_cast<uint8_t const*>(dataBegin()) + fragmentIndex(index), fragSize(index));
+		memcpy(frag->headerAddress(), reinterpret_cast<uint8_t const*>(dataBegin()) + fragmentIndex(index), fragSize(index));  // NOLINT(cppcoreguidelines-pro-type-reinterpret-cast,cppcoreguidelines-pro-bounds-pointer-arithmetic)
 		return frag;
 	}
 
@@ -204,7 +196,7 @@ public:
 	{
 		if (index >= block_count() || block_count() == 0)
 		{
-			throw cet::exception("ArgumentOutOfRange") << "Buffer overrun detected! ContainerFragment::fragSize was asked for a non-existent Fragment!";
+			throw cet::exception("ArgumentOutOfRange") << "Buffer overrun detected! ContainerFragment::fragSize was asked for a non-existent Fragment!";  // NOLINT(cert-err60-cpp)
 		}
 		auto end = fragmentIndex(index + 1);
 		if (index == 0) return end;
@@ -232,13 +224,13 @@ public:
 	{
 		if (index > block_count())
 		{
-			throw cet::exception("ArgumentOutOfRange") << "Buffer overrun detected! ContainerFragment::fragmentIndex was asked for a non-existent Fragment!";
+			throw cet::exception("ArgumentOutOfRange") << "Buffer overrun detected! ContainerFragment::fragmentIndex was asked for a non-existent Fragment!";  // NOLINT(cert-err60-cpp)
 		}
 		if (index == 0) { return 0; }
 
 		auto index_ptr = get_index_();
 
-		return index_ptr[index - 1];
+		return index_ptr[index - 1];  // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
 	}
 
 	/**
@@ -267,19 +259,19 @@ protected:
 	const size_t* create_index_() const
 	{
 		TLOG(TLVL_TRACE, "ContainerFragment") << "Creating new index for ContainerFragment";
-		auto tmp = new size_t[metadata()->block_count + 1];
+		index_ptr_owner_ = std::make_unique<std::vector<size_t>>(metadata()->block_count + 1);
 
-		auto current = reinterpret_cast<uint8_t const*>(artdaq_Fragment_.dataBegin());
+		auto current = reinterpret_cast<uint8_t const*>(artdaq_Fragment_.dataBegin());  // NOLINT(cppcoreguidelines-pro-type-reinterpret-cast)
 		size_t offset = 0;
 		for (int ii = 0; ii < metadata()->block_count; ++ii)
 		{
-			auto this_size = reinterpret_cast<const detail::RawFragmentHeader*>(current)->word_count * sizeof(RawDataType);
+			auto this_size = reinterpret_cast<const detail::RawFragmentHeader*>(current)->word_count * sizeof(RawDataType);  // NOLINT(cppcoreguidelines-pro-type-reinterpret-cast)
 			offset += this_size;
-			tmp[ii] = offset;
-			current += this_size;
+			index_ptr_owner_->at(ii) = offset;
+			current += this_size;  // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
 		}
-		tmp[metadata()->block_count] = CONTAINER_MAGIC;
-		return tmp;
+		index_ptr_owner_->at(metadata()->block_count) = CONTAINER_MAGIC;
+		return &index_ptr_owner_->at(0);
 	}
 
 	/**
@@ -289,21 +281,16 @@ protected:
 	void reset_index_ptr_() const
 	{
 		TLOG(TLVL_TRACE, "ContainerFragment") << "Request to reset index_ptr recieved. has_index=" << metadata()->has_index << ", Check word = " << std::hex
-		                                      << *(reinterpret_cast<size_t const*>(artdaq_Fragment_.dataBeginBytes() + metadata()->index_offset) + metadata()->block_count);
-		if (metadata()->has_index && *(reinterpret_cast<size_t const*>(artdaq_Fragment_.dataBeginBytes() + metadata()->index_offset) + metadata()->block_count) == CONTAINER_MAGIC)
+		                                      << *(reinterpret_cast<size_t const*>(artdaq_Fragment_.dataBeginBytes() + metadata()->index_offset) + metadata()->block_count);         // NOLINT(cppcoreguidelines-pro-type-reinterpret-cast,cppcoreguidelines-pro-bounds-pointer-arithmetic)
+		if (metadata()->has_index && *(reinterpret_cast<size_t const*>(artdaq_Fragment_.dataBeginBytes() + metadata()->index_offset) + metadata()->block_count) == CONTAINER_MAGIC)  // NOLINT(cppcoreguidelines-pro-type-reinterpret-cast,cppcoreguidelines-pro-bounds-pointer-arithmetic)
 		{
 			TLOG(TLVL_TRACE, "ContainerFragment") << "Setting index_ptr to found valid index";
-			index_ptr_ = reinterpret_cast<size_t const*>(artdaq_Fragment_.dataBeginBytes() + metadata()->index_offset);
+			index_ptr_ = reinterpret_cast<size_t const*>(artdaq_Fragment_.dataBeginBytes() + metadata()->index_offset);  // NOLINT(cppcoreguidelines-pro-type-reinterpret-cast,cppcoreguidelines-pro-bounds-pointer-arithmetic)
 		}
 		else
 		{
 			TLOG(TLVL_TRACE, "ContainerFragment") << "Index invalid or not found, allocating new index";
-			if (index_alloc_)
-			{
-				delete[] index_ptr_;
-			}
-
-			index_alloc_ = true;
+			index_ptr_owner_.reset(nullptr);
 			index_ptr_ = create_index_();
 		}
 	}
@@ -322,12 +309,16 @@ protected:
 	}
 
 private:
+	ContainerFragment(ContainerFragment const&) = delete;             // ContainerFragments should definitely not be copied
+	ContainerFragment(ContainerFragment&&) = delete;                  // ContainerFragments should not be moved, only the underlying Fragment
+	ContainerFragment& operator=(ContainerFragment const&) = delete;  // ContainerFragments should definitely not be copied
+	ContainerFragment& operator=(ContainerFragment&&) = delete;       // ContainerFragments should not be moved, only the underlying Fragment
+
 	Fragment const& artdaq_Fragment_;
 
 	mutable const size_t* index_ptr_;
-	mutable bool index_alloc_;
-	mutable const Metadata* metadata_;
-	mutable bool metadata_alloc_;
+	mutable std::unique_ptr<std::vector<size_t>> index_ptr_owner_;
+	mutable std::unique_ptr<Metadata> metadata_;
 };
 
 #endif /* artdaq_core_Data_ContainerFragment_hh */

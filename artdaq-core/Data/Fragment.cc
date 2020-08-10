@@ -5,7 +5,7 @@
 
 using artdaq::detail::RawFragmentHeader;
 
-bool artdaq::fragmentSequenceIDCompare(Fragment i, Fragment j)
+bool artdaq::fragmentSequenceIDCompare(const Fragment& i, const Fragment& j)
 {
 	return i.sequenceID() < j.sequenceID();
 }

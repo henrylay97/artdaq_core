@@ -56,6 +56,11 @@ public:
 	virtual ~SimpleLookupPolicy() noexcept;
 
 private:
+	SimpleLookupPolicy(SimpleLookupPolicy const&) = delete;
+	SimpleLookupPolicy(SimpleLookupPolicy&&) = delete;
+	SimpleLookupPolicy& operator=(SimpleLookupPolicy const&) = delete;
+	SimpleLookupPolicy& operator=(SimpleLookupPolicy&&) = delete;
+
 	/**
 	 * \brief A cet::search_path object for the current directory
 	 */

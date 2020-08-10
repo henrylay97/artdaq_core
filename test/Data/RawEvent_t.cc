@@ -2,7 +2,7 @@
 #include "artdaq-core/Data/RawEvent.hh"
 
 #define BOOST_TEST_MODULE(RawEvent_t)
-#include "cetlib/quiet_unit_test.hpp"
+#include <cetlib/quiet_unit_test.hpp>
 
 BOOST_AUTO_TEST_SUITE(RawEvent_test)
 
@@ -13,7 +13,7 @@ BOOST_AUTO_TEST_CASE(InsertFragment)
 	// header.  This doesn't work for the DS50 aggregator as it packs multiple
 	// fragments with different sequence IDs into a single RawEvent.  This test
 	// verifies that the we're able to do this.
-	artdaq::RawEvent r1(1, 1, 1, 1);
+	artdaq::RawEvent r1(1, 2, 3, 4, 5);
 	std::unique_ptr<artdaq::Fragment> f1(new artdaq::Fragment(1, 1));
 	std::unique_ptr<artdaq::Fragment> f2(new artdaq::Fragment(2, 1));
 	std::unique_ptr<artdaq::Fragment> f3(new artdaq::Fragment(3, 1));
