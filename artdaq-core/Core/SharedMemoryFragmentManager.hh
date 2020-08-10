@@ -25,6 +25,10 @@ public:
 		 * \brief SharedMemoryFragmentManager destructor
 		 */
 	virtual ~SharedMemoryFragmentManager() = default;
+	SharedMemoryFragmentManager(SharedMemoryFragmentManager const&) = delete;
+	SharedMemoryFragmentManager(SharedMemoryFragmentManager&&) = delete;
+	SharedMemoryFragmentManager& operator=(SharedMemoryFragmentManager const&) = delete;
+	SharedMemoryFragmentManager& operator=(SharedMemoryFragmentManager&&) = delete;
 
 	/**
 		 * \brief Write a Fragment to the Shared Memory

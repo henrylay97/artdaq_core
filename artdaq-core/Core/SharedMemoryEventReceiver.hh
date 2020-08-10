@@ -80,7 +80,7 @@ public:
 
 	/**
 	 * \brief Determine if the end of data has been reached (from data shared memory segment)
-	 * \return Whether the EndOfData flah has been raised by the data shared memory segment
+	 * \return Whether the EndOfData flag has been raised by the data shared memory segment
 	 */
 	bool IsEndOfData() { return data_.IsEndOfData(); }
 
@@ -97,6 +97,11 @@ public:
 	size_t size() { return data_.size(); }
 
 private:
+	SharedMemoryEventReceiver(SharedMemoryEventReceiver const&) = delete;
+	SharedMemoryEventReceiver(SharedMemoryEventReceiver&&) = delete;
+	SharedMemoryEventReceiver& operator=(SharedMemoryEventReceiver const&) = delete;
+	SharedMemoryEventReceiver& operator=(SharedMemoryEventReceiver&&) = delete;
+
 	std::string printBuffers_(SharedMemoryManager* data_source);
 
 	int current_read_buffer_;

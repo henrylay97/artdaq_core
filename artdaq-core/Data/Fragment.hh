@@ -3,10 +3,10 @@
 
 #include <algorithm>
 //#include <cassert>
-#include <stdint.h>
-#include <string.h>
 #include <cmath>
 #include <cstddef>
+#include <cstdint>
+#include <cstring>
 #include <iosfwd>
 #include <iterator>
 #include <list>
@@ -64,7 +64,7 @@ typedef std::list<FragmentPtr> FragmentPtrs;
 	 * \param j Second Fragment to comapre
 	 * \return i.sequenceID() < j.sequenceID()
 	 */
-bool fragmentSequenceIDCompare(Fragment i, Fragment j);
+bool fragmentSequenceIDCompare(const Fragment& i, const Fragment& j);
 
 /**
 	 * \brief Prints the given Fragment to the stream
@@ -202,7 +202,7 @@ public:
 	static FragmentPtr FragmentBytes(std::size_t nbytes)
 	{
 		RawDataType nwords = ceil(nbytes / static_cast<double>(sizeof(RawDataType)));
-		return FragmentPtr(new Fragment(nwords));
+		return std::make_unique<Fragment>(nwords);
 	}
 
 	/**
@@ -242,7 +242,7 @@ public:
 	{
 		RawDataType nwords = ceil(payload_size_in_bytes /
 		                          static_cast<double>(sizeof(RawDataType)));
-		return FragmentPtr(new Fragment(nwords, sequence_id, fragment_id, type, metadata, timestamp));
+		return std::make_unique<Fragment>(nwords, sequence_id, fragment_id, type, metadata, timestamp);
 	}
 
 	/**
@@ -407,21 +407,21 @@ public:
 	 * the specified structure.  This throws an exception if
 	 * the Fragment already contains metadata.
 	 * \tparam T Type of the metadata
-	 * \param md Metadata to store in Fragment
+	 * \param metadata Metadata to store in Fragment
 	 * \exception cet::exception if metadata already present in Fragment
 	 */
 	template<class T>
-	void setMetadata(const T& md);
+	void setMetadata(const T& metadata);
 
 	/**
 	 * \brief Updates existing metadata with a new metadata object
 	 * \tparam T Type of the metadata
-	 * \param md Metadata to set
+	 * \param metadata Metadata to set
 	 * \exception cet::exception if no metadata stored in Fragment
 	 * \exception cet::exception if new metadata has different size than existing metadata
 	 */
 	template<class T>
-	void updateMetadata(const T& md);
+	void updateMetadata(const T& metadata);
 
 	/**
 	 * \brief Resize the data payload to hold sz RawDataType words.
@@ -502,7 +502,7 @@ public:
 	template<typename T>
 	T reinterpret_cast_checked(const RawDataType* in) const
 	{
-		T newpointer = reinterpret_cast<T>(in);
+		T newpointer = reinterpret_cast<T>(in);  // NOLINT(cppcoreguidelines-pro-type-reinterpret-cast)
 
 		if (static_cast<const void*>(newpointer) != static_cast<const void*>(in))
 		{
@@ -530,7 +530,7 @@ public:
 	template<typename T>
 	T reinterpret_cast_checked(RawDataType* in)
 	{
-		T newpointer = reinterpret_cast<T>(in);
+		T newpointer = reinterpret_cast<T>(in);  // NOLINT(cppcoreguidelines-pro-type-reinterpret-cast)
 
 		if (static_cast<void*>(newpointer) != static_cast<void*>(in))
 		{
@@ -795,7 +795,7 @@ artdaq::Fragment::
 	    std::ceil(sizeof(T) / static_cast<double>(sizeof(artdaq::RawDataType)));
 	if (requested_md_wc > max_md_wc)
 	{
-		throw cet::exception("InvalidRequest")
+		throw cet::exception("InvalidRequest")  // NOLINT(cert-err60-cpp)
 		    << "The requested metadata structure is too large: "
 		    << "requested word count = " << requested_md_wc
 		    << ", maximum word count = " << max_md_wc;
@@ -813,7 +813,7 @@ artdaq::Fragment::
              payload_size)                                     // User data
       )
 {
-	TRACEN("Fragment", 50, "Fragment ctor num_word()=%zu MetadataSize_=%zu payload_size=%zu", artdaq::detail::RawFragmentHeader::num_words(), validatedMetadataSize_<T>(), payload_size);
+	TRACEN("Fragment", 50, "Fragment ctor num_word()=%zu MetadataSize_=%zu payload_size=%zu", artdaq::detail::RawFragmentHeader::num_words(), validatedMetadataSize_<T>(), payload_size);  // NOLINT
 	// vals ctor w/o init val is used; make sure header is ALL initialized.
 	for (iterator ii = vals_.begin();
 	     ii != (vals_.begin() + detail::RawFragmentHeader::num_words()); ++ii)
@@ -931,7 +931,7 @@ artdaq::Fragment::updateFragmentHeaderWC_()
 	// Make sure vals_.size() fits inside 32 bits. Left-shift here should
 	// match bitfield size of word_count in RawFragmentHeader.
 	assert(vals_.size() < (1ULL << 32));
-	TRACEN("Fragment", 50, "Fragment::updateFragmentHeaderWC_ adjusting fragmentHeader()->word_count from %u to %zu", (unsigned)(fragmentHeaderPtr()->word_count), vals_.size());
+	TRACEN("Fragment", 50, "Fragment::updateFragmentHeaderWC_ adjusting fragmentHeader()->word_count from %u to %zu", (unsigned)(fragmentHeaderPtr()->word_count), vals_.size());  // NOLINT
 	fragmentHeaderPtr()->word_count = vals_.size();
 }
 
@@ -953,7 +953,7 @@ T* artdaq::Fragment::metadata()
 {
 	if (fragmentHeader().metadata_word_count == 0)
 	{
-		throw cet::exception("InvalidRequest")
+		throw cet::exception("InvalidRequest")  // NOLINT(cert-err60-cpp)
 		    << "No metadata has been stored in this Fragment.";
 	}
 
@@ -966,7 +966,7 @@ artdaq::Fragment::metadata() const
 {
 	if (fragmentHeader().metadata_word_count == 0)
 	{
-		throw cet::exception("InvalidRequest")
+		throw cet::exception("InvalidRequest")  // NOLINT(cert-err60-cpp)
 		    << "No metadata has been stored in this Fragment.";
 	}
 	return reinterpret_cast_checked<T const*>(&vals_[headerSizeWords()]);
@@ -977,7 +977,7 @@ void artdaq::Fragment::setMetadata(const T& metadata)
 {
 	if (fragmentHeader().metadata_word_count != 0)
 	{
-		throw cet::exception("InvalidRequest")
+		throw cet::exception("InvalidRequest")  // NOLINT(cert-err60-cpp)
 		    << "Metadata has already been stored in this Fragment.";
 	}
 	auto const mdSize = validatedMetadataSize_<T>();
@@ -993,7 +993,7 @@ void artdaq::Fragment::updateMetadata(const T& metadata)
 {
 	if (fragmentHeader().metadata_word_count == 0)
 	{
-		throw cet::exception("InvalidRequest")
+		throw cet::exception("InvalidRequest")  // NOLINT(cert-err60-cpp)
 		    << "No metadata in fragment; please use Fragment::setMetadata instead of Fragment::updateMetadata";
 	}
 
@@ -1001,7 +1001,7 @@ void artdaq::Fragment::updateMetadata(const T& metadata)
 
 	if (fragmentHeader().metadata_word_count != mdSize)
 	{
-		throw cet::exception("InvalidRequest")
+		throw cet::exception("InvalidRequest")  // NOLINT(cert-err60-cpp)
 		    << "Mismatch between type of metadata struct passed to updateMetadata and existing metadata struct";
 	}
 
@@ -1046,12 +1046,12 @@ inline void
 artdaq::Fragment::resizeBytes(std::size_t szbytes, byte_t v)
 {
 	RawDataType defaultval;
-	byte_t* ptr = reinterpret_cast_checked<byte_t*>(&defaultval);
+	auto ptr = reinterpret_cast_checked<byte_t*>(&defaultval);
 
 	for (uint8_t i = 0; i < sizeof(RawDataType); ++i)
 	{
 		*ptr = v;
-		ptr++;
+		ptr++;  // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
 	}
 
 	RawDataType nwords = ceil(szbytes / static_cast<double>(sizeof(RawDataType)));
@@ -1134,7 +1134,7 @@ artdaq::Fragment::swap(Fragment& other) noexcept
 inline artdaq::RawDataType*
 artdaq::Fragment::dataAddress()
 {
-	return &vals_[0] + headerSizeWords() +
+	return &vals_[0] + headerSizeWords() +  // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
 	       fragmentHeader().metadata_word_count;
 }
 
@@ -1143,10 +1143,10 @@ artdaq::Fragment::metadataAddress()
 {
 	if (fragmentHeader().metadata_word_count == 0)
 	{
-		throw cet::exception("InvalidRequest")
+		throw cet::exception("InvalidRequest")  // NOLINT(cert-err60-cpp)
 		    << "No metadata has been stored in this Fragment.";
 	}
-	return &vals_[0] + headerSizeWords();
+	return &vals_[0] + headerSizeWords();  // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
 }
 
 inline artdaq::RawDataType*
@@ -1181,7 +1181,7 @@ artdaq::Fragment::headerSizeWords() const
 				break;
 			}
 			default:
-				throw cet::exception("Fragment") << "A Fragment with an unknown version (" << std::to_string(hdr->version) << ") was received!";
+				throw cet::exception("Fragment") << "A Fragment with an unknown version (" << std::to_string(hdr->version) << ") was received!";  // NOLINT(cert-err60-cpp)
 				break;
 		}
 	}
@@ -1232,7 +1232,7 @@ artdaq::Fragment::fragmentHeaderPtr()
 				break;
 			}
 			default:
-				throw cet::exception("Fragment") << "A Fragment with an unknown version (" << std::to_string(hdr->version) << ") was received!";
+				throw cet::exception("Fragment") << "A Fragment with an unknown version (" << std::to_string(hdr->version) << ") was received!";  // NOLINT(cert-err60-cpp)
 				break;
 		}
 	}
@@ -1267,7 +1267,7 @@ artdaq::Fragment::fragmentHeader() const
 				break;
 			}
 			default:
-				throw cet::exception("Fragment") << "A Fragment with an unknown version (" << std::to_string(hdr.version) << ") was received!";
+				throw cet::exception("Fragment") << "A Fragment with an unknown version (" << std::to_string(hdr.version) << ") was received!";  // NOLINT(cert-err60-cpp)
 				break;
 		}
 	}

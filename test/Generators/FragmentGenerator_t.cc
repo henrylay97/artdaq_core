@@ -1,5 +1,5 @@
 #define BOOST_TEST_MODULE (FragmentGenerator_t)
-#include "cetlib/quiet_unit_test.hpp"
+#include <cetlib/quiet_unit_test.hpp>
 
 #include "artdaq-core/Data/Fragment.hh"
 #include "artdaq-core/Generators/FragmentGenerator.hh"
@@ -14,7 +14,7 @@ class FragmentGeneratorTest;
 class artdaqtest::FragmentGeneratorTest : public artdaq::FragmentGenerator
 {
 public:
-	FragmentGeneratorTest();
+	FragmentGeneratorTest() = default;
 
 	bool getNext(artdaq::FragmentPtrs& output) override
 	{
@@ -27,13 +27,10 @@ public:
 	}
 
 private:
-	bool getNext_(artdaq::FragmentPtrs&);
+	bool getNext_(artdaq::FragmentPtrs& /*frags*/);
 
 	std::vector<artdaq::Fragment::fragment_id_t> fragmentIDs_();
 };
-
-artdaqtest::FragmentGeneratorTest::FragmentGeneratorTest()
-    : FragmentGenerator() {}
 
 bool artdaqtest::FragmentGeneratorTest::getNext_(artdaq::FragmentPtrs& frags)
 {

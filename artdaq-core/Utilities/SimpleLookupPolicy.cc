@@ -1,3 +1,5 @@
+#include <memory>
+
 #include "artdaq-core/Utilities/SimpleLookupPolicy.hh"
 #include "cetlib/filesystem.h"
 
@@ -12,12 +14,12 @@ artdaq::SimpleLookupPolicy::
 	// an env var name or a list of paths.  If/when a single path is
 	// specified, we'll simply duplicate it so that search_path will
 	// do the right thing.
-	cwdPath_.reset(new cet::search_path(".:."));
+	cwdPath_ = std::make_unique<cet::search_path>(".:.");
 
 	// if no fallback path was specified, simply use the current directory
 	if (paths.empty())
 	{
-		fallbackPaths_.reset(new cet::search_path(".:."));
+		fallbackPaths_ = std::make_unique<cet::search_path>(".:.");
 		return;
 	}
 
@@ -29,12 +31,12 @@ artdaq::SimpleLookupPolicy::
 			workString.append(":");
 			workString.append(paths);
 		}
-		fallbackPaths_.reset(new cet::search_path(workString));
+		fallbackPaths_ = std::make_unique<cet::search_path>(workString);
 	}
 
 	else
 	{  // argType == ENV_VAR
-		fallbackPaths_.reset(new cet::search_path(paths));
+		fallbackPaths_ = std::make_unique<cet::search_path>(paths);
 	}
 }
 
@@ -55,4 +57,4 @@ std::string artdaq::SimpleLookupPolicy::operator()(std::string const& filename)
 	return fallbackPaths_->find_file(filename);
 }
 
-artdaq::SimpleLookupPolicy::~SimpleLookupPolicy() noexcept {}
+artdaq::SimpleLookupPolicy::~SimpleLookupPolicy() noexcept = default;

@@ -47,7 +47,7 @@ enum class ExceptionHandlerRethrow
    * - If artdaq::ExceptionHandlerRethrow::yes was passed to
    * ExceptionHandler(), re-throw the exception rather than swallow it
    */
-void ExceptionHandler(ExceptionHandlerRethrow decision, std::string optional_message = "");
+void ExceptionHandler(ExceptionHandlerRethrow decision, const std::string& optional_message = "");
 }  // namespace artdaq
 
 #endif

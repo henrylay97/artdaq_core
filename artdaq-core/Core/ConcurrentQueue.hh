@@ -95,7 +95,7 @@ public:
 		  * instantiate the ConcurrentQueue template has a method memoryUsed
 		  * returning the number of bytes occupied by the class itself.
 			 */
-	static const bool value = (sizeof(test<T>(nullptr)) == sizeof(TrueType));
+	static const bool value = (sizeof(test<T>(nullptr)) == sizeof(TrueType));  // NOLINT(cert-err58-cpp)
 };
 
 /**
@@ -168,7 +168,7 @@ struct FailIfFull
 	/**
 		 * \brief Exception thrown by FailIfFull policy when an enqueue operation is attempted on a full queue
 		 */
-	static struct QueueIsFull : public std::exception
+	struct QueueIsFull : public std::exception
 	{
 		/**
 			 * \brief Describe exception
@@ -178,7 +178,7 @@ struct FailIfFull
 		{
 			return "Cannot add item to a full queue";
 		}
-	} queueIsFull;  ///< Instance of QueueIsFull exception
+	};
 
 	/**
 		 * \brief Inserts element into the ConcurrentQueue
@@ -230,7 +230,7 @@ struct FailIfFull
 		if (size >= capacity || used + itemSize > memory)
 		{
 			++elementsDropped;
-			throw queueIsFull;
+			throw QueueIsFull();
 		}
 		else
 		{
@@ -239,9 +239,6 @@ struct FailIfFull
 		return true;
 	}
 };
-
-template<typename T>
-typename FailIfFull<T>::QueueIsFull FailIfFull<T>::queueIsFull{};
 
 /**
 	* \brief ConcurrentQueue policy to discard oldest elements when the queue is full
@@ -612,7 +609,7 @@ private:
 	mutable std::condition_variable queueNotFull_;
 
 	std::chrono::steady_clock::time_point readyTime_;
-	bool readerReady_;
+	bool readerReady_{false};
 	SequenceType elements_;
 	SizeType capacity_;
 	SizeType size_;
@@ -624,8 +621,8 @@ private:
 		  operation.
 		*/
 	detail::MemoryType memory_;
-	detail::MemoryType used_;
-	size_t elementsDropped_;
+	detail::MemoryType used_{0};
+	size_t elementsDropped_{0};
 
 	/*
 		  These private member functions assume that whatever locks
@@ -683,6 +680,8 @@ private:
 	ConcurrentQueue(ConcurrentQueue<T, EnqPolicy> const&) = delete;
 
 	ConcurrentQueue& operator=(ConcurrentQueue<T, EnqPolicy> const&) = delete;
+	ConcurrentQueue(ConcurrentQueue<T, EnqPolicy>&&) = default;
+	ConcurrentQueue& operator=(ConcurrentQueue<T, EnqPolicy>&&) = default;
 };
 
 //------------------------------------------------------------------
@@ -695,13 +694,10 @@ ConcurrentQueue<T, EnqPolicy>::ConcurrentQueue(
     detail::MemoryType maxMemory)
     : protectElements_()
     , readyTime_(std::chrono::steady_clock::now())
-    , readerReady_(false)
     , elements_()
     , capacity_(maxSize)
     , size_(0)
     , memory_(maxMemory)
-    , used_(0)
-    , elementsDropped_(0)
 {}
 
 template<class T, class EnqPolicy>
@@ -845,11 +841,11 @@ ConcurrentQueue<T, EnqPolicy>::memory() const
 }
 
 template<class T, class EnqPolicy>
-bool ConcurrentQueue<T, EnqPolicy>::setMemory(detail::MemoryType newmemory)
+bool ConcurrentQueue<T, EnqPolicy>::setMemory(detail::MemoryType maxMemory)
 {
 	LockType lock(protectElements_);
 	bool isEmpty = (size_ == 0);
-	if (isEmpty) { memory_ = newmemory; }
+	if (isEmpty) { memory_ = maxMemory; }
 	return isEmpty;
 }
 
@@ -867,10 +863,10 @@ ConcurrentQueue<T, EnqPolicy>::clear()
 }
 
 template<class T, class EnqPolicy>
-void ConcurrentQueue<T, EnqPolicy>::addExternallyDroppedEvents(SizeType n)
+void ConcurrentQueue<T, EnqPolicy>::addExternallyDroppedEvents(SizeType dropped)
 {
 	LockType lock(protectElements_);
-	elementsDropped_ += n;
+	elementsDropped_ += dropped;
 }
 
 //-----------------------------------------------------------

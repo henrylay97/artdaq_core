@@ -12,7 +12,7 @@
 #include "cetlib_except/exception.h"
 
 extern "C" {
-#include <stdint.h>
+#include <stdint.h>  // NOLINT(modernize-deprecated-headers)
 }
 
 namespace artdaq {
@@ -31,10 +31,13 @@ struct RawFragmentHeader;
 struct artdaq::detail::RawFragmentHeader
 {
 	/**
-	 * \brief The RawDataType (currently a 64-bit integer) is the basic unit of data representation within _artdaq_
+	 * \brief The RawDataType (currently an unsigned long long) is the basic unit of data representation within _artdaq_
+	 *
+	 * ELF, 7/30/2020: This typedef apparently cannot be changed without breaking compatibility with older data files. 
+	                   I have tried and failed to deal with such a change in classes_def.xml.
 	 */
 	typedef unsigned long long RawDataType;
-
+	
 #if HIDE_FROM_ROOT
 	typedef uint16_t version_t;             ///< version field is 16 bits
 	typedef uint64_t sequence_id_t;         ///< sequence_id field is 48 bits
@@ -118,8 +121,9 @@ struct artdaq::detail::RawFragmentHeader
 				return "Empty";
 			case ContainerFragmentType:
 				return "Container";
+			default:
+				return "Unknown";
 		}
-		return "Unknown";
 	}
 
 	// Each of the following invalid values is chosen based on the
@@ -210,10 +214,10 @@ artdaq::detail::RawFragmentHeader::setUserType(uint8_t utype)
 {
 	if (utype < FIRST_USER_TYPE || utype > LAST_USER_TYPE)
 	{
-		throw cet::exception("InvalidValue")
+		throw cet::exception("InvalidValue")  // NOLINT(cert-err60-cpp)
 		    << "RawFragmentHeader user types must be in the range of "
-		    << ((int)FIRST_USER_TYPE) << " to " << ((int)LAST_USER_TYPE)
-		    << " (bad type is " << ((int)utype) << ").";
+		    << static_cast<int>(FIRST_USER_TYPE) << " to " << static_cast<int>(LAST_USER_TYPE)
+		    << " (bad type is " << static_cast<int>(utype) << ").";
 	}
 	type = utype;
 }
@@ -223,9 +227,9 @@ artdaq::detail::RawFragmentHeader::setSystemType(uint8_t stype)
 {
 	if (stype < FIRST_SYSTEM_TYPE /*|| stype > LAST_SYSTEM_TYPE*/)
 	{
-		throw cet::exception("InvalidValue")
+		throw cet::exception("InvalidValue")  // NOLINT(cert-err60-cpp)
 		    << "RawFragmentHeader system types must be in the range of "
-		    << ((int)FIRST_SYSTEM_TYPE) << " to " << ((int)LAST_SYSTEM_TYPE);
+		    << static_cast<int>(FIRST_USER_TYPE) << " to " << static_cast<int>(LAST_USER_TYPE);
 	}
 	type = stype;
 }

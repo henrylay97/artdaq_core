@@ -2,7 +2,7 @@
 #include "artdaq-core/Data/detail/RawFragmentHeader.hh"
 
 #define BOOST_TEST_MODULE(Fragment_t)
-#include "cetlib/quiet_unit_test.hpp"
+#include <cetlib/quiet_unit_test.hpp>
 
 /**
  * \brief Test Metadata with three fields in two long words
@@ -479,7 +479,7 @@ BOOST_AUTO_TEST_CASE(Addresses)
 	artdaq::RawDataType* haddr = f1.headerAddress();
 	artdaq::RawDataType* daddr = f1.dataAddress();
 	BOOST_REQUIRE_EQUAL(daddr,
-	                    (haddr + artdaq::detail::RawFragmentHeader::num_words()));
+	                    (haddr + artdaq::detail::RawFragmentHeader::num_words()));  // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
 	try
 	{
 		f1.metadataAddress();
@@ -493,7 +493,7 @@ BOOST_AUTO_TEST_CASE(Addresses)
 	}
 	BOOST_REQUIRE_EQUAL(haddr, &(*(f1.headerBegin())));
 	BOOST_REQUIRE_EQUAL(daddr, &(*(f1.dataBegin())));
-	BOOST_REQUIRE_EQUAL(daddr + 200, &(*(f1.dataEnd())));
+	BOOST_REQUIRE_EQUAL(daddr + 200, &(*(f1.dataEnd())));  // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
 
 	// metadata with integer number of longwords
 	MetadataTypeOne mdOneA;
@@ -504,28 +504,28 @@ BOOST_AUTO_TEST_CASE(Addresses)
 	haddr = f2.headerAddress();
 	daddr = f2.dataAddress();
 	artdaq::RawDataType* maddr = f2.metadataAddress();
-	BOOST_REQUIRE_EQUAL(maddr, haddr +
+	BOOST_REQUIRE_EQUAL(maddr, haddr +  // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
 	                               artdaq::detail::RawFragmentHeader::num_words());
-	BOOST_REQUIRE_EQUAL(daddr, maddr + 2);
+	BOOST_REQUIRE_EQUAL(daddr, maddr + 2);  // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
 	BOOST_REQUIRE_EQUAL(haddr, &(*(f2.headerBegin())));
 	BOOST_REQUIRE_EQUAL(daddr, &(*(f2.dataBegin())));
-	BOOST_REQUIRE_EQUAL(daddr + 135, &(*(f2.dataEnd())));
+	BOOST_REQUIRE_EQUAL(daddr + 135, &(*(f2.dataEnd())));  // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
 
 	// metadata with fractional number of longwords
 	MetadataTypeTwo mdTwoA;
 	artdaq::Fragment f3(77, 101, 0, 3, mdTwoA);
 	BOOST_REQUIRE_EQUAL(f3.dataSize(), (size_t)77);
-	BOOST_REQUIRE_EQUAL(f3.size(), (size_t)77 + 4 +
+	BOOST_REQUIRE_EQUAL(f3.size(), (size_t)77 + 4 +  // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
 	                                   artdaq::detail::RawFragmentHeader::num_words());
 	haddr = f3.headerAddress();
 	daddr = f3.dataAddress();
 	maddr = f3.metadataAddress();
-	BOOST_REQUIRE_EQUAL(maddr, haddr +
+	BOOST_REQUIRE_EQUAL(maddr, haddr +  // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
 	                               artdaq::detail::RawFragmentHeader::num_words());
-	BOOST_REQUIRE_EQUAL(daddr, maddr + 4);
+	BOOST_REQUIRE_EQUAL(daddr, maddr + 4);  // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
 	BOOST_REQUIRE_EQUAL(haddr, &(*(f3.headerBegin())));
 	BOOST_REQUIRE_EQUAL(daddr, &(*(f3.dataBegin())));
-	BOOST_REQUIRE_EQUAL(daddr + 77, &(*(f3.dataEnd())));
+	BOOST_REQUIRE_EQUAL(daddr + 77, &(*(f3.dataEnd())));  // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
 }
 
 BOOST_AUTO_TEST_CASE(Metadata)
@@ -562,7 +562,7 @@ BOOST_AUTO_TEST_CASE(Metadata)
 	}
 
 	f1.setMetadata(mdOneA);
-	MetadataTypeOne* mdOnePtr = f1.metadata<MetadataTypeOne>();
+	auto* mdOnePtr = f1.metadata<MetadataTypeOne>();
 	BOOST_REQUIRE_EQUAL(mdOnePtr->field1, (uint64_t)5);
 	BOOST_REQUIRE_EQUAL(mdOnePtr->field2, (uint32_t)10);
 	BOOST_REQUIRE_EQUAL(mdOnePtr->field3, (uint32_t)15);
@@ -602,7 +602,7 @@ BOOST_AUTO_TEST_CASE(Metadata)
 	}
 
 	artdaq::Fragment f2(10, 1, 2, 3, mdTwoA);
-	MetadataTypeTwo* mdTwoPtr = f2.metadata<MetadataTypeTwo>();
+	auto* mdTwoPtr = f2.metadata<MetadataTypeTwo>();
 	BOOST_REQUIRE_EQUAL(mdTwoPtr->field1, (uint64_t)10);
 	BOOST_REQUIRE_EQUAL(mdTwoPtr->field2, (uint32_t)20);
 	BOOST_REQUIRE_EQUAL(mdTwoPtr->field3, (uint32_t)30);
@@ -618,16 +618,16 @@ BOOST_AUTO_TEST_CASE(Metadata)
 	BOOST_REQUIRE_EQUAL(f3.fragmentID(), (uint16_t)0xc3a5);
 	BOOST_REQUIRE_EQUAL(f3.type(), (uint8_t)123);
 	artdaq::RawDataType* dataPtr = f3.dataAddress();
-	dataPtr[0] = 0x12345678;
-	dataPtr[1] = 0xabcd;
-	dataPtr[2] = 0x456789ab;
-	dataPtr[3] = 0x3c3c3c3c;
-	dataPtr[4] = 0x5a5a5a5a;
-	BOOST_REQUIRE_EQUAL(dataPtr[0], (uint64_t)0x12345678);
-	BOOST_REQUIRE_EQUAL(dataPtr[1], (uint64_t)0xabcd);
-	BOOST_REQUIRE_EQUAL(dataPtr[2], (uint64_t)0x456789ab);
-	BOOST_REQUIRE_EQUAL(dataPtr[3], (uint64_t)0x3c3c3c3c);
-	BOOST_REQUIRE_EQUAL(dataPtr[4], (uint64_t)0x5a5a5a5a);
+	dataPtr[0] = 0x12345678;                                // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+	dataPtr[1] = 0xabcd;                                    // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+	dataPtr[2] = 0x456789ab;                                // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+	dataPtr[3] = 0x3c3c3c3c;                                // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+	dataPtr[4] = 0x5a5a5a5a;                                // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+	BOOST_REQUIRE_EQUAL(dataPtr[0], (uint64_t)0x12345678);  // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+	BOOST_REQUIRE_EQUAL(dataPtr[1], (uint64_t)0xabcd);      // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+	BOOST_REQUIRE_EQUAL(dataPtr[2], (uint64_t)0x456789ab);  // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+	BOOST_REQUIRE_EQUAL(dataPtr[3], (uint64_t)0x3c3c3c3c);  // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+	BOOST_REQUIRE_EQUAL(dataPtr[4], (uint64_t)0x5a5a5a5a);  // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
 	BOOST_REQUIRE_EQUAL(f3.sequenceID(), (uint32_t)0xabcdef);
 	BOOST_REQUIRE_EQUAL(f3.fragmentID(), (uint16_t)0xc3a5);
 	BOOST_REQUIRE_EQUAL(f3.type(), (uint8_t)123);
@@ -644,16 +644,16 @@ BOOST_AUTO_TEST_CASE(Metadata)
 	BOOST_REQUIRE_EQUAL(f3.fragmentID(), (uint16_t)0xc3a5);
 	BOOST_REQUIRE_EQUAL(f3.type(), (uint8_t)123);
 	dataPtr = f3.dataAddress();
-	dataPtr[0] = 0x12345678;
-	dataPtr[1] = 0xabcd;
-	dataPtr[2] = 0x456789ab;
-	dataPtr[3] = 0x3c3c3c3c;
-	dataPtr[4] = 0x5a5a5a5a;
-	BOOST_REQUIRE_EQUAL(dataPtr[0], (uint64_t)0x12345678);
-	BOOST_REQUIRE_EQUAL(dataPtr[1], (uint64_t)0xabcd);
-	BOOST_REQUIRE_EQUAL(dataPtr[2], (uint64_t)0x456789ab);
-	BOOST_REQUIRE_EQUAL(dataPtr[3], (uint64_t)0x3c3c3c3c);
-	BOOST_REQUIRE_EQUAL(dataPtr[4], (uint64_t)0x5a5a5a5a);
+	dataPtr[0] = 0x12345678;                                // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+	dataPtr[1] = 0xabcd;                                    // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+	dataPtr[2] = 0x456789ab;                                // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+	dataPtr[3] = 0x3c3c3c3c;                                // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+	dataPtr[4] = 0x5a5a5a5a;                                // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+	BOOST_REQUIRE_EQUAL(dataPtr[0], (uint64_t)0x12345678);  // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+	BOOST_REQUIRE_EQUAL(dataPtr[1], (uint64_t)0xabcd);      // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+	BOOST_REQUIRE_EQUAL(dataPtr[2], (uint64_t)0x456789ab);  // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+	BOOST_REQUIRE_EQUAL(dataPtr[3], (uint64_t)0x3c3c3c3c);  // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+	BOOST_REQUIRE_EQUAL(dataPtr[4], (uint64_t)0x5a5a5a5a);  // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
 
 	MetadataTypeHuge mdHuge;
 	artdaq::Fragment f4(19);
@@ -749,25 +749,25 @@ BOOST_AUTO_TEST_CASE(Bytes)
 	// (now-deprecated, but still in legacy code) dataAddress() point to
 	// the same region in memory, i.e., the start of the payload
 
-	artdaq::Fragment::byte_t* ptr1 = reinterpret_cast<artdaq::Fragment::byte_t*>(
+	auto* ptr1 = reinterpret_cast<artdaq::Fragment::byte_t*>(  // NOLINT(cppcoreguidelines-pro-type-reinterpret-cast)
 	    &*f3_factory->dataBegin());
 
 	artdaq::Fragment::byte_t* ptr2 = f3_factory->dataBeginBytes();
 
-	artdaq::Fragment::byte_t* ptr3 = reinterpret_cast<artdaq::Fragment::byte_t*>(f3_factory->dataAddress());
+	auto* ptr3 = reinterpret_cast<artdaq::Fragment::byte_t*>(f3_factory->dataAddress());  // NOLINT(cppcoreguidelines-pro-type-reinterpret-cast)
 
 	BOOST_REQUIRE_EQUAL(ptr1, ptr2);
 	BOOST_REQUIRE_EQUAL(ptr2, ptr3);
 
 	// Make sure metadata struct gets aligned
 	// header == 3 RawDataTypes, metadata is 3 bytes (rounds up to 1 RawDataType)
-	BOOST_REQUIRE(f3_factory->dataBeginBytes() -
-	                  reinterpret_cast<artdaq::Fragment::byte_t*>(
-	                      &*f3_factory->headerBegin()) ==
+        std::size_t const metadata_size =
+            f3_factory->dataBeginBytes() - reinterpret_cast<artdaq::Fragment::byte_t*>(&*f3_factory->headerBegin()); // NOLINT(cppcoreguidelines-pro-type-reinterpret-cast)
+        BOOST_REQUIRE(metadata_size ==
 	              (1 + artdaq::detail::RawFragmentHeader::num_words()) * sizeof(artdaq::RawDataType));
 
 	// Sanity check for the payload size
-	BOOST_REQUIRE(static_cast<std::size_t>(f3_factory->dataEndBytes() - f3_factory->dataBeginBytes()) == f3_factory->dataSizeBytes());
+	BOOST_REQUIRE(static_cast<std::size_t>(f3_factory->dataEndBytes() - f3_factory->dataBeginBytes()) == f3_factory->dataSizeBytes());  // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
 
 	// Check resizing
 	artdaq::Fragment f4(payload_size);
@@ -906,7 +906,7 @@ BOOST_AUTO_TEST_CASE(Upgrade_V1)
 
 	for (size_t jj = 0; jj < f.dataSize(); ++jj)
 	{
-		BOOST_REQUIRE_EQUAL(*(f.dataBegin() + jj), jj + 1);
+		BOOST_REQUIRE_EQUAL(*(f.dataBegin() + jj), jj + 1);  // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
 	}
 }
 

@@ -3,8 +3,8 @@
 
 #include <boost/thread/mutex.hpp>
 
-#include <math.h>
-#include <stdint.h>
+#include <cmath>
+#include <cstdint>
 #include <vector>
 
 namespace artdaq {
@@ -25,7 +25,7 @@ struct MonitoredQuantityStats
 		RECENT = 1  ///< recent data only
 	};
 
-	long long fullSampleCount;     ///< The total number of samples represented
+	size_t fullSampleCount;        ///< The total number of samples represented
 	double fullSampleRate;         ///< The total number of samples over the full duration of sampling
 	double fullValueSum;           ///< The sum of all samples
 	double fullValueSumOfSquares;  ///< The sum of the squares of all samples
@@ -36,7 +36,7 @@ struct MonitoredQuantityStats
 	double fullValueRate;          ///< The sum of all samples over the full duration of sampling
 	DURATION_T fullDuration;       ///< The full duration of sampling
 
-	long long recentSampleCount;     ///< The number of samples in the "recent" time window
+	size_t recentSampleCount;        ///< The number of samples in the "recent" time window
 	double recentSampleRate;         ///< The number of samples in the "recent" time window, divided by the length of that window
 	double recentValueSum;           ///< The sum of the "recent" samples
 	double recentValueSumOfSquares;  ///< The sum of the squares of the "recent" samples
@@ -47,10 +47,10 @@ struct MonitoredQuantityStats
 	double recentValueRate;          ///< The sum of the "recent" samples, divided by the length of the "recent" time window
 	DURATION_T recentDuration;       ///< The length of the "recent" time window
 
-	std::vector<long long> recentBinnedSampleCounts;  ///< Sample counts for each instance of calculateStatistics in _intervalForRecentStats (rolling window)
-	std::vector<double> recentBinnedValueSums;        ///< Sums for each instance of calculateStatistics in _intervalForRecentStats (rolling window)
-	std::vector<DURATION_T> recentBinnedDurations;    ///< Duration between each instance of calcualteStatistics in _intervalForRecentStats (rolling window)
-	std::vector<TIME_POINT_T> recentBinnedEndTimes;   ///< Last sample time in each instance of calculateStatistics in _intervalForRecentStats (rolling window)
+	std::vector<size_t> recentBinnedSampleCounts;    ///< Sample counts for each instance of calculateStatistics in _intervalForRecentStats (rolling window)
+	std::vector<double> recentBinnedValueSums;       ///< Sums for each instance of calculateStatistics in _intervalForRecentStats (rolling window)
+	std::vector<DURATION_T> recentBinnedDurations;   ///< Duration between each instance of calcualteStatistics in _intervalForRecentStats (rolling window)
+	std::vector<TIME_POINT_T> recentBinnedEndTimes;  ///< Last sample time in each instance of calculateStatistics in _intervalForRecentStats (rolling window)
 
 	double lastSampleValue;            ///< Value of the most recent sample
 	double lastValueRate;              ///< Latest rate point (sum of values over calculateStatistics interval)
@@ -62,7 +62,7 @@ struct MonitoredQuantityStats
 		 * \param t Which interval to return, DataSetType::FULL (default) or DataSetType::RECENT
 		 * \return The sample count for the requested interval
 		 */
-	long long getSampleCount(DataSetType t = DataSetType::FULL) const { return t == DataSetType::RECENT ? recentSampleCount : fullSampleCount; }
+	size_t getSampleCount(DataSetType t = DataSetType::FULL) const { return t == DataSetType::RECENT ? recentSampleCount : fullSampleCount; }
 
 	/**
 		 * \brief Returns the sum of values in the requested interval
@@ -128,7 +128,7 @@ struct MonitoredQuantityStats
 	double getSampleLatency(DataSetType t = DataSetType::FULL) const
 	{
 		auto v = getSampleRate(t);
-		return v ? 1e6 / v : INFINITY;
+		return v != 0.0 ? 1e6 / v : INFINITY;
 	}
 
 	/**
@@ -286,13 +286,18 @@ public:
 	DURATION_T getFullDuration() const;           ///< Access the full duration of the statistics
 	double getRecentValueSum() const;             ///< Access the sum of the value samples in the "recent" time span
 	double getRecentValueAverage() const;         ///< Access the average of the value samples in the "recent" time span
-	long long getFullSampleCount() const;         ///< Access the count of samples for the entire history of the MonitoredQuantity
+	size_t getFullSampleCount() const;            ///< Access the count of samples for the entire history of the MonitoredQuantity
 
 private:
+	MonitoredQuantity() = delete;
+
 	// Prevent copying of the MonitoredQuantity
 	MonitoredQuantity(MonitoredQuantity const&) = delete;
 
 	MonitoredQuantity& operator=(MonitoredQuantity const&) = delete;
+
+	MonitoredQuantity(MonitoredQuantity&&) = delete;
+	MonitoredQuantity& operator=(MonitoredQuantity&&) = delete;
 
 	// Helper functions.
 	void _reset_accumulators();
@@ -300,7 +305,7 @@ private:
 	void _reset_results();
 
 	std::atomic<TIME_POINT_T> _lastCalculationTime;
-	long long _workingSampleCount;
+	size_t _workingSampleCount;
 	double _workingValueSum;
 	double _workingValueSumOfSquares;
 	double _workingValueMin;
