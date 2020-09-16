@@ -761,9 +761,9 @@ BOOST_AUTO_TEST_CASE(Bytes)
 
 	// Make sure metadata struct gets aligned
 	// header == 3 RawDataTypes, metadata is 3 bytes (rounds up to 1 RawDataType)
-        std::size_t const metadata_size =
-            f3_factory->dataBeginBytes() - reinterpret_cast<artdaq::Fragment::byte_t*>(&*f3_factory->headerBegin()); // NOLINT(cppcoreguidelines-pro-type-reinterpret-cast)
-        BOOST_REQUIRE(metadata_size ==
+	std::size_t const metadata_size =
+	    f3_factory->dataBeginBytes() - reinterpret_cast<artdaq::Fragment::byte_t*>(&*f3_factory->headerBegin());  // NOLINT(cppcoreguidelines-pro-type-reinterpret-cast)
+	BOOST_REQUIRE(metadata_size ==
 	              (1 + artdaq::detail::RawFragmentHeader::num_words()) * sizeof(artdaq::RawDataType));
 
 	// Sanity check for the payload size

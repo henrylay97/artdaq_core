@@ -181,7 +181,7 @@ std::string artdaq::generateMessageFacilityConfiguration(char const* progname, b
 	fhicl::ParameterSet tmp_pset;
 	try
 	{
-	fhicl::make_ParameterSet(pstr, tmp_pset);
+		fhicl::make_ParameterSet(pstr, tmp_pset);
 	}
 	catch (cet::exception const& ex)
 	{
@@ -283,7 +283,7 @@ void artdaq::configureMessageFacility(char const* progname, bool useConsole, boo
 	fhicl::ParameterSet pset;
 	try
 	{
-	fhicl::make_ParameterSet(pstr, pset);
+		fhicl::make_ParameterSet(pstr, pset);
 	}
 	catch (cet::exception const&)
 	{

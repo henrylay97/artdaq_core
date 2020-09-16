@@ -146,6 +146,54 @@ BOOST_AUTO_TEST_CASE(AddFragments)
 	BOOST_REQUIRE_EQUAL(*(outfrag->dataBegin() + 1), 6);
 }
 
+#define PERF_TEST_FRAGMENT_COUNT 1000
+BOOST_AUTO_TEST_CASE(Performance)
+{
+	artdaq::FragmentPtrs frags;
+	std::vector<artdaq::Fragment::value_type> fakeData1{1, 2, 3, 4};
+	for (int ii = 0; ii < PERF_TEST_FRAGMENT_COUNT; ++ii)
+	{
+		artdaq::FragmentPtr
+		    tmpFrag1(artdaq::Fragment::dataFrag(1,
+		                                        ii,
+		                                        fakeData1.begin(),
+		                                        fakeData1.end()));
+		tmpFrag1->setUserType(artdaq::Fragment::FirstUserFragmentType);
+		frags.push_back(std::move(tmpFrag1));
+	}
+
+	// Test individual adds
+	artdaq::Fragment f(0);
+	f.setSequenceID(1);
+	artdaq::ContainerFragmentLoader cfl(f);
+	auto cf = reinterpret_cast<artdaq::ContainerFragment*>(&cfl);  // NOLINT(cppcoreguidelines-pro-type-reinterpret-cast)
+	auto start_time = std::chrono::steady_clock::now();
+	for (auto& it : frags)
+	{
+		cfl.addFragment(it);
+	}
+	auto end_time = std::chrono::steady_clock::now();
+
+	BOOST_REQUIRE_EQUAL(cf->block_count(), PERF_TEST_FRAGMENT_COUNT);
+	auto type = artdaq::Fragment::FirstUserFragmentType;
+	BOOST_REQUIRE_EQUAL(cf->fragment_type(), type);
+	TLOG(TLVL_INFO, "ContainerFragment_t") << "Adding " << PERF_TEST_FRAGMENT_COUNT << " Fragments individually took " << artdaq::TimeUtils::GetElapsedTimeMicroseconds(start_time, end_time) << " us";
+
+	// Test group add
+	artdaq::Fragment f2(0);
+	f2.setSequenceID(1);
+	artdaq::ContainerFragmentLoader cfl2(f2);
+	cf = reinterpret_cast<artdaq::ContainerFragment*>(&cfl2);  // NOLINT(cppcoreguidelines-pro-type-reinterpret-cast)
+
+	start_time = std::chrono::steady_clock::now();
+	cfl2.addFragments(frags);
+	end_time = std::chrono::steady_clock::now();
+
+	BOOST_REQUIRE_EQUAL(cf->block_count(), PERF_TEST_FRAGMENT_COUNT);
+	BOOST_REQUIRE_EQUAL(cf->fragment_type(), type);
+	TLOG(TLVL_INFO, "ContainerFragment_t") << "Adding " << PERF_TEST_FRAGMENT_COUNT << " Fragments in a group took " << artdaq::TimeUtils::GetElapsedTimeMicroseconds(start_time, end_time) << " us";
+}
+
 BOOST_AUTO_TEST_CASE(Exceptions)
 {
 	artdaq::Fragment f(0);

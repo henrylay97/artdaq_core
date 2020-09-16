@@ -1,5 +1,5 @@
-#include "artdaq-core/Data/FragmentNameHelper.hh"
 #include "artdaq-core/Data/ContainerFragment.hh"
+#include "artdaq-core/Data/FragmentNameHelper.hh"
 
 namespace artdaq {
 
