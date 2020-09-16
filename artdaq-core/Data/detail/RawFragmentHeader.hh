@@ -37,7 +37,7 @@ struct artdaq::detail::RawFragmentHeader
 	                   I have tried and failed to deal with such a change in classes_def.xml.
 	 */
 	typedef unsigned long long RawDataType;
-	
+
 #if HIDE_FROM_ROOT
 	typedef uint16_t version_t;             ///< version field is 16 bits
 	typedef uint64_t sequence_id_t;         ///< sequence_id field is 48 bits

@@ -113,7 +113,6 @@ private:
 	FragmentNameHelper& operator=(FragmentNameHelper&&) = default;
 };
 
-
 inline std::shared_ptr<FragmentNameHelper>
 makeNameHelper(std::string const& plugin_name, std::string const& unidentified_instance_name, std::vector<std::pair<artdaq::Fragment::type_t, std::string>> extraTypes)
 {
