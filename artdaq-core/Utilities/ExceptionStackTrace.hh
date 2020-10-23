@@ -41,12 +41,12 @@ public:
 	}
 
 	//default
-	Trace(Trace&&) = default;
+	Trace(Trace&&) = default;  ///< Default Move Constructor
 
 	//deleted
-	Trace(const Trace&) = delete;
-	Trace& operator=(const Trace&) = delete;
-	Trace& operator=(Trace&&) = delete;
+	Trace(const Trace&) = delete;             ///< Copy Constructor is deleted
+	Trace& operator=(const Trace&) = delete;  ///< Copy Assignment operator is deleted
+	Trace& operator=(Trace&&) = delete;       ///< Move Assignment operator is deleted
 
 	/**
 	 * \brief Produces a one-line summary
@@ -97,7 +97,7 @@ inline std::ostream& operator<<(std::ostream& os, Trace const& trace)
 class StackTrace
 {
 public:
-	using traces_t = std::vector<Trace>;
+	using traces_t = std::vector<Trace>;  ///< Trace collection type
 
 	/**
 	 * \brief Constructor
@@ -115,12 +115,12 @@ public:
 	void resolve();
 
 	//default
-	StackTrace(StackTrace&&) = default;
-	StackTrace& operator=(StackTrace&&) = default;
+	StackTrace(StackTrace&&) = default;             ///< Default Move Constructor
+	StackTrace& operator=(StackTrace&&) = default;  ///< Default move assignment operator
 
 	//deleted
-	StackTrace(const StackTrace&) = delete;
-	StackTrace& operator=(const StackTrace&) = delete;
+	StackTrace(const StackTrace&) = delete;             ///< Copy Constructor is deleted
+	StackTrace& operator=(const StackTrace&) = delete;  ///< Copy assignment operator is deleted
 
 	/**
 	 * \brief Demangles backtrace symbols
@@ -158,7 +158,7 @@ inline std::ostream& operator<<(std::ostream& os, StackTrace const& stack_trace)
 class StackTraceCollector
 {
 public:
-	using stacktrace_map_t = std::unordered_map<std::thread::id, StackTrace>;
+	using stacktrace_map_t = std::unordered_map<std::thread::id, StackTrace>;  ///< Map relating Thread IDs to their StackTraces
 
 	/**
 	 * \brief Constructor
@@ -167,10 +167,10 @@ public:
 	    : stack_traces_{}, stack_traces_mutex_{} {}
 
 	//deleted
-	StackTraceCollector(const StackTraceCollector&) = delete;
-	StackTraceCollector& operator=(const StackTraceCollector&) = delete;
-	StackTraceCollector(StackTraceCollector&&) = delete;
-	StackTraceCollector& operator=(StackTraceCollector&&) = delete;
+	StackTraceCollector(const StackTraceCollector&) = delete;             ///< Copy Constructor is deleted
+	StackTraceCollector& operator=(const StackTraceCollector&) = delete;  ///< Copy Assignment is deleted
+	StackTraceCollector(StackTraceCollector&&) = delete;                  ///< Move Constructor is deleted
+	StackTraceCollector& operator=(StackTraceCollector&&) = delete;       ///< Move Assignment is deleted
 
 	/**
 	 * \brief Adds a stacktrace to the stack_traces_ map

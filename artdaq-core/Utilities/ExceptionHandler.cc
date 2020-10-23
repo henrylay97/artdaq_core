@@ -11,6 +11,9 @@
 namespace artdaq {
 
 #ifdef EXCEPTIONSTACKTRACE
+/**
+ * @brief Print the Exception Stack Trace
+*/
 inline void PrintExceptionStackTrace()
 {
 	auto message = artdaq::debug::getStackTraceCollector().print_stacktrace();
@@ -27,6 +30,9 @@ inline void PrintExceptionStackTrace()
 	TLOG(TLVL_DEBUG) << message.substr(prev);
 }
 #else
+/**
+ * @brief Print the Exception Stack Trace
+*/
 inline void PrintExceptionStackTrace()
 {}
 #endif

@@ -30,7 +30,7 @@ public:
 		 * \param broadcast_key Key of the broadcast shared memory segment
 		 * \param expectedEventCount The number of events the SimpleMemoryReader should expect
 		 */
-	explicit SimpleMemoryReader(uint32_t shm_key, uint32_t broadcast_key, std::size_t eec = 0);
+	explicit SimpleMemoryReader(uint32_t shm_key, uint32_t broadcast_key, std::size_t expectedEventCount = 0);
 
 	/**
 		 * \brief Run until a null pointer is popped off of the RawEventQueue. Throws an excpetion

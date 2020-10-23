@@ -28,7 +28,7 @@ public:
 		 * \brief Constructs a SimpleQueueReader
 		 * \param expectedEventCount The number of events the SimpleQueueReader should expect
 		 */
-	explicit SimpleQueueReader(std::size_t eec = 0);
+	explicit SimpleQueueReader(std::size_t expectedEventCount = 0);
 
 	/**
 		 * \brief Run until a null pointer is popped off of the RawEventQueue. Throws an excpetion

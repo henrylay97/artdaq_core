@@ -28,6 +28,9 @@
 	}
 
 namespace artdaq {
+/**
+ * @brief The FragmentNameHelper translates between Fragments and their instance names (usually by type, but any/all RawFragmentHeader fields, or even Overlays, may be used)
+ */
 class FragmentNameHelper
 {
 public:
@@ -37,13 +40,10 @@ public:
 	virtual ~FragmentNameHelper() = default;
 
 	/**
-	 * \brief FragmentNameHelper constructor
-	 * \param ps ParameterSet used to configure FragmentNameHelper
-	 *
-	 * FragmentNameHelper accepts the following Parameters:
-	 * "unidentified_instance_name" (Default: "unidentified"): Name to use for any Fragments which are not successfully translated by the FragmentNameHelper
-	 * "fragment_type_map" (Default: []): A list of Fragment type_t to string pairs for additional types to register with the FragmentNameHelper
-	 */
+	 * @brief FragmentNameHelper Constructor
+	 * @param unidentified_instance_name Name to use for unidentified Fragments
+	 * @param extraTypes Additional types to register
+	*/
 	FragmentNameHelper(std::string unidentified_instance_name, std::vector<std::pair<artdaq::Fragment::type_t, std::string>> extraTypes)
 	    : type_map_()
 	    , unidentified_instance_name_(unidentified_instance_name)
@@ -97,7 +97,7 @@ public:
 			 * \brief Returns the product instance name for the specified fragment, based on the types that have
 			 *        been specified in the SetBasicTypes() and AddExtraType() methods.  This *does* include the
 			 *        use of "container" types, if the container type mapping is part of the basic types.  If no
-			 *        mapping is found, the specified unidentified_instance_name is returned.
+			 *        mapping is found, the specified unidentified_instance_name should be returned.
 			 * Must be implemented by derived classes
 			 */
 	virtual std::pair<bool, std::string>
@@ -113,6 +113,13 @@ private:
 	FragmentNameHelper& operator=(FragmentNameHelper&&) = default;
 };
 
+/**
+ * @brief Create a FragmentNameHelper
+ * @param plugin_name Name of the FragmentNameHelper plugin to load
+ * @param unidentified_instance_name String to use for when the FragmentNameHelper cannot determine the Fragment name
+ * @param extraTypes Additional types to register with the FragmentNameHelper
+ * @return FragmentNameHelper shared_ptr handle
+*/
 inline std::shared_ptr<FragmentNameHelper>
 makeNameHelper(std::string const& plugin_name, std::string const& unidentified_instance_name, std::vector<std::pair<artdaq::Fragment::type_t, std::string>> extraTypes)
 {
@@ -121,6 +128,9 @@ makeNameHelper(std::string const& plugin_name, std::string const& unidentified_i
 	return bpf.makePlugin<std::shared_ptr<FragmentNameHelper>>(plugin_name, unidentified_instance_name, extraTypes);
 }
 
+/**
+ * @brief Default implementation of FragmentNameHelper
+*/
 class ArtdaqFragmentNameHelper : public FragmentNameHelper
 {
 public:
@@ -130,9 +140,10 @@ public:
 	virtual ~ArtdaqFragmentNameHelper();
 
 	/**
-	 * \brief NetMonTransportService Constructor
-	 * \param pset ParameterSet used to configure NetMonTransportService and DataSenderManager. See NetMonTransportService::Config
-	 */
+	 * @brief ArtdaqFragmentNameHelper Constructor
+	 * @param unidentified_instance_name Name to use for unidentified Fragments
+	 * @param extraTypes Additional types to register
+	*/
 	ArtdaqFragmentNameHelper(std::string unidentified_instance_name, std::vector<std::pair<artdaq::Fragment::type_t, std::string>> extraTypes);
 
 	/**
