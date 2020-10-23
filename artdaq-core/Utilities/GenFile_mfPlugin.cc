@@ -243,7 +243,7 @@ ELGenFileOutput::ELGenFileOutput(Parameters const& pset)
 			default:
 				break;
 		}
-		TLOG(6) << "filePattern is now: " << filePattern;
+		TLOG(TLVL_DEBUG + 3) << "filePattern is now: " << filePattern;
 	}
 	std::string fileName = baseDir + "/" + filePattern;
 	TLOG(TLVL_DEBUG) << "fileName is: " << fileName;

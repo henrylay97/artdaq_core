@@ -34,9 +34,9 @@ int SimpleMemoryReaderApp(int argc, char** argv)
 }
 
 SimpleMemoryReader::
-    SimpleMemoryReader(uint32_t shm_key, uint32_t broadcast_key, std::size_t eec)
+    SimpleMemoryReader(uint32_t shm_key, uint32_t broadcast_key, std::size_t expectedEventCount)
     : incoming_events_(new SharedMemoryEventReceiver(shm_key, broadcast_key))
-    , expectedEventCount_(eec)
+    , expectedEventCount_(expectedEventCount)
 {
 	TLOG(50) << "ctor done (after queue_.setReaderIsReady())";
 }

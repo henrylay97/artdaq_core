@@ -35,9 +35,9 @@ int simpleQueueReaderApp(int argc, char** argv)
 }
 
 SimpleQueueReader::
-    SimpleQueueReader(std::size_t eec)
+    SimpleQueueReader(std::size_t expectedEventCount)
     : queue_(getGlobalQueue())
-    , expectedEventCount_(eec)
+    , expectedEventCount_(expectedEventCount)
 {
 	queue_.setReaderIsReady();
 	TLOG(50) << "SimpleQueueReader ctor done (after queue_.setReaderIsReady())";
