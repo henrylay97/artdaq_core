@@ -10,10 +10,11 @@ namespace artdaq {
 	* \param progname The name of the program
 	* \param useConsole Should console output be activated? Default = true
 	 * \param printDebug Whether Debug-level messages should be printed to console. Default = false
+	 * \param fileExtraName Additonal name to be printed after progname in file names within output directory for progname (e.g. "-art")
 	* \return Fhicl string with generated MessageFacility configuration
 	* \throw cet::exception if log path or ARTDAQ_LOG_FHICL do not exist
 	*/
-std::string generateMessageFacilityConfiguration(char const* progname, bool useConsole = true, bool printDebug = false);
+std::string generateMessageFacilityConfiguration(char const* progname, bool useConsole = true, bool printDebug = false, char const* fileExtraName = "");
 
 /**
 	 * \brief Configure TRACE

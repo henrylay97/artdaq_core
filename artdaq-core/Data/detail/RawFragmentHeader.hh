@@ -191,6 +191,23 @@ struct artdaq::detail::RawFragmentHeader
 	 */
 	struct timespec getLatency(bool touch);
 
+	bool operator==(const detail::RawFragmentHeader& other)
+	{
+		return word_count == other.word_count &&
+		       version == other.version &&
+		       type == other.type &&
+		       metadata_word_count == other.metadata_word_count &&
+
+		       sequence_id == other.sequence_id &&
+		       fragment_id == other.fragment_id &&
+
+		       timestamp == other.timestamp &&
+
+		       valid == other.valid &&
+		       complete == other.complete &&
+		       atime_ns == other.atime_ns &&
+		       atime_s == other.atime_s;
+	}
 #endif /* HIDE_FROM_ROOT */
 };
 

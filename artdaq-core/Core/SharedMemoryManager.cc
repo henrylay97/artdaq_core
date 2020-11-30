@@ -683,7 +683,8 @@ bool artdaq::SharedMemoryManager::ReadyForWrite(bool overwrite)
 std::deque<int> artdaq::SharedMemoryManager::GetBuffersOwnedByManager(bool locked)
 {
 	std::deque<int> output;
-	if (!IsValid())
+	size_t buffer_count = size();
+	if (!IsValid() || buffer_count == 0)
 	{
 		return output;
 	}
@@ -694,7 +695,7 @@ std::deque<int> artdaq::SharedMemoryManager::GetBuffersOwnedByManager(bool locke
 		std::lock_guard<std::mutex> lk(search_mutex_);
 		TLOG(TLVL_BUFLCK) << "GetBuffersOwnedByManager obtained search_mutex";
 		//TraceLock lk(search_mutex_, 16, "GetOwnedSearch");
-		for (auto ii = 0; ii < shm_ptr_->buffer_count; ++ii)
+		for (size_t ii = 0; ii < buffer_count; ++ii)
 		{
 			auto buf = getBufferInfo_(ii);
 			if (buf == nullptr)
@@ -709,7 +710,7 @@ std::deque<int> artdaq::SharedMemoryManager::GetBuffersOwnedByManager(bool locke
 	}
 	else
 	{
-		for (auto ii = 0; ii < shm_ptr_->buffer_count; ++ii)
+		for (size_t ii = 0; ii < buffer_count; ++ii)
 		{
 			auto buf = getBufferInfo_(ii);
 			if (buf == nullptr)
@@ -723,7 +724,7 @@ std::deque<int> artdaq::SharedMemoryManager::GetBuffersOwnedByManager(bool locke
 		}
 	}
 
-	TLOG(TLVL_BUFFER) << "GetBuffersOwnedByManager: own " << output.size() << " / " << shm_ptr_->buffer_count << " buffers.";
+	TLOG(TLVL_BUFFER) << "GetBuffersOwnedByManager: own " << output.size() << " / " << buffer_count << " buffers.";
 	return output;
 }
 
@@ -731,7 +732,7 @@ size_t artdaq::SharedMemoryManager::BufferDataSize(int buffer)
 {
 	TLOG(TLVL_BUFFER) << "BufferDataSize(" << buffer << ") called.";
 
-	if (buffer >= shm_ptr_->buffer_count)
+	if (!shm_ptr_ || buffer >= shm_ptr_->buffer_count)
 	{
 		Detach(true, "ArgumentOutOfRange", "The specified buffer does not exist!");
 	}
@@ -932,7 +933,7 @@ void artdaq::SharedMemoryManager::MarkBufferFull(int buffer, int destination)
 	}
 }
 
-void artdaq::SharedMemoryManager::MarkBufferEmpty(int buffer, bool force)
+void artdaq::SharedMemoryManager::MarkBufferEmpty(int buffer, bool force, bool detachOnException)
 {
 	TLOG(18) << "MarkBufferEmpty BEGIN, buffer=" << buffer << ", force=" << force << ", manager_id_=" << manager_id_;
 	if (buffer >= shm_ptr_->buffer_count)
@@ -948,7 +949,8 @@ void artdaq::SharedMemoryManager::MarkBufferEmpty(int buffer, bool force)
 	}
 	if (!force)
 	{
-		checkBuffer_(shmBuf, BufferSemaphoreFlags::Reading, true);
+		auto ret = checkBuffer_(shmBuf, BufferSemaphoreFlags::Reading, detachOnException);
+		if (!ret) return;
 	}
 	touchBuffer_(shmBuf);
 

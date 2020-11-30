@@ -15,10 +15,9 @@
 
 namespace BFS = boost::filesystem;
 
-std::string artdaq::generateMessageFacilityConfiguration(char const* progname, bool useConsole, bool printDebug)
+std::string artdaq::generateMessageFacilityConfiguration(char const* progname, bool useConsole, bool printDebug, char const* fileExtraName)
 {
 	std::string logPathProblem;
-	std::string logfileName;
 	char* logRootString = getenv("ARTDAQ_LOG_ROOT");
 	char* logFhiclCode = getenv("ARTDAQ_LOG_FHICL");
 	char* artdaqMfextensionsDir = getenv("ARTDAQ_MFEXTENSIONS_DIR");
@@ -58,40 +57,6 @@ std::string artdaq::generateMessageFacilityConfiguration(char const* progname, b
 			BFS::create_directory(logfileDir);
 			BFS::permissions(logfileDir, BFS::add_perms | BFS::owner_all | BFS::group_all | BFS::others_read);
 		}
-
-		time_t rawtime;
-		struct tm* timeinfo;
-		char timeBuff[256];
-		time(&rawtime);
-		timeinfo = localtime(&rawtime);
-		strftime(timeBuff, 256, "%Y%m%d%H%M%S", timeinfo);
-
-		char hostname[256];
-		std::string hostString;
-		if (gethostname(&hostname[0], 256) == 0)
-		{
-			std::string tmpString(hostname);
-			hostString = tmpString;
-			size_t pos = hostString.find('.');
-			if (pos != std::string::npos && pos > 2)
-			{
-				hostString = hostString.substr(0, pos);
-			}
-		}
-
-		logfileName.append(logfileDir);
-		logfileName.append("/");
-		logfileName.append(progname);
-		logfileName.append("-");
-		if (!hostString.empty() && logfileName.find(hostString) == std::string::npos)
-		{
-			logfileName.append(hostString);
-			logfileName.append("-");
-		}
-		logfileName.append(timeBuff);
-		logfileName.append("-");
-		logfileName.append(boost::lexical_cast<std::string>(getpid()));
-		logfileName.append(".log");
 	}
 
 	std::ostringstream ss;
@@ -132,23 +97,13 @@ std::string artdaq::generateMessageFacilityConfiguration(char const* progname, b
 	{
 		ss << " file: {";
 		ss << R"( type: "GenFile" threshold: "DEBUG" seperator: "-")";
-		ss << " pattern: \"" << progname << "-%?H%t-%p.log"
+		ss << " pattern: \"" << progname << fileExtraName << "-%?H%t-%p.log"
 		   << "\"";
 		ss << " timestamp_pattern: \"%Y%m%d%H%M%S\"";
 		ss << " directory: \"" << logfileDir << "\"";
 		ss << " append : false";
 		ss << " }";
 	}
-#if 0  // ELF 01/17/2018 Removed because it violates the "every EVB art process must have identical configuration" rule
-	else if (logfileName.length() > 0)
-	{
-		ss << "    file : { "
-			<< "      type : \"file\" threshold : \"DEBUG\" "
-			<< "      filename : \"" << logfileName << "\" "
-			<< "      append : false "
-			<< "    } ";
-	}
-#endif
 
 	if (artdaqMfextensionsDir != nullptr && useMFExtensions)
 	{
