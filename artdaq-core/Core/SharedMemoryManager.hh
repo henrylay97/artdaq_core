@@ -181,8 +181,9 @@ public:
 		 * \brief Release a buffer from a reader, marking it Empty and ready to accept more data
 		 * \param buffer Buffer ID of buffer
 		 * \param force Force buffer to empty state (only if manager_id_ == 0)
+		 * \param detachOnException Whether to throw exceptions when buffers are not in the expected state (default true)
 		 */
-	void MarkBufferEmpty(int buffer, bool force = false);
+	void MarkBufferEmpty(int buffer, bool force = false, bool detachOnException = true);
 
 	/**
 		 * \brief Resets the buffer from Reading to Full. This operation will only have an
