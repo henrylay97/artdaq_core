@@ -191,6 +191,11 @@ struct artdaq::detail::RawFragmentHeader
 	 */
 	struct timespec getLatency(bool touch);
 
+	/**
+	 * @brief Check if two RawFragmentHeader objects are equal
+	 * @param other RawFragmentHeader to compare
+	 * @return Whether the two RawFragmentHeaders are identical
+	*/
 	bool operator==(const detail::RawFragmentHeader& other)
 	{
 		return word_count == other.word_count &&
