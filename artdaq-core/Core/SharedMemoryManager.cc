@@ -1134,10 +1134,10 @@ size_t artdaq::SharedMemoryManager::Write(int buffer, void* data, size_t size)
 	}
 	checkBuffer_(shmBuf, BufferSemaphoreFlags::Writing);
 	touchBuffer_(shmBuf);
-	TLOG(19) << "Buffer Write Pos is " << shmBuf->writePos << ", write size is " << size;
+	TLOG(19) << "Buffer Write Pos is " << std::hex << std::showbase << shmBuf->writePos << ", write size is " << size;
 	if (shmBuf->writePos + size > shm_ptr_->buffer_size)
 	{
-		TLOG(TLVL_ERROR) << "Attempted to write more data than fits into Shared Memory, bufferSize=" << shm_ptr_->buffer_size
+		TLOG(TLVL_ERROR) << "Attempted to write more data than fits into Shared Memory, bufferSize=" << std::hex << std::showbase << shm_ptr_->buffer_size
 		                 << ",writePos=" << shmBuf->writePos << ",writeSize=" << size;
 		Detach(true, "SharedMemoryWrite", "Attempted to write more data than fits into Shared Memory! \nRe-run with a larger buffer size!");
 	}

@@ -94,6 +94,9 @@ if(BTYPE_UC STREQUAL DEBUG)
 			cet_add_compiler_flags(-fsanitize=thread -ltsan -Wno-unused-command-line-argument)
 		endif()
 	endif()
+	if(DEFINED ENV{USE_GCOV})
+		cet_add_compiler_flags(-fprofile-arcs -ftest-coverage --coverage)
+	endif()
 endif()
 
 #exeption stack trace

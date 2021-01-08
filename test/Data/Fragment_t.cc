@@ -68,99 +68,38 @@ BOOST_AUTO_TEST_CASE(Construct)
 	BOOST_REQUIRE_EQUAL(f3.fragmentID(), (artdaq::Fragment::fragment_id_t)202);
 	BOOST_REQUIRE_EQUAL(f3.hasMetadata(), false);
 
+	std::vector<artdaq::RawDataType> d{1, 2, 3};
+	auto f4 = artdaq::Fragment::dataFrag(101, 202, &d[0], 3);
+	BOOST_REQUIRE_EQUAL(f4->dataSize(), (size_t)3);
+	BOOST_REQUIRE_EQUAL(f4->size(), (size_t)artdaq::detail::RawFragmentHeader::num_words() + 3);
+	BOOST_REQUIRE_EQUAL(f4->version(), (artdaq::Fragment::version_t)artdaq::detail::RawFragmentHeader::CurrentVersion);
+	BOOST_REQUIRE(f4->type() == artdaq::Fragment::DataFragmentType);
+	BOOST_REQUIRE_EQUAL(f4->sequenceID(), (artdaq::Fragment::sequence_id_t)101);
+	BOOST_REQUIRE_EQUAL(f4->fragmentID(), (artdaq::Fragment::fragment_id_t)202);
+	BOOST_REQUIRE_EQUAL(f4->hasMetadata(), false);
+
 	// Verify that only "user" fragment types may be specified
 	// in the constructor
-	try
-	{
-		artdaq::Fragment frag(101, 202, 0);
-		BOOST_REQUIRE(0 && "Should have thrown exception");
-	}
-	catch (cet::exception const& excpt)
-	{}
-	catch (...)
-	{
-		BOOST_REQUIRE(0 && "Should have thrown cet::exception");
-	}
+	BOOST_REQUIRE_THROW(artdaq::Fragment frag(101, 202, 0), cet::exception);
+	BOOST_REQUIRE_THROW(artdaq::Fragment frag(101, 202, 225), cet::exception);
+	BOOST_REQUIRE_THROW(artdaq::Fragment frag(101, 202, 255), cet::exception);
+	BOOST_REQUIRE_THROW(artdaq::Fragment frag(101, 202, artdaq::Fragment::InvalidFragmentType), cet::exception);
+	BOOST_REQUIRE_THROW(artdaq::Fragment frag(101, 202, artdaq::detail::RawFragmentHeader::FIRST_SYSTEM_TYPE), cet::exception);
+	BOOST_REQUIRE_THROW(artdaq::Fragment frag(101, 202, artdaq::detail::RawFragmentHeader::LAST_SYSTEM_TYPE), cet::exception);
 
-	try
-	{
-		artdaq::Fragment frag(101, 202, 225);
-		BOOST_REQUIRE(0 && "Should have thrown exception");
-	}
-	catch (cet::exception const& excpt)
-	{}
-	catch (...)
-	{
-		BOOST_REQUIRE(0 && "Should have thrown cet::exception");
-	}
+	artdaq::Fragment
+	    fragA(101, 202, artdaq::detail::RawFragmentHeader::FIRST_USER_TYPE);
+	artdaq::Fragment
+	    fragB(101, 202, artdaq::detail::RawFragmentHeader::LAST_USER_TYPE);
+	artdaq::Fragment fragC(101, 202, 1);
+	artdaq::Fragment fragD(101, 202, 2);
+	artdaq::Fragment fragE(101, 202, 3);
+	artdaq::Fragment fragF(101, 202, 100);
+	artdaq::Fragment fragG(101, 202, 200);
+	artdaq::Fragment fragH(101, 202, 224);
 
-	try
-	{
-		artdaq::Fragment frag(101, 202, 255);
-		BOOST_REQUIRE(0 && "Should have thrown exception");
-	}
-	catch (cet::exception const& excpt)
-	{}
-	catch (...)
-	{
-		BOOST_REQUIRE(0 && "Should have thrown cet::exception");
-	}
-
-	try
-	{
-		artdaq::Fragment frag(101, 202, artdaq::Fragment::InvalidFragmentType);
-		BOOST_REQUIRE(0 && "Should have thrown exception");
-	}
-	catch (cet::exception const& excpt)
-	{}
-	catch (...)
-	{
-		BOOST_REQUIRE(0 && "Should have thrown cet::exception");
-	}
-
-	try
-	{
-		artdaq::Fragment
-		    frag(101, 202, artdaq::detail::RawFragmentHeader::FIRST_SYSTEM_TYPE);
-		BOOST_REQUIRE(0 && "Should have thrown exception");
-	}
-	catch (cet::exception const& excpt)
-	{}
-	catch (...)
-	{
-		BOOST_REQUIRE(0 && "Should have thrown cet::exception");
-	}
-
-	try
-	{
-		artdaq::Fragment
-		    frag(101, 202, artdaq::detail::RawFragmentHeader::LAST_SYSTEM_TYPE);
-		BOOST_REQUIRE(0 && "Should have thrown exception");
-	}
-	catch (cet::exception const& excpt)
-	{}
-	catch (...)
-	{
-		BOOST_REQUIRE(0 && "Should have thrown cet::exception");
-	}
-
-	try
-	{
-		artdaq::Fragment
-		    fragA(101, 202, artdaq::detail::RawFragmentHeader::FIRST_USER_TYPE);
-		artdaq::Fragment
-		    fragB(101, 202, artdaq::detail::RawFragmentHeader::LAST_USER_TYPE);
-		artdaq::Fragment fragC(101, 202, 1);
-		artdaq::Fragment fragD(101, 202, 2);
-		artdaq::Fragment fragE(101, 202, 3);
-		artdaq::Fragment fragF(101, 202, 100);
-		artdaq::Fragment fragG(101, 202, 200);
-		artdaq::Fragment fragH(101, 202, 224);
-	}
-	catch (...)
-	{
-		BOOST_REQUIRE(0 && "Should not have thrown exception");
-	}
+	TLOG(TLVL_INFO) << "Example Fragment: " << f1;
+	BOOST_REQUIRE_EQUAL(f1.typeString(), "0");
 }
 
 BOOST_AUTO_TEST_CASE(FragmentType)
@@ -168,181 +107,42 @@ BOOST_AUTO_TEST_CASE(FragmentType)
 	artdaq::Fragment frag(15);
 
 	// test "user" fragment types
-	try
-	{
-		frag.setUserType(0);
-		BOOST_REQUIRE(0 && "Should have thrown exception");
-	}
-	catch (cet::exception const& excpt)
-	{}
-	catch (...)
-	{
-		BOOST_REQUIRE(0 && "Should have thrown cet::exception");
-	}
+	BOOST_REQUIRE_THROW(frag.setUserType(0), cet::exception);
+	BOOST_REQUIRE_THROW(frag.setUserType(225), cet::exception);
+	BOOST_REQUIRE_THROW(frag.setUserType(255), cet::exception);
+	BOOST_REQUIRE_THROW(frag.setUserType(artdaq::Fragment::InvalidFragmentType), cet::exception);
+	BOOST_REQUIRE_THROW(frag.setUserType(artdaq::detail::RawFragmentHeader::FIRST_SYSTEM_TYPE), cet::exception);
+	BOOST_REQUIRE_THROW(frag.setUserType(artdaq::detail::RawFragmentHeader::LAST_SYSTEM_TYPE), cet::exception);
 
-	try
-	{
-		frag.setUserType(225);
-		BOOST_REQUIRE(0 && "Should have thrown exception");
-	}
-	catch (cet::exception const& excpt)
-	{}
-	catch (...)
-	{
-		BOOST_REQUIRE(0 && "Should have thrown cet::exception");
-	}
-
-	try
-	{
-		frag.setUserType(255);
-		BOOST_REQUIRE(0 && "Should have thrown exception");
-	}
-	catch (cet::exception const& excpt)
-	{}
-	catch (...)
-	{
-		BOOST_REQUIRE(0 && "Should have thrown cet::exception");
-	}
-
-	try
-	{
-		frag.setUserType(artdaq::Fragment::InvalidFragmentType);
-		BOOST_REQUIRE(0 && "Should have thrown exception");
-	}
-	catch (cet::exception const& excpt)
-	{}
-	catch (...)
-	{
-		BOOST_REQUIRE(0 && "Should have thrown cet::exception");
-	}
-
-	try
-	{
-		frag.setUserType(artdaq::detail::RawFragmentHeader::FIRST_SYSTEM_TYPE);
-		BOOST_REQUIRE(0 && "Should have thrown exception");
-	}
-	catch (cet::exception const& excpt)
-	{}
-	catch (...)
-	{
-		BOOST_REQUIRE(0 && "Should have thrown cet::exception");
-	}
-
-	try
-	{
-		frag.setUserType(artdaq::detail::RawFragmentHeader::LAST_SYSTEM_TYPE);
-		BOOST_REQUIRE(0 && "Should have thrown exception");
-	}
-	catch (cet::exception const& excpt)
-	{}
-	catch (...)
-	{
-		BOOST_REQUIRE(0 && "Should have thrown cet::exception");
-	}
-
-	try
-	{
-		frag.setUserType(artdaq::detail::RawFragmentHeader::FIRST_USER_TYPE);
-		frag.setUserType(artdaq::detail::RawFragmentHeader::LAST_USER_TYPE);
-		frag.setUserType(1);
-		frag.setUserType(2);
-		frag.setUserType(3);
-		frag.setUserType(100);
-		frag.setUserType(200);
-		frag.setUserType(224);
-	}
-	catch (...)
-	{
-		BOOST_REQUIRE(0 && "Should not have thrown exception");
-	}
+	frag.setUserType(artdaq::detail::RawFragmentHeader::FIRST_USER_TYPE);
+	frag.setUserType(artdaq::detail::RawFragmentHeader::LAST_USER_TYPE);
+	frag.setUserType(1);
+	frag.setUserType(2);
+	frag.setUserType(3);
+	frag.setUserType(100);
+	frag.setUserType(200);
+	frag.setUserType(224);
 
 	// test "system" fragment types
-	try
-	{
-		frag.setSystemType(0);
-		BOOST_REQUIRE(0 && "Should have thrown exception");
-	}
-	catch (cet::exception const& excpt)
-	{}
-	catch (...)
-	{
-		BOOST_REQUIRE(0 && "Should have thrown cet::exception");
-	}
+	BOOST_REQUIRE_THROW(frag.setSystemType(0), cet::exception);
+	BOOST_REQUIRE_THROW(frag.setSystemType(1), cet::exception);
+	BOOST_REQUIRE_THROW(frag.setSystemType(224), cet::exception);
+	BOOST_REQUIRE_THROW(frag.setSystemType(artdaq::Fragment::InvalidFragmentType), cet::exception);
+	BOOST_REQUIRE_THROW(frag.setSystemType(artdaq::detail::RawFragmentHeader::FIRST_USER_TYPE), cet::exception);
+	BOOST_REQUIRE_THROW(frag.setSystemType(artdaq::detail::RawFragmentHeader::LAST_USER_TYPE), cet::exception);
 
-	try
-	{
-		frag.setSystemType(1);
-		BOOST_REQUIRE(0 && "Should have thrown exception");
-	}
-	catch (cet::exception const& excpt)
-	{}
-	catch (...)
-	{
-		BOOST_REQUIRE(0 && "Should have thrown cet::exception");
-	}
+	frag.setSystemType(artdaq::detail::RawFragmentHeader::FIRST_SYSTEM_TYPE);
+	frag.setSystemType(artdaq::detail::RawFragmentHeader::LAST_SYSTEM_TYPE);
+	frag.setSystemType(225);
+	frag.setSystemType(230);
+	frag.setSystemType(240);
+	frag.setSystemType(250);
+	frag.setSystemType(255);
 
-	try
-	{
-		frag.setSystemType(224);
-		BOOST_REQUIRE(0 && "Should have thrown exception");
-	}
-	catch (cet::exception const& excpt)
-	{}
-	catch (...)
-	{
-		BOOST_REQUIRE(0 && "Should have thrown cet::exception");
-	}
-
-	try
-	{
-		frag.setSystemType(artdaq::Fragment::InvalidFragmentType);
-		BOOST_REQUIRE(0 && "Should have thrown exception");
-	}
-	catch (cet::exception const& excpt)
-	{}
-	catch (...)
-	{
-		BOOST_REQUIRE(0 && "Should have thrown cet::exception");
-	}
-
-	try
-	{
-		frag.setSystemType(artdaq::detail::RawFragmentHeader::FIRST_USER_TYPE);
-		BOOST_REQUIRE(0 && "Should have thrown exception");
-	}
-	catch (cet::exception const& excpt)
-	{}
-	catch (...)
-	{
-		BOOST_REQUIRE(0 && "Should have thrown cet::exception");
-	}
-
-	try
-	{
-		frag.setSystemType(artdaq::detail::RawFragmentHeader::LAST_USER_TYPE);
-		BOOST_REQUIRE(0 && "Should have thrown exception");
-	}
-	catch (cet::exception const& excpt)
-	{}
-	catch (...)
-	{
-		BOOST_REQUIRE(0 && "Should have thrown cet::exception");
-	}
-
-	try
-	{
-		frag.setSystemType(artdaq::detail::RawFragmentHeader::FIRST_SYSTEM_TYPE);
-		frag.setSystemType(artdaq::detail::RawFragmentHeader::LAST_SYSTEM_TYPE);
-		frag.setSystemType(225);
-		frag.setSystemType(230);
-		frag.setSystemType(240);
-		frag.setSystemType(250);
-		frag.setSystemType(255);
-	}
-	catch (...)
-	{
-		BOOST_REQUIRE(0 && "Should not have thrown exception");
-	}
+	auto map = artdaq::detail::RawFragmentHeader::MakeVerboseSystemTypeMap();
+	BOOST_REQUIRE(map.size() > 0);
+	map = artdaq::detail::RawFragmentHeader::MakeSystemTypeMap();
+	BOOST_REQUIRE(map.size() > 0);
 }
 
 BOOST_AUTO_TEST_CASE(SequenceID)
@@ -480,20 +280,24 @@ BOOST_AUTO_TEST_CASE(Addresses)
 	artdaq::RawDataType* daddr = f1.dataAddress();
 	BOOST_REQUIRE_EQUAL(daddr,
 	                    (haddr + artdaq::detail::RawFragmentHeader::num_words()));  // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
-	try
-	{
-		f1.metadataAddress();
-		BOOST_REQUIRE(0 && "Should have thrown exception");
-	}
-	catch (cet::exception const& excpt)
-	{}
-	catch (...)
-	{
-		BOOST_REQUIRE(0 && "Should have thrown cet::exception");
-	}
+
+	BOOST_REQUIRE_THROW(f1.metadataAddress(), cet::exception);
+
 	BOOST_REQUIRE_EQUAL(haddr, &(*(f1.headerBegin())));
 	BOOST_REQUIRE_EQUAL(daddr, &(*(f1.dataBegin())));
 	BOOST_REQUIRE_EQUAL(daddr + 200, &(*(f1.dataEnd())));  // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+
+	// Const versions
+	const artdaq::Fragment cf1(f1);
+	BOOST_REQUIRE_EQUAL(cf1.dataSize(), (size_t)200);
+	BOOST_REQUIRE_EQUAL(cf1.size(), (size_t)200 +
+	                                    artdaq::detail::RawFragmentHeader::num_words());
+	const artdaq::RawDataType* chaddr = cf1.headerBegin();
+	const artdaq::RawDataType* cdaddr = cf1.dataBegin();
+	BOOST_REQUIRE_EQUAL(cdaddr,
+	                    (chaddr + artdaq::detail::RawFragmentHeader::num_words()));  // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+
+	BOOST_REQUIRE_EQUAL(cdaddr + 200, &(*(cf1.dataEnd())));  // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
 
 	// metadata with integer number of longwords
 	MetadataTypeOne mdOneA;
@@ -532,34 +336,15 @@ BOOST_AUTO_TEST_CASE(Metadata)
 {
 	artdaq::Fragment f1(42);
 	BOOST_REQUIRE_EQUAL(f1.hasMetadata(), false);
-	try
-	{
-		f1.metadata<MetadataTypeOne>();
-		BOOST_REQUIRE(0 && "Should have thrown exception");
-	}
-	catch (cet::exception const& excpt)
-	{}
-	catch (...)
-	{
-		BOOST_REQUIRE(0 && "Should have thrown cet::exception");
-	}
+
+	BOOST_REQUIRE_THROW(f1.metadata<MetadataTypeOne>(), cet::exception);
 
 	MetadataTypeOne mdOneA;
 	mdOneA.field1 = 5;
 	mdOneA.field2 = 10;
 	mdOneA.field3 = 15;
 
-	try
-	{
-		f1.updateMetadata(mdOneA);
-		BOOST_REQUIRE(0 && "Should have thrown exception");
-	}
-	catch (cet::exception const& excpt)
-	{}
-	catch (...)
-	{
-		BOOST_REQUIRE(0 && "Should have thrown cet::exception");
-	}
+	BOOST_REQUIRE_THROW(f1.updateMetadata(mdOneA), cet::exception);
 
 	f1.setMetadata(mdOneA);
 	auto* mdOnePtr = f1.metadata<MetadataTypeOne>();
@@ -567,18 +352,8 @@ BOOST_AUTO_TEST_CASE(Metadata)
 	BOOST_REQUIRE_EQUAL(mdOnePtr->field2, (uint32_t)10);
 	BOOST_REQUIRE_EQUAL(mdOnePtr->field3, (uint32_t)15);
 
-	try
-	{
-		MetadataTypeOne mdOneB;
-		f1.setMetadata(mdOneB);
-		BOOST_REQUIRE(0 && "Should have thrown exception");
-	}
-	catch (cet::exception const& excpt)
-	{}
-	catch (...)
-	{
-		BOOST_REQUIRE(0 && "Should have thrown cet::exception");
-	}
+	MetadataTypeOne mdOneB;
+	BOOST_REQUIRE_THROW(f1.setMetadata(mdOneB), cet::exception);
 
 	f1.updateMetadata(*mdOnePtr);
 
@@ -589,17 +364,7 @@ BOOST_AUTO_TEST_CASE(Metadata)
 	mdTwoA.field4 = 40;
 	mdTwoA.field5 = 50;
 
-	try
-	{
-		f1.updateMetadata(mdTwoA);
-		BOOST_REQUIRE(0 && "Should have thrown exception");
-	}
-	catch (cet::exception const& excpt)
-	{}
-	catch (...)
-	{
-		BOOST_REQUIRE(0 && "Should have thrown cet::exception");
-	}
+	BOOST_REQUIRE_THROW(f1.updateMetadata(mdTwoA), cet::exception);
 
 	artdaq::Fragment f2(10, 1, 2, 3, mdTwoA);
 	auto* mdTwoPtr = f2.metadata<MetadataTypeTwo>();
@@ -658,29 +423,10 @@ BOOST_AUTO_TEST_CASE(Metadata)
 	MetadataTypeHuge mdHuge;
 	artdaq::Fragment f4(19);
 	BOOST_REQUIRE_EQUAL(f4.hasMetadata(), false);
-	try
-	{
-		f4.setMetadata(mdHuge);
-		BOOST_REQUIRE(0 && "Should have thrown exception");
-	}
-	catch (cet::exception const& excpt)
-	{}
-	catch (...)
-	{
-		BOOST_REQUIRE(0 && "Should have thrown cet::exception");
-	}
 
-	try
-	{
-		artdaq::Fragment f5(127, 1, 2, 3, mdHuge);
-		BOOST_REQUIRE(0 && "Should have thrown exception");
-	}
-	catch (cet::exception const& excpt)
-	{}
-	catch (...)
-	{
-		BOOST_REQUIRE(0 && "Should have thrown cet::exception");
-	}
+	BOOST_REQUIRE_THROW(f4.setMetadata(mdHuge), cet::exception);
+
+	BOOST_REQUIRE_THROW(artdaq::Fragment f5(127, 1, 2, 3, mdHuge), cet::exception);
 }
 
 // JCF, 4/15/14 -- perform a set of tests concerning the new
@@ -749,6 +495,10 @@ BOOST_AUTO_TEST_CASE(Bytes)
 	// (now-deprecated, but still in legacy code) dataAddress() point to
 	// the same region in memory, i.e., the start of the payload
 
+	auto* hdrptr = reinterpret_cast<artdaq::Fragment::byte_t*>(  // NOLINT(cppcoreguidelines-pro-type-reinterpret-cast)
+	    &*f3_factory->headerBegin());
+	BOOST_REQUIRE_EQUAL(&*f3_factory->headerBeginBytes(), hdrptr);
+
 	auto* ptr1 = reinterpret_cast<artdaq::Fragment::byte_t*>(  // NOLINT(cppcoreguidelines-pro-type-reinterpret-cast)
 	    &*f3_factory->dataBegin());
 
@@ -758,6 +508,25 @@ BOOST_AUTO_TEST_CASE(Bytes)
 
 	BOOST_REQUIRE_EQUAL(ptr1, ptr2);
 	BOOST_REQUIRE_EQUAL(ptr2, ptr3);
+
+	auto* dataEndPtr = reinterpret_cast<artdaq::Fragment::byte_t*>(  // NOLINT(cppcoreguidelines-pro-type-reinterpret-cast)
+	    &*f3_factory->dataEnd());
+	BOOST_REQUIRE_EQUAL(&*f3_factory->dataEndBytes(), dataEndPtr);
+
+	// Check const versions, too
+	const artdaq::Fragment f3_copy(*f3_factory);
+	auto chdrptr = reinterpret_cast<const artdaq::Fragment::byte_t*>(f3_copy.headerBegin());  // NOLINT(cppcoreguidelines-pro-type-reinterpret-cast)
+	BOOST_REQUIRE_EQUAL(&*f3_copy.headerBeginBytes(), chdrptr);
+	auto* cptr1 = reinterpret_cast<const artdaq::Fragment::byte_t*>(  // NOLINT(cppcoreguidelines-pro-type-reinterpret-cast)
+	    &*f3_copy.dataBegin());
+
+	const artdaq::Fragment::byte_t* cptr2 = f3_copy.dataBeginBytes();
+
+	BOOST_REQUIRE_EQUAL(cptr1, cptr2);
+
+	auto* cdataEndPtr = reinterpret_cast<const artdaq::Fragment::byte_t*>(  // NOLINT(cppcoreguidelines-pro-type-reinterpret-cast)
+	    &*f3_copy.dataEnd());
+	BOOST_REQUIRE_EQUAL(&*f3_copy.dataEndBytes(), cdataEndPtr);
 
 	// Make sure metadata struct gets aligned
 	// header == 3 RawDataTypes, metadata is 3 bytes (rounds up to 1 RawDataType)

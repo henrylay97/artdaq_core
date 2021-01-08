@@ -128,8 +128,42 @@ BOOST_AUTO_TEST_CASE(Exceptions)
 	// Trying to get an invalid buffer is an exception
 	BOOST_REQUIRE_EXCEPTION(man.ResetReadPos(11), cet::exception, [&](cet::exception e) { return e.category() == "ArgumentOutOfRange"; });
 	BOOST_REQUIRE_EQUAL(man.IsValid(), false);
-
 	man.Attach();
+	BOOST_REQUIRE_EXCEPTION(man.BufferDataSize(11), cet::exception, [&](cet::exception e) { return e.category() == "ArgumentOutOfRange"; });
+	BOOST_REQUIRE_EQUAL(man.IsValid(), false);
+	man.Attach();
+	BOOST_REQUIRE_EXCEPTION(man.ResetWritePos(11), cet::exception, [&](cet::exception e) { return e.category() == "ArgumentOutOfRange"; });
+	BOOST_REQUIRE_EQUAL(man.IsValid(), false);
+	man.Attach();
+	BOOST_REQUIRE_EXCEPTION(man.IncrementReadPos(11, 1), cet::exception, [&](cet::exception e) { return e.category() == "ArgumentOutOfRange"; });
+	BOOST_REQUIRE_EQUAL(man.IsValid(), false);
+	man.Attach();
+	BOOST_REQUIRE_EXCEPTION(man.IncrementWritePos(11, 1), cet::exception, [&](cet::exception e) { return e.category() == "ArgumentOutOfRange"; });
+	BOOST_REQUIRE_EQUAL(man.IsValid(), false);
+	man.Attach();
+	BOOST_REQUIRE_EXCEPTION(man.MoreDataInBuffer(11), cet::exception, [&](cet::exception e) { return e.category() == "ArgumentOutOfRange"; });
+	BOOST_REQUIRE_EQUAL(man.IsValid(), false);
+	man.Attach();
+	BOOST_REQUIRE_EXCEPTION(man.CheckBuffer(11, artdaq::SharedMemoryManager::BufferSemaphoreFlags::Full), cet::exception, [&](cet::exception e) { return e.category() == "ArgumentOutOfRange"; });
+	BOOST_REQUIRE_EQUAL(man.IsValid(), false);
+	man.Attach();
+	BOOST_REQUIRE_EXCEPTION(man.MarkBufferFull(11), cet::exception, [&](cet::exception e) { return e.category() == "ArgumentOutOfRange"; });
+	BOOST_REQUIRE_EQUAL(man.IsValid(), false);
+	man.Attach();
+	BOOST_REQUIRE_EXCEPTION(man.MarkBufferEmpty(11), cet::exception, [&](cet::exception e) { return e.category() == "ArgumentOutOfRange"; });
+	BOOST_REQUIRE_EQUAL(man.IsValid(), false);
+	man.Attach();
+	BOOST_REQUIRE_EXCEPTION(man.ResetBuffer(11), cet::exception, [&](cet::exception e) { return e.category() == "ArgumentOutOfRange"; });
+	BOOST_REQUIRE_EQUAL(man.IsValid(), false);
+	man.Attach();
+	int dummy[2]{0, 1};
+	BOOST_REQUIRE_EXCEPTION(man.Write(11, &dummy, sizeof(dummy)), cet::exception, [&](cet::exception e) { return e.category() == "ArgumentOutOfRange"; });
+	BOOST_REQUIRE_EQUAL(man.IsValid(), false);
+	man.Attach();
+	BOOST_REQUIRE_EXCEPTION(man.Read(11, &dummy, sizeof(dummy)), cet::exception, [&](cet::exception e) { return e.category() == "ArgumentOutOfRange"; });
+	BOOST_REQUIRE_EQUAL(man.IsValid(), false);
+	man.Attach();
+
 	// Trying to access a buffer that is in the wrong state is an exception
 	BOOST_REQUIRE_EXCEPTION(man.MarkBufferEmpty(0), cet::exception, [&](cet::exception e) { return e.category() == "StateAccessViolation"; });
 	BOOST_REQUIRE_EQUAL(man.IsValid(), false);

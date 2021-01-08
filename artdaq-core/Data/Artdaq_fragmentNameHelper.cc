@@ -27,8 +27,7 @@ std::set<std::string> ArtdaqFragmentNameHelper::GetAllProductInstanceNames() con
 		if (output.count(instance_name) == 0u)
 		{
 			output.insert(instance_name);
-			TLOG(TLVL_TRACE) << "Adding product instance name \"" << map_iter.second
-			                 << "\" to list of expected names";
+			TLOG(TLVL_TRACE) << "Adding product instance name \"" << map_iter.second << "\" to list of expected names";
 		}
 	}
 

@@ -211,7 +211,7 @@ void artdaq::configureTRACE(fhicl::ParameterSet& trace_pset)
 				for (const auto& tname : tnames)
 				{
 					lvlsbldr << tname;
-					auto msks = lvls_pset.get<std::vector<uint64_t>>(tname);
+					auto msks = lvls_pset.get<std::vector<double>>(tname);
 					for (auto msk : msks)
 					{
 						lvlsbldr << " 0x" << std::hex << static_cast<unsigned long long>(msk);  // NOLINT(google-runtime-int)
