@@ -27,6 +27,7 @@ BOOST_AUTO_TEST_CASE(AddEmptyFragment)
 	artdaq::Fragment f(0);
 	artdaq::ContainerFragmentLoader cfl(f);
 	auto cf = reinterpret_cast<artdaq::ContainerFragment*>(&cfl);  // NOLINT(cppcoreguidelines-pro-type-reinterpret-cast)
+	cfl.set_fragment_type(artdaq::Fragment::EmptyFragmentType);
 	cfl.addFragment(*frag);
 
 	BOOST_REQUIRE_EQUAL(f.dataSizeBytes(), sizeof(artdaq::detail::RawFragmentHeader) + (2 * sizeof(size_t)));
@@ -138,7 +139,7 @@ BOOST_AUTO_TEST_CASE(AddFragments)
 	BOOST_REQUIRE_EQUAL(outfrag->dataSize(), 4);
 	BOOST_REQUIRE_EQUAL(*outfrag->dataBegin(), 1);
 	BOOST_REQUIRE_EQUAL(*(outfrag->dataBegin() + 1), 2);
-	outfrag = cf->at(1);
+	outfrag = (*cf)[1];  // Alternate access operator
 	BOOST_REQUIRE_EQUAL(outfrag->sequenceID(), 1);
 	BOOST_REQUIRE_EQUAL(outfrag->fragmentID(), 1);
 	BOOST_REQUIRE_EQUAL(outfrag->dataSize(), 4);
@@ -227,6 +228,43 @@ BOOST_AUTO_TEST_CASE(Exceptions)
 	cfl3.addFragment(f2);
 	f2.setSystemType(artdaq::Fragment::EmptyFragmentType);
 	BOOST_REQUIRE_EXCEPTION(cfl3.addFragment(f2), cet::exception, [&](cet::exception e) { return e.category() == "WrongFragmentType"; });
+
+	artdaq::FragmentPtrs ff1;
+	ff1.emplace_back(new artdaq::Fragment(101, 202, artdaq::Fragment::DataFragmentType));
+	ff1.emplace_back(new artdaq::Fragment(102, 203));
+	ff1.back()->setSystemType(artdaq::Fragment::EmptyFragmentType);
+	BOOST_REQUIRE_EXCEPTION(cfl3.addFragments(ff1), cet::exception, [&](cet::exception e) { return e.category() == "WrongFragmentType"; });
+}
+
+BOOST_AUTO_TEST_CASE(Upgrade)
+{
+	artdaq::Fragment f(4 + artdaq::detail::RawFragmentHeader::num_words());
+	artdaq::ContainerFragment::MetadataV0 oldMetadata;
+
+	oldMetadata.block_count = 1;
+	oldMetadata.index[0] = f.dataSizeBytes();
+
+	f.setMetadata(oldMetadata);
+
+	std::vector<artdaq::Fragment::value_type> fakeData{1, 2, 3, 4};
+	artdaq::FragmentPtr
+	    tmpFrag(artdaq::Fragment::dataFrag(1,
+	                                       0,
+	                                       fakeData.begin(),
+	                                       fakeData.end()));
+	tmpFrag->setUserType(artdaq::Fragment::FirstUserFragmentType);
+	memcpy(f.dataBegin(), tmpFrag->headerAddress(), tmpFrag->sizeBytes());
+
+	artdaq::ContainerFragment cf(f);
+	auto md = cf.metadata();
+	BOOST_REQUIRE_EQUAL(md->version, 0);
+
+	auto outfrag = cf.at(0);
+	BOOST_REQUIRE_EQUAL(outfrag->sequenceID(), 1);
+	BOOST_REQUIRE_EQUAL(outfrag->fragmentID(), 0);
+	BOOST_REQUIRE_EQUAL(outfrag->dataSize(), 4);
+	BOOST_REQUIRE_EQUAL(*outfrag->dataBegin(), 1);
+	BOOST_REQUIRE_EQUAL(*(outfrag->dataBegin() + 1), 2);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

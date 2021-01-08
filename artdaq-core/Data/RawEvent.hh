@@ -7,16 +7,14 @@
 #include "cetlib_except/exception.h"
 
 #include <algorithm>
-#include <iosfwd>
 #include <memory>
+#include <ostream>
 
 namespace artdaq {
 /**
 	 * \brief artdaq implementation details namespace
 	 */
 namespace detail {
-struct RawEventHeader;
-}
 
 /**
 	 * \brief The header information used to identify key properties of the RawEvent object
@@ -25,7 +23,7 @@ struct RawEventHeader;
 	 * the information necessary for routing of raw events inside the
 	 * artdaq code, but is not intended for use by any experiment.
 	 */
-struct detail::RawEventHeader
+struct RawEventHeader
 {
 	static constexpr uint8_t CURRENT_VERSION = 0;  ///< Current version of the RawEventHeader
 	typedef uint32_t run_id_t;                     ///< Run numbers are 32 bits
@@ -84,13 +82,14 @@ struct detail::RawEventHeader
 	 * \param evh RawEventHeader to print
 	 * \return Stream reference
 	 */
-inline std::ostream& operator<<(std::ostream& os, detail::RawEventHeader const& evh)
+inline std::ostream& operator<<(std::ostream& os, RawEventHeader const& evh)
 {
 	evh.print(os);
 	return os;
 }
-#endif
 
+#endif
+}  // namespace detail
 /**
 	 * \brief RawEvent is the artdaq view of a generic event, containing a header and zero or more Fragments.
 	 * 
@@ -337,7 +336,6 @@ inline std::ostream& operator<<(std::ostream& os, RawEvent const& ev)
 	ev.print(os);
 	return os;
 }
-
 #endif
 }  // namespace artdaq
 

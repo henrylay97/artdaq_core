@@ -63,4 +63,12 @@ BOOST_AUTO_TEST_CASE(Simple)
 	BOOST_REQUIRE_EQUAL(pm_fps.size(), 1u);
 }
 
+BOOST_AUTO_TEST_CASE(FragmentIDs)
+{
+	artdaqtest::FragmentGeneratorTest testGen;
+	artdaq::FragmentGenerator& baseGen(testGen);
+	auto ids = baseGen.fragmentIDs();
+	BOOST_REQUIRE_EQUAL(ids.size(), 1);
+	BOOST_REQUIRE_EQUAL(ids[0], 1);
+}
 BOOST_AUTO_TEST_SUITE_END()

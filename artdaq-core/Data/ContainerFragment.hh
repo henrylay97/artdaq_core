@@ -275,8 +275,7 @@ protected:
 	}
 
 	/**
-	 * \brief Reset the index pointer, creating a new index if necessary. ContainerFragmentLoader uses this functionality to implant new indicies into the ContainerFragment,
-	 * other code should simply use the get_index_ function.
+	 * \brief Reset the index pointer to a newly-created index
 	 */
 	void reset_index_ptr_() const
 	{
@@ -289,9 +288,8 @@ protected:
 		}
 		else
 		{
-			TLOG(TLVL_TRACE, "ContainerFragment") << "Index invalid or not found, allocating new index";
-			index_ptr_owner_.reset(nullptr);
-			index_ptr_ = create_index_();
+			TLOG(TLVL_ERROR, "ContainerFragment") << "Index invalid or not found!";
+			throw cet::exception("InvalidIndex") << "Index invalid or not found!";
 		}
 	}
 
