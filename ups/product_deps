@@ -1,7 +1,7 @@
 # The parent line must be the first non-comment line in the file
 # This line defines the product name and version
-parent artdaq_core  v3_06_08
-defaultqual	e19:s96
+parent artdaq_core  v3_06_10
+defaultqual	e19:s97
 
 # These optional lines define the installed directories where
 # headers, libraries, and executables will be found
@@ -19,391 +19,57 @@ perllib  product_dir
 
 #
 product		version		optional
+canvas_root_io  v1_07_02        s106
 canvas_root_io  v1_07_01        s105
 canvas_root_io  v1_07_00        s104
 canvas_root_io  v1_05_03        s103
-canvas_root_io  v1_05_02        s102
-canvas_root_io  v1_06_02        s101
 canvas_root_io  v1_05_02        s97
-canvas_root_io  v1_05_02        s96
-canvas_root_io  v1_05_01        s95
-canvas_root_io  v1_05_00        s94
-canvas_root_io  v1_04_01        s93
-canvas_root_io  v1_04_00        s89
-canvas_root_io  v1_04_00        s87
-canvas_root_io  v1_03_07        s92
-canvas_root_io  v1_03_06	s91
-canvas_root_io  v1_03_05	s90
-canvas_root_io  v1_03_04	s86
-canvas_root_io  v1_01_11        s85
-canvas_root_io  v1_03_04	s84
-canvas_root_io  v1_03_03	s83
-canvas_root_io  v1_03_03	s82
-canvas_root_io  v1_03_03	s81
-canvas_root_io  v1_01_10        s79
-canvas_root_io  v1_02_02	s78
-canvas_root_io  v1_02_01	s75
-canvas_root_io  v1_01_10        s74
-canvas_root_io  v1_01_09        s73
-canvas_root_io  v1_01_08        s72
-canvas_root_io  v1_01_08        s70
-canvas_root_io  v1_01_07        s69
-canvas_root_io  v1_01_06        s68
-canvas_root_io  v1_01_05        s67
-TRACE           v3_16_02
+TRACE           v3_17_01
 cetbuildtools	v7_17_01	-	only_for_build
 end_product_list
 
 # -nq- means there is no qualifier
 # a "-" means the dependent product is not required by the parent and will not be setup
-qualifier		canvas		canvas_root_io	TRACE	notes
-c7:s105:debug           -               c7:debug        -nq-    -std=c++17
-c7:s105:prof            -               c7:prof         -nq-    -std=c++17
-e20:s105:debug		-		e20:debug	-nq-	-std=c++17
-e20:s105:prof		-		e20:prof	-nq-	-std=c++17
-e19:s105:debug		-		e19:debug	-nq-	-std=c++17
-e19:s105:prof		-		e19:prof	-nq-	-std=c++17
+qualifier		canvas_root_io	TRACE	notes
+c7:s106:debug                        c7:debug        -nq-    -std=c++17
+c7:s106:prof                         c7:prof         -nq-    -std=c++17
+e20:s106:debug				e20:debug	-nq-	-std=c++17
+e20:s106:prof				e20:prof	-nq-	-std=c++17
+e19:s106:debug				e19:debug	-nq-	-std=c++17
+e19:s106:prof				e19:prof	-nq-	-std=c++17
 
-c7:s104:debug           -               c7:debug        -nq-    -std=c++17
-c7:s104:prof            -               c7:prof         -nq-    -std=c++17
-e20:s104:debug		-		e20:debug	-nq-	-std=c++17
-e20:s104:prof		-		e20:prof	-nq-	-std=c++17
-e19:s104:debug		-		e19:debug	-nq-	-std=c++17
-e19:s104:prof		-		e19:prof	-nq-	-std=c++17
+c7:s105:debug                          c7:debug        -nq-    -std=c++17
+c7:s105:prof                           c7:prof         -nq-    -std=c++17
+e20:s105:debug				e20:debug	-nq-	-std=c++17
+e20:s105:prof				e20:prof	-nq-	-std=c++17
+e19:s105:debug				e19:debug	-nq-	-std=c++17
+e19:s105:prof				e19:prof	-nq-	-std=c++17
 
-c7:s103:py2:debug       -               c7:py2:debug    -nq-    -std=c++17
-c7:s103:py2:prof        -               c7:py2:prof     -nq-    -std=c++17
-c7:s103:debug           -               c7:debug        -nq-    -std=c++17
-c7:s103:prof            -               c7:prof         -nq-    -std=c++17
-e19:s103:py2:debug      -               e19:py2:debug   -nq-    -std=c++17
-e19:s103:py2:prof       -               e19:py2:prof    -nq-    -std=c++17
-e19:s103:debug          -               e19:debug       -nq-    -std=c++17
-e19:s103:prof           -               e19:prof        -nq-    -std=c++17
+c7:s104:debug                          c7:debug        -nq-    -std=c++17
+c7:s104:prof                           c7:prof         -nq-    -std=c++17
+e20:s104:debug				e20:debug	-nq-	-std=c++17
+e20:s104:prof				e20:prof	-nq-	-std=c++17
+e19:s104:debug				e19:debug	-nq-	-std=c++17
+e19:s104:prof				e19:prof	-nq-	-std=c++17
 
-c7:s102:py2:debug       -               c7:py2:debug    -nq-    -std=c++17
-c7:s102:py2:prof        -               c7:py2:prof     -nq-    -std=c++17
-c7:s102:debug           -               c7:debug        -nq-    -std=c++17
-c7:s102:prof            -               c7:prof         -nq-    -std=c++17
-e19:s102:py2:debug      -               e19:py2:debug   -nq-    -std=c++17
-e19:s102:py2:prof       -               e19:py2:prof    -nq-    -std=c++17
-e19:s102:debug          -               e19:debug       -nq-    -std=c++17
-e19:s102:prof           -               e19:prof        -nq-    -std=c++17
+c7:s103:py2:debug                      c7:py2:debug    -nq-    -std=c++17
+c7:s103:py2:prof                       c7:py2:prof     -nq-    -std=c++17
+c7:s103:debug                          c7:debug        -nq-    -std=c++17
+c7:s103:prof                           c7:prof         -nq-    -std=c++17
+e19:s103:py2:debug                     e19:py2:debug   -nq-    -std=c++17
+e19:s103:py2:prof                      e19:py2:prof    -nq-    -std=c++17
+e19:s103:debug                         e19:debug       -nq-    -std=c++17
+e19:s103:prof                          e19:prof        -nq-    -std=c++17
 
-c7:s101:debug           -               c7:debug        -nq-    -std=c++17
-c7:s101:prof            -               c7:prof         -nq-    -std=c++17
-e20:s101:debug		-		e20:debug	-nq-	-std=c++17
-e20:s101:prof		-		e20:prof	-nq-	-std=c++17
-e19:s101:debug		-		e19:debug	-nq-	-std=c++17
-e19:s101:prof		-		e19:prof	-nq-	-std=c++17
+c7:s97:py2:debug                       c7:py2:debug    -nq-    -std=c++17
+c7:s97:py2:prof                        c7:py2:prof     -nq-    -std=c++17
+c7:s97:debug                           c7:debug        -nq-    -std=c++17
+c7:s97:prof                            c7:prof         -nq-    -std=c++17
+e19:s97:py2:debug			e19:py2:debug	-nq-	-std=c++17
+e19:s97:py2:prof			e19:py2:prof	-nq-	-std=c++17
+e19:s97:debug				e19:debug	-nq-	-std=c++17
+e19:s97:prof				e19:prof	-nq-	-std=c++17
 
-c7:s97:py2:debug        -               c7:py2:debug    -nq-    -std=c++17
-c7:s97:py2:prof         -               c7:py2:prof     -nq-    -std=c++17
-c7:s97:debug            -               c7:debug        -nq-    -std=c++17
-c7:s97:prof             -               c7:prof         -nq-    -std=c++17
-e19:s97:py2:debug	-		e19:py2:debug	-nq-	-std=c++17
-e19:s97:py2:prof	-		e19:py2:prof	-nq-	-std=c++17
-e19:s97:debug		-		e19:debug	-nq-	-std=c++17
-e19:s97:prof		-		e19:prof	-nq-	-std=c++17
-
-c7:s96:py2:debug        -               c7:py2:debug    -nq-    -std=c++17
-c7:s96:py2:prof         -               c7:py2:prof     -nq-    -std=c++17
-c7:s96:debug            -               c7:debug        -nq-    -std=c++17
-c7:s96:prof             -               c7:prof         -nq-    -std=c++17
-e19:s96:py2:debug	-		e19:py2:debug	-nq-	-std=c++17
-e19:s96:py2:prof	-		e19:py2:prof	-nq-	-std=c++17
-e19:s96:debug		-		e19:debug	-nq-	-std=c++17
-e19:s96:prof		-		e19:prof	-nq-	-std=c++17
-
-c7:s95:py2:debug        -               c7:py2:debug    -nq-    -std=c++17
-c7:s95:py2:prof         -               c7:py2:prof     -nq-    -std=c++17
-c7:s95:debug            -               c7:debug        -nq-    -std=c++17
-c7:s95:prof             -               c7:prof         -nq-    -std=c++17
-e19:s95:py2:debug	-		e19:py2:debug	-nq-	-std=c++17
-e19:s95:py2:prof	-		e19:py2:prof	-nq-	-std=c++17
-e19:s95:debug		-		e19:debug	-nq-	-std=c++17
-e19:s95:prof		-		e19:prof	-nq-	-std=c++17
-
-c7:s94:py2:debug        -               c7:py2:debug    -nq-    -std=c++17
-c7:s94:py2:prof         -               c7:py2:prof     -nq-    -std=c++17
-c7:s94:debug            -               c7:debug        -nq-    -std=c++17
-c7:s94:prof             -               c7:prof         -nq-    -std=c++17
-e19:s94:py2:debug	-		e19:py2:debug	-nq-	-std=c++17
-e19:s94:py2:prof	-		e19:py2:prof	-nq-	-std=c++17
-e19:s94:debug		-		e19:debug	-nq-	-std=c++17
-e19:s94:prof		-		e19:prof	-nq-	-std=c++17
-
-c7:s93:py3:debug        -               c7:py3:debug    -nq-    -std=c++17
-c7:s93:py3:prof         -               c7:py3:prof     -nq-    -std=c++17
-c7:s93:debug            -               c7:debug        -nq-    -std=c++17
-c7:s93:prof             -               c7:prof         -nq-    -std=c++17
-c2:s93:py3:debug        -               c2:py3:debug    -nq-    -std=c++17
-c2:s93:py3:prof         -               c2:py3:prof     -nq-    -std=c++17
-c2:s93:debug            -               c2:debug        -nq-    -std=c++17
-c2:s93:prof             -               c2:prof         -nq-    -std=c++17
-e19:s93:py3:debug	-		e19:py3:debug	-nq-	-std=c++17
-e19:s93:py3:prof	-		e19:py3:prof	-nq-	-std=c++17
-e19:s93:debug		-		e19:debug	-nq-	-std=c++17
-e19:s93:prof		-		e19:prof	-nq-	-std=c++17
-e17:s93:py3:debug	-		e17:py3:debug	-nq-	-std=c++17
-e17:s93:py3:prof	-		e17:py3:prof	-nq-	-std=c++17
-e17:s93:debug		-		e17:debug	-nq-	-std=c++17
-e17:s93:prof		-		e17:prof	-nq-	-std=c++17
-
-c7:s92:py3:debug        -               c7:py3:debug    -nq-    -std=c++17
-c7:s92:py3:prof         -               c7:py3:prof     -nq-    -std=c++17
-c7:s92:debug            -               c7:debug        -nq-    -std=c++17
-c7:s92:prof             -               c7:prof         -nq-    -std=c++17
-c2:s92:py3:debug        -               c2:py3:debug    -nq-    -std=c++17
-c2:s92:py3:prof         -               c2:py3:prof     -nq-    -std=c++17
-c2:s92:debug            -               c2:debug        -nq-    -std=c++17
-c2:s92:prof             -               c2:prof         -nq-    -std=c++17
-e19:s92:py3:debug	-		e19:py3:debug	-nq-	-std=c++17
-e19:s92:py3:prof	-		e19:py3:prof	-nq-	-std=c++17
-e19:s92:debug		-		e19:debug	-nq-	-std=c++17
-e19:s92:prof		-		e19:prof	-nq-	-std=c++17
-e17:s92:py3:debug	-		e17:py3:debug	-nq-	-std=c++17
-e17:s92:py3:prof	-		e17:py3:prof	-nq-	-std=c++17
-e17:s92:debug		-		e17:debug	-nq-	-std=c++17
-e17:s92:prof		-		e17:prof	-nq-	-std=c++17
-
-c7:s91:py3:debug        -               c7:py3:debug    -nq-    -std=c++17
-c7:s91:py3:prof         -               c7:py3:prof     -nq-    -std=c++17
-c7:s91:debug            -               c7:debug        -nq-    -std=c++17
-c7:s91:prof             -               c7:prof         -nq-    -std=c++17
-c2:s91:py3:debug        -               c2:py3:debug    -nq-    -std=c++17
-c2:s91:py3:prof         -               c2:py3:prof     -nq-    -std=c++17
-c2:s91:debug            -               c2:debug        -nq-    -std=c++17
-c2:s91:prof             -               c2:prof         -nq-    -std=c++17
-e19:s91:py3:debug	-		e19:py3:debug	-nq-	-std=c++17
-e19:s91:py3:prof	-		e19:py3:prof	-nq-	-std=c++17
-e19:s91:debug		-		e19:debug	-nq-	-std=c++17
-e19:s91:prof		-		e19:prof	-nq-	-std=c++17
-e17:s91:py3:debug	-		e17:py3:debug	-nq-	-std=c++17
-e17:s91:py3:prof	-		e17:py3:prof	-nq-	-std=c++17
-e17:s91:debug		-		e17:debug	-nq-	-std=c++17
-e17:s91:prof		-		e17:prof	-nq-	-std=c++17
-
-c7:s89:py3:debug        -               c7:py3:debug    -nq-    -std=c++17
-c7:s89:py3:prof         -               c7:py3:prof     -nq-    -std=c++17
-c7:s89:debug            -               c7:debug        -nq-    -std=c++17
-c7:s89:prof             -               c7:prof         -nq-    -std=c++17
-c2:s89:py3:debug        -               c2:py3:debug    -nq-    -std=c++17
-c2:s89:py3:prof         -               c2:py3:prof     -nq-    -std=c++17
-c2:s89:debug            -               c2:debug        -nq-    -std=c++17
-c2:s89:prof             -               c2:prof         -nq-    -std=c++17
-e19:s89:py3:debug	-		e19:py3:debug	-nq-	-std=c++17
-e19:s89:py3:prof	-		e19:py3:prof	-nq-	-std=c++17
-e19:s89:debug		-		e19:debug	-nq-	-std=c++17
-e19:s89:prof		-		e19:prof	-nq-	-std=c++17
-e17:s89:py3:debug	-		e17:py3:debug	-nq-	-std=c++17
-e17:s89:py3:prof	-		e17:py3:prof	-nq-	-std=c++17
-e17:s89:debug		-		e17:debug	-nq-	-std=c++17
-e17:s89:prof		-		e17:prof	-nq-	-std=c++17
-
-c7:s87:py3:debug        -               c7:py3:debug    -nq-    -std=c++17
-c7:s87:py3:prof         -               c7:py3:prof     -nq-    -std=c++17
-c7:s87:debug            -               c7:debug        -nq-    -std=c++17
-c7:s87:prof             -               c7:prof         -nq-    -std=c++17
-c2:s87:py3:debug        -               c2:py3:debug    -nq-    -std=c++17
-c2:s87:py3:prof         -               c2:py3:prof     -nq-    -std=c++17
-c2:s87:debug            -               c2:debug        -nq-    -std=c++17
-c2:s87:prof             -               c2:prof         -nq-    -std=c++17
-e19:s87:py3:debug	-		e19:py3:debug	-nq-	-std=c++17
-e19:s87:py3:prof	-		e19:py3:prof	-nq-	-std=c++17
-e19:s87:debug		-		e19:debug	-nq-	-std=c++17
-e19:s87:prof		-		e19:prof	-nq-	-std=c++17
-e17:s87:py3:debug	-		e17:py3:debug	-nq-	-std=c++17
-e17:s87:py3:prof	-		e17:py3:prof	-nq-	-std=c++17
-e17:s87:debug		-		e17:debug	-nq-	-std=c++17
-e17:s87:prof		-		e17:prof	-nq-	-std=c++17
-
-c7:s91:py3:debug        -               c7:py3:debug    -nq-    -std=c++17
-c7:s91:py3:prof         -               c7:py3:prof     -nq-    -std=c++17
-c7:s91:debug            -               c7:debug        -nq-    -std=c++17
-c7:s91:prof             -               c7:prof         -nq-    -std=c++17
-c2:s91:py3:debug        -               c2:py3:debug    -nq-    -std=c++17
-c2:s91:py3:prof         -               c2:py3:prof     -nq-    -std=c++17
-c2:s91:debug            -               c2:debug        -nq-    -std=c++17
-c2:s91:prof             -               c2:prof         -nq-    -std=c++17
-e19:s91:py3:debug	-		e19:py3:debug	-nq-	-std=c++17
-e19:s91:py3:prof	-		e19:py3:prof	-nq-	-std=c++17
-e19:s91:debug		-		e19:debug	-nq-	-std=c++17
-e19:s91:prof		-		e19:prof	-nq-	-std=c++17
-e17:s91:py3:debug	-		e17:py3:debug	-nq-	-std=c++17
-e17:s91:py3:prof	-		e17:py3:prof	-nq-	-std=c++17
-e17:s91:debug		-		e17:debug	-nq-	-std=c++17
-e17:s91:prof		-		e17:prof	-nq-	-std=c++17
-
-c7:s90:py3:debug        -               c7:py3:debug    -nq-    -std=c++17
-c7:s90:py3:prof         -               c7:py3:prof     -nq-    -std=c++17
-c7:s90:debug            -               c7:debug        -nq-    -std=c++17
-c7:s90:prof             -               c7:prof         -nq-    -std=c++17
-c2:s90:py3:debug        -               c2:py3:debug    -nq-    -std=c++17
-c2:s90:py3:prof         -               c2:py3:prof     -nq-    -std=c++17
-c2:s90:debug            -               c2:debug        -nq-    -std=c++17
-c2:s90:prof             -               c2:prof         -nq-    -std=c++17
-e19:s90:py3:debug	-		e19:py3:debug	-nq-	-std=c++17
-e19:s90:py3:prof	-		e19:py3:prof	-nq-	-std=c++17
-e19:s90:debug		-		e19:debug	-nq-	-std=c++17
-e19:s90:prof		-		e19:prof	-nq-	-std=c++17
-e17:s90:py3:debug	-		e17:py3:debug	-nq-	-std=c++17
-e17:s90:py3:prof	-		e17:py3:prof	-nq-	-std=c++17
-e17:s90:debug		-		e17:debug	-nq-	-std=c++17
-e17:s90:prof		-		e17:prof	-nq-	-std=c++17
-
-c7:s86:py3:debug        -               c7:py3:debug    -nq-    -std=c++17
-c7:s86:py3:prof         -               c7:py3:prof     -nq-    -std=c++17
-c7:s86:debug            -               c7:debug        -nq-    -std=c++17
-c7:s86:prof             -               c7:prof         -nq-    -std=c++17
-c2:s86:py3:debug        -               c2:py3:debug    -nq-    -std=c++17
-c2:s86:py3:prof         -               c2:py3:prof     -nq-    -std=c++17
-c2:s86:debug            -               c2:debug        -nq-    -std=c++17
-c2:s86:prof             -               c2:prof         -nq-    -std=c++17
-e19:s86:py3:debug	-		e19:py3:debug	-nq-	-std=c++17
-e19:s86:py3:prof	-		e19:py3:prof	-nq-	-std=c++17
-e19:s86:debug		-		e19:debug	-nq-	-std=c++17
-e19:s86:prof		-		e19:prof	-nq-	-std=c++17
-e17:s86:py3:debug	-		e17:py3:debug	-nq-	-std=c++17
-e17:s86:py3:prof	-		e17:py3:prof	-nq-	-std=c++17
-e17:s86:debug		-		e17:debug	-nq-	-std=c++17
-e17:s86:prof		-		e17:prof	-nq-	-std=c++17
-
-c2:s85:debug            -               c2:debug        -nq-    -std=c++17
-c2:s85:prof             -               c2:prof         -nq-    -std=c++17
-e17:s85:debug		-		e17:debug	-nq-	-std=c++17
-e17:s85:prof		-		e17:prof	-nq-	-std=c++17
-
-c7:s84:py3:debug        -               c7:py3:debug    -nq-    -std=c++17
-c7:s84:py3:prof         -               c7:py3:prof     -nq-    -std=c++17
-c7:s84:debug            -               c7:debug        -nq-    -std=c++17
-c7:s84:prof             -               c7:prof         -nq-    -std=c++17
-c2:s84:py3:debug        -               c2:py3:debug    -nq-    -std=c++17
-c2:s84:py3:prof         -               c2:py3:prof     -nq-    -std=c++17
-c2:s84:debug            -               c2:debug        -nq-    -std=c++17
-c2:s84:prof             -               c2:prof         -nq-    -std=c++17
-e19:s84:py3:debug	-		e19:py3:debug	-nq-	-std=c++17
-e19:s84:py3:prof	-		e19:py3:prof	-nq-	-std=c++17
-e19:s84:debug		-		e19:debug	-nq-	-std=c++17
-e19:s84:prof		-		e19:prof	-nq-	-std=c++17
-e17:s84:py3:debug	-		e17:py3:debug	-nq-	-std=c++17
-e17:s84:py3:prof	-		e17:py3:prof	-nq-	-std=c++17
-e17:s84:debug		-		e17:debug	-nq-	-std=c++17
-e17:s84:prof		-		e17:prof	-nq-	-std=c++17
-
-c7:s83:py3:debug        -               c7:py3:debug    -nq-    -std=c++17
-c7:s83:py3:prof         -               c7:py3:prof     -nq-    -std=c++17
-c7:s83:debug            -               c7:debug        -nq-    -std=c++17
-c7:s83:prof             -               c7:prof         -nq-    -std=c++17
-c2:s83:py3:debug        -               c2:py3:debug    -nq-    -std=c++17
-c2:s83:py3:prof         -               c2:py3:prof     -nq-    -std=c++17
-c2:s83:debug            -               c2:debug        -nq-    -std=c++17
-c2:s83:prof             -               c2:prof         -nq-    -std=c++17
-e19:s83:py3:debug	-		e19:py3:debug	-nq-	-std=c++17
-e19:s83:py3:prof	-		e19:py3:prof	-nq-	-std=c++17
-e19:s83:debug		-		e19:debug	-nq-	-std=c++17
-e19:s83:prof		-		e19:prof	-nq-	-std=c++17
-e17:s83:py3:debug	-		e17:py3:debug	-nq-	-std=c++17
-e17:s83:py3:prof	-		e17:py3:prof	-nq-	-std=c++17
-e17:s83:debug		-		e17:debug	-nq-	-std=c++17
-e17:s83:prof		-		e17:prof	-nq-	-std=c++17
-
-c7:s82:py3:debug        -               c7:py3:debug    -nq-    -std=c++17
-c7:s82:py3:prof         -               c7:py3:prof     -nq-    -std=c++17
-c7:s82:debug            -               c7:debug        -nq-    -std=c++17
-c7:s82:prof             -               c7:prof         -nq-    -std=c++17
-c2:s82:py3:debug        -               c2:py3:debug    -nq-    -std=c++17
-c2:s82:py3:prof         -               c2:py3:prof     -nq-    -std=c++17
-c2:s82:debug            -               c2:debug        -nq-    -std=c++17
-c2:s82:prof             -               c2:prof         -nq-    -std=c++17
-e19:s82:py3:debug	-		e19:py3:debug	-nq-	-std=c++17
-e19:s82:py3:prof	-		e19:py3:prof	-nq-	-std=c++17
-e19:s82:debug		-		e19:debug	-nq-	-std=c++17
-e19:s82:prof		-		e19:prof	-nq-	-std=c++17
-e17:s82:py3:debug	-		e17:py3:debug	-nq-	-std=c++17
-e17:s82:py3:prof	-		e17:py3:prof	-nq-	-std=c++17
-e17:s82:debug		-		e17:debug	-nq-	-std=c++17
-e17:s82:prof		-		e17:prof	-nq-	-std=c++17
-
-c7:s81:py3:debug        -               c7:py3:debug    -nq-    -std=c++17
-c7:s81:py3:prof         -               c7:py3:prof     -nq-    -std=c++17
-c7:s81:debug            -               c7:debug        -nq-    -std=c++17
-c7:s81:prof             -               c7:prof         -nq-    -std=c++17
-c2:s81:py3:debug        -               c2:py3:debug    -nq-    -std=c++17
-c2:s81:py3:prof         -               c2:py3:prof     -nq-    -std=c++17
-c2:s81:debug            -               c2:debug        -nq-    -std=c++17
-c2:s81:prof             -               c2:prof         -nq-    -std=c++17
-e19:s81:py3:debug	-		e19:py3:debug	-nq-	-std=c++17
-e19:s81:py3:prof	-		e19:py3:prof	-nq-	-std=c++17
-e19:s81:debug		-		e19:debug	-nq-	-std=c++17
-e19:s81:prof		-		e19:prof	-nq-	-std=c++17
-e17:s81:py3:debug	-		e17:py3:debug	-nq-	-std=c++17
-e17:s81:py3:prof	-		e17:py3:prof	-nq-	-std=c++17
-e17:s81:debug		-		e17:debug	-nq-	-std=c++17
-e17:s81:prof		-		e17:prof	-nq-	-std=c++17
-
-c2:s79:debug            -               c2:debug        -nq-    -std=c++17
-c2:s79:prof             -               c2:prof         -nq-    -std=c++17
-e17:s79:debug		-		e17:debug	-nq-	-std=c++17
-e17:s79:prof		-		e17:prof	-nq-	-std=c++17
-e15:s79:debug		-		e15:debug	-nq-	-std=c++14
-e15:s79:prof		-		e15:prof	-nq-	-std=c++14
-
-c2:s78:debug            -               c2:debug        -nq-    -std=c++17
-c2:s78:prof             -               c2:prof         -nq-    -std=c++17
-e17:s78:debug		-		e17:debug	-nq-	-std=c++17
-e17:s78:prof		-		e17:prof	-nq-	-std=c++17
-
-c2:s75:debug            -               c2:debug        -nq-    -std=c++17
-c2:s75:prof             -               c2:prof         -nq-    -std=c++17
-e17:s75:debug		-		e17:debug	-nq-	-std=c++17
-e17:s75:prof		-		e17:prof	-nq-	-std=c++17
-e15:s75:debug		-		e15:debug	-nq-	-std=c++14
-e15:s75:prof		-		e15:prof	-nq-	-std=c++14
-
-c2:s74:debug            -               c2:debug        -nq-    -std=c++17
-c2:s74:prof             -               c2:prof         -nq-    -std=c++17
-e17:s74:debug		-		e17:debug	-nq-	-std=c++17
-e17:s74:prof		-		e17:prof	-nq-	-std=c++17
-e15:s74:debug		-		e15:debug	-nq-	-std=c++14
-e15:s74:prof		-		e15:prof	-nq-	-std=c++14
-
-c2:s73:debug            -               c2:debug        -nq-    -std=c++17
-c2:s73:prof             -               c2:prof         -nq-    -std=c++17
-e17:s73:debug		-		e17:debug	-nq-	-std=c++17
-e17:s73:prof		-		e17:prof	-nq-	-std=c++17
-
-c2:s72:debug            -               c2:debug        -nq-    -std=c++17
-c2:s72:prof             -               c2:prof         -nq-    -std=c++17
-e17:s72:debug		-		e17:debug	-nq-	-std=c++17
-e17:s72:prof		-		e17:prof	-nq-	-std=c++17
-
-c2:s70:debug            -               c2:debug        -nq-    -std=c++17
-c2:s70:prof             -               c2:prof         -nq-    -std=c++17
-e17:s70:debug		-		e17:debug	-nq-	-std=c++17
-e17:s70:prof		-		e17:prof	-nq-	-std=c++17
-e15:s70:debug		-		e15:debug	-nq-	-std=c++14
-e15:s70:prof		-		e15:prof	-nq-	-std=c++14
-
-c2:s69:debug            -               c2:debug        -nq-    -std=c++17
-c2:s69:prof             -               c2:prof         -nq-    -std=c++17
-e17:s69:debug		-		e17:debug	-nq-	-std=c++17
-e17:s69:prof		-		e17:prof	-nq-	-std=c++17
-e15:s69:debug		-		e15:debug	-nq-	-std=c++14
-e15:s69:prof		-		e15:prof	-nq-	-std=c++14
-
-c2:s68:debug            -               c2:debug        -nq-    -std=c++17
-c2:s68:prof             -               c2:prof         -nq-    -std=c++17
-e17:s68:debug		-		e17:debug	-nq-	-std=c++17
-e17:s68:prof		-		e17:prof	-nq-	-std=c++17
-e15:s68:debug		-		e15:debug	-nq-	-std=c++14
-e15:s68:prof		-		e15:prof	-nq-	-std=c++14
-
-c2:s67:debug            -               c2:debug        -nq-    -std=c++17
-c2:s67:prof             -               c2:prof         -nq-    -std=c++17
-e17:s67:debug		-		e17:debug	-nq-	-std=c++17
-e17:s67:prof		-		e17:prof	-nq-	-std=c++17
-e15:s67:debug		-		e15:debug	-nq-	-std=c++14
-e15:s67:prof		-		e15:prof	-nq-	-std=c++14
 end_qualifier_list
 
 

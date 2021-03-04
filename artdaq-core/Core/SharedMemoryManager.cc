@@ -26,7 +26,12 @@ static std::mutex sighandler_mutex;
 static void signal_handler(int signum)
 {
 	// Messagefacility may already be gone at this point, TRACE ONLY!
-	TRACE_STREAMER(TLVL_ERROR, &("SharedMemoryManager")[0], 0, 0, 0) << "A signal of type " << signum << " was caught by SharedMemoryManager. Detaching all Shared Memory segments, then proceeding with default handlers!";
+#   if TRACE_REVNUM < 1459
+	TRACE_STREAMER(TLVL_ERROR, &("SharedMemoryManager")[0], 0, 0, 0)
+#	else
+	TRACE_STREAMER(TLVL_ERROR, TLOG2("SharedMemoryManager",0), 0)
+#	endif
+					  << "A signal of type " << signum << " was caught by SharedMemoryManager. Detaching all Shared Memory segments, then proceeding with default handlers!";
 	for (auto ii : instances)
 	{
 		if (ii != nullptr)
@@ -43,7 +48,12 @@ static void signal_handler(int signum)
 	pthread_sigmask(SIG_UNBLOCK, nullptr, &set);
 	pthread_sigmask(SIG_UNBLOCK, &set, nullptr);
 
-	TRACE_STREAMER(TLVL_ERROR, &("SharedMemoryManager")[0], 0, 0, 0) << "Calling default signal handler";
+#   if TRACE_REVNUM < 1459
+	TRACE_STREAMER(TLVL_ERROR, &("SharedMemoryManager")[0], 0, 0, 0)
+#	else
+	TRACE_STREAMER(TLVL_ERROR, TLOG2("SharedMemoryManager",0), 0)
+#	endif
+					  << "Calling default signal handler";
 	if (signum != SIGUSR2)
 	{
 		sigaction(signum, &old_actions[signum], nullptr);

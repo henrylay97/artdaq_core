@@ -27,7 +27,7 @@ typedef std::chrono::duration<double, std::ratio<1>> seconds;
 /// <param name="then">std::chrono::steady_clock::time_point representing start of interval</param>
 /// <param name="now">std::chrono::steady_clock::time_point representing end of interval. Defaults to std::chrono::steady_clock::now()</param>
 /// <returns>Seconds in time interval, expressed as double</returns>
-inline constexpr double GetElapsedTime(std::chrono::steady_clock::time_point then, std::chrono::steady_clock::time_point now = std::chrono::steady_clock::now())
+inline double GetElapsedTime(std::chrono::steady_clock::time_point then, std::chrono::steady_clock::time_point now = std::chrono::steady_clock::now())
 {
 	return std::chrono::duration_cast<seconds>(now - then).count();
 }
@@ -38,7 +38,7 @@ inline constexpr double GetElapsedTime(std::chrono::steady_clock::time_point the
 /// <param name="then">std::chrono::steady_clock::time_point representing start of interval</param>
 /// <param name="now">std::chrono::steady_clock::time_point representing end of interval. Defaults to std::chrono::steady_clock::now()</param>
 /// <returns>Microseconds in time interval</returns>
-inline constexpr size_t GetElapsedTimeMicroseconds(std::chrono::steady_clock::time_point then, std::chrono::steady_clock::time_point now = std::chrono::steady_clock::now())
+inline size_t GetElapsedTimeMicroseconds(std::chrono::steady_clock::time_point then, std::chrono::steady_clock::time_point now = std::chrono::steady_clock::now())
 {
 	return static_cast<size_t>(GetElapsedTime(then, now) * 1000000);
 }
@@ -49,7 +49,7 @@ inline constexpr size_t GetElapsedTimeMicroseconds(std::chrono::steady_clock::ti
 /// <param name="then">std::chrono::steady_clock::time_point representing start of interval</param>
 /// <param name="now">std::chrono::steady_clock::time_point representing end of interval. Defaults to std::chrono::steady_clock::now()</param>
 /// <returns>Milliseconds in time interval</returns>
-inline constexpr size_t GetElapsedTimeMilliseconds(std::chrono::steady_clock::time_point then, std::chrono::steady_clock::time_point now = std::chrono::steady_clock::now())
+inline size_t GetElapsedTimeMilliseconds(std::chrono::steady_clock::time_point then, std::chrono::steady_clock::time_point now = std::chrono::steady_clock::now())
 {
 	return static_cast<size_t>(GetElapsedTime(then, now) * 1000);
 }

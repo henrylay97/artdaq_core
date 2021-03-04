@@ -30,4 +30,7 @@
   <class name="art::Wrapper<std::vector<artdaq::PackageBuildInfo>>"/>
   <class name="art::Wrapper<artdaq::PackageBuildInfo>"/>
     <class name="art::ParentageMap"/>
+    <class name="std::pair<const art::ParentageID, art::Parentage>"/>
+    <class name="std::pair<art::ParentageID, art::Parentage>"/>
+    <class name="std::pair<art::ProcessHistoryID, art::ProcessHistory>"/>
 </lcgdict>
