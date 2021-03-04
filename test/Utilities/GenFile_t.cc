@@ -19,16 +19,7 @@ BOOST_AUTO_TEST_CASE(genFileFileNameFlags)
 
 	fhicl::ParameterSet pset;
 	BOOST_REQUIRE_NO_THROW(fhicl::make_ParameterSet(pstr, pset));
-#if CANVAS_HEX_VERSION >= 0x30300  // art v2_11_00
 	mf::StartMessageFacility(pset, "configureMessageFacility_t");
-
-#else
-	mf::StartMessageFacility(pset);
-
-	mf::SetApplicationName("configureMessageFacility_t");
-
-	mf::setEnabledState("");
-#endif
 
 	mf::LogInfo("Test") << "Test Message";
 	TLOG(TLVL_INFO) << "Test TRACE";

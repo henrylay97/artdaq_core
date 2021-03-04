@@ -18,6 +18,28 @@ BOOST_AUTO_TEST_CASE(GetElapsedTime)
 	BOOST_REQUIRE_EQUAL(artdaq::TimeUtils::GetElapsedTime(then, now), 1);
 	BOOST_REQUIRE_EQUAL(artdaq::TimeUtils::GetElapsedTimeMilliseconds(then, now), 1000);
 	BOOST_REQUIRE_EQUAL(artdaq::TimeUtils::GetElapsedTimeMicroseconds(then, now), 1000000);
+
+	auto start = std::chrono::steady_clock::now();
+	for (int ii = 0; ii < 1000000; ++ii)
+	{
+		artdaq::TimeUtils::GetElapsedTime(start);
+	}
+	auto dur = artdaq::TimeUtils::GetElapsedTime(start);
+	TLOG(TLVL_INFO) << "Time to call GetElapsedTime 1000000 times: " << dur << " s ( ave: " << dur / 1000000 << " s/call ).";
+	start = std::chrono::steady_clock::now();
+	for (int ii = 0; ii < 1000000; ++ii)
+	{
+		artdaq::TimeUtils::GetElapsedTimeMilliseconds(start);
+	}
+	dur = artdaq::TimeUtils::GetElapsedTime(start);
+	TLOG(TLVL_INFO) << "Time to call GetElapsedTimeMilliseconds 1000000 times: " << dur << " s ( ave: " << dur / 1000000 << " s/call ).";
+	start = std::chrono::steady_clock::now();
+	for (int ii = 0; ii < 1000000; ++ii)
+	{
+		artdaq::TimeUtils::GetElapsedTimeMicroseconds(start);
+	}
+	dur = artdaq::TimeUtils::GetElapsedTime(start);
+	TLOG(TLVL_INFO) << "Time to call GetElapsedTimeMicroseconds 1000000 times: " << dur << " s ( ave: " << dur / 1000000 << " s/call ).";
 }
 
 BOOST_AUTO_TEST_CASE(UnixTime)
