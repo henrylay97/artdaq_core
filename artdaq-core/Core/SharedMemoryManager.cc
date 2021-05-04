@@ -53,8 +53,8 @@ static void signal_handler(int signum)
 #else
 	TRACE_STREAMER(TLVL_ERROR, TLOG2("SharedMemoryManager", 0), 0)
 #endif
-					  << "Restoring default signal handler";
-		sigaction(signum, &old_actions[signum], nullptr);
+	    << "Restoring default signal handler";
+	sigaction(signum, &old_actions[signum], nullptr);
 }
 
 artdaq::SharedMemoryManager::SharedMemoryManager(uint32_t shm_key, size_t buffer_count, size_t buffer_size, uint64_t buffer_timeout_us, bool destructive_read_mode)
