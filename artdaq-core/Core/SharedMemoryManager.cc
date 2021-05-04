@@ -53,18 +53,8 @@ static void signal_handler(int signum)
 #else
 	TRACE_STREAMER(TLVL_ERROR, TLOG2("SharedMemoryManager", 0), 0)
 #endif
-	    << "Calling default signal handler";
-	if (signum != SIGUSR2)
-	{
+					  << "Restoring default signal handler";
 		sigaction(signum, &old_actions[signum], nullptr);
-		kill(getpid(), signum);  // Only send signal to self
-	}
-	else
-	{
-		// Send Interrupt signal if parsing SIGUSR2 (i.e. user-defined exception that should tear down ARTDAQ)
-		sigaction(SIGINT, &old_actions[SIGINT], nullptr);
-		kill(getpid(), SIGINT);  // Only send signal to self
-	}
 }
 
 artdaq::SharedMemoryManager::SharedMemoryManager(uint32_t shm_key, size_t buffer_count, size_t buffer_size, uint64_t buffer_timeout_us, bool destructive_read_mode)

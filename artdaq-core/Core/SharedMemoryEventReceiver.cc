@@ -73,6 +73,12 @@ bool artdaq::SharedMemoryEventReceiver::ReadyForRead(bool broadcast, size_t time
 		current_data_source_ = nullptr;
 		first = false;
 
+		if (broadcasts_.IsEndOfData() || data_.IsEndOfData())
+		{
+			TLOG(TLVL_TRACE) << "End-Of-Data condition detected, returning false";
+			return false;
+		}
+
 		time_diff = TimeUtils::gettimeofday_us() - start_time;
 		auto sleep_time = time_diff;
 		if (sleep_time < 10000) sleep_time = 10000;
