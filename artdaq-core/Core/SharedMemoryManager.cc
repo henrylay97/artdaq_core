@@ -26,12 +26,12 @@ static std::mutex sighandler_mutex;
 static void signal_handler(int signum)
 {
 	// Messagefacility may already be gone at this point, TRACE ONLY!
-#if TRACE_REVNUM < 1459
+#   if TRACE_REVNUM < 1459
 	TRACE_STREAMER(TLVL_ERROR, &("SharedMemoryManager")[0], 0, 0, 0)
-#else
-	TRACE_STREAMER(TLVL_ERROR, TLOG2("SharedMemoryManager", 0), 0)
-#endif
-	    << "A signal of type " << signum << " was caught by SharedMemoryManager. Detaching all Shared Memory segments, then proceeding with default handlers!";
+#	else
+	TRACE_STREAMER(TLVL_ERROR, TLOG2("SharedMemoryManager",0), 0)
+#	endif
+					  << "A signal of type " << signum << " was caught by SharedMemoryManager. Detaching all Shared Memory segments, then proceeding with default handlers!";
 	for (auto ii : instances)
 	{
 		if (ii != nullptr)
@@ -48,23 +48,13 @@ static void signal_handler(int signum)
 	pthread_sigmask(SIG_UNBLOCK, nullptr, &set);
 	pthread_sigmask(SIG_UNBLOCK, &set, nullptr);
 
-#if TRACE_REVNUM < 1459
+#   if TRACE_REVNUM < 1459
 	TRACE_STREAMER(TLVL_ERROR, &("SharedMemoryManager")[0], 0, 0, 0)
-#else
-	TRACE_STREAMER(TLVL_ERROR, TLOG2("SharedMemoryManager", 0), 0)
-#endif
-	    << "Calling default signal handler";
-	if (signum != SIGUSR2)
-	{
-		sigaction(signum, &old_actions[signum], nullptr);
-		kill(getpid(), signum);  // Only send signal to self
-	}
-	else
-	{
-		// Send Interrupt signal if parsing SIGUSR2 (i.e. user-defined exception that should tear down ARTDAQ)
-		sigaction(SIGINT, &old_actions[SIGINT], nullptr);
-		kill(getpid(), SIGINT);  // Only send signal to self
-	}
+#	else
+	TRACE_STREAMER(TLVL_ERROR, TLOG2("SharedMemoryManager",0), 0)
+#	endif
+					  << "Restoring default signal handler";
+	sigaction(signum, &old_actions[signum], nullptr);
 }
 
 artdaq::SharedMemoryManager::SharedMemoryManager(uint32_t shm_key, size_t buffer_count, size_t buffer_size, uint64_t buffer_timeout_us, bool destructive_read_mode)
