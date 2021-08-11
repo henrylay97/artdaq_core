@@ -13,10 +13,11 @@
 #  make package
 # ======================================================================
 
-# use cmake 2.8 or later
-cmake_minimum_required (VERSION 3.12...3.14)
+cmake_minimum_required (VERSION 3.16)
 
-project(artdaq-core)
+find_package(cetbuildtools)
+
+project(artdaq_core VERSION 3.07.05)
 # cetbuildtools contains our cmake modules
 SET ( CETBUILDTOOLS_VERSION $ENV{CETBUILDTOOLS_VERSION} )
 IF (NOT CETBUILDTOOLS_VERSION)
@@ -41,15 +42,15 @@ cet_set_compiler_flags(DIAGS VIGILANT
 
 # these are minimum required versions, not the actual product versions
 find_ups_boost(v1_53_0)
-find_ups_product (cetbuildtools v4_09_02)
+find_ups_product (cetbuildtools)
 find_ups_product( canvas v1_00_00 )
 find_ups_product( cetlib v1_08_00 )
 find_ups_product( cetpkgsupport v1_08_03 )
-find_ups_product( clhep v2_2_0_3 )
+find_ups_product( clhep v2_2_0 )
 find_ups_product( fhiclcpp v3_04_00 )
 find_ups_product( messagefacility v1_14_01 )
 find_ups_product( sqlite v3_08_05_00 )
-find_ups_product( tbb v4_1 )
+find_ups_product( tbb )
 find_ups_root( v5_34_20 )
 find_ups_product( TRACE v3_03_00 )
 
@@ -70,12 +71,10 @@ list(GET CANVAS_VERSION_LIST 2 CANVAS_PATCH_VERSION)
 message("-DCANVAS_HEX_VERSION=0x${CANVAS_MAJOR_VERSION}${CANVAS_MINOR_VERSION}${CANVAS_PATCH_VERSION}")
 add_definitions(-DCANVAS_HEX_VERSION=0x${CANVAS_MAJOR_VERSION}${CANVAS_MINOR_VERSION}${CANVAS_PATCH_VERSION})
 
-# as of art v2_11_00, messagefacility has a single library
-check_ups_version(messagefacility $ENV{MESSAGEFACILITY_VERSION} v2_02_00 PRODUCT_MATCHES_VAR ONE_MF_LIBRARY)
-if(ONE_MF_LIBRARY)
-    set( MESSAGEFACILITY_LIBS MF_MessageLogger)
-else()
-    set( MESSAGEFACILITY_LIBS MF_MessageLogger MF_Utilities)
+# as of fhiclcpp v4_15_00 (s108), ParameterSet::make is the preferred way to make a ParameterSet
+check_ups_version(fhiclcpp $ENV{FHICLCPP_VERSION} v4_15_00 PRODUCT_MATCHES_VAR PSET_MAKE)
+if(PSET_MAKE)
+  add_definitions(-DSIMPLER_PSET_MAKE)
 endif()
 
 # Debug streamer.
@@ -85,17 +84,20 @@ if(BTYPE_UC STREQUAL DEBUG)
 	if(DEFINED ENV{USE_ASAN})
 		if($ENV{USE_ASAN} GREATER 0)
 			message("!!! Address Sanitizer Activated!!!")
-			cet_add_compiler_flags(-fsanitize=address -lasan -Wno-unused-command-line-argument)
+			add_compile_options(-fsanitize=address -Wno-unused-command-line-argument)
+			add_link_options(-lasan)
 		endif()
 	endif()
 	if(DEFINED ENV{USE_TSAN})
 		if($ENV{USE_TSAN} GREATER 0)
 			message("!!! Thread Sanitizer Activated!!!")
-			cet_add_compiler_flags(-fsanitize=thread -ltsan -Wno-unused-command-line-argument)
+			add_compile_options(-fsanitize=thread -Wno-unused-command-line-argument)
+			add_link_options(-ltsan)
 		endif()
 	endif()
 	if(DEFINED ENV{USE_GCOV})
-		cet_add_compiler_flags(-fprofile-arcs -ftest-coverage --coverage)
+		add_compile_options(-fprofile-arcs -ftest-coverage --coverage)
+		add_link_options(--coverage)
 	endif()
 endif()
 
@@ -105,13 +107,12 @@ if(DEFINED ENV{USE_EXCEPTIONSTACKTRACE})
 		message("!!! Exception StackTrace Activated!!!")
 		add_definitions(-D EXCEPTIONSTACKTRACE)
 		set( EXCEPTIONSTACKTRACE_LIB  artdaq-core_Utilities_ExceptionStackTrace )
-                cet_add_compiler_flags( -rdynamic -Wno-unused-command-line-argument )
+		add_compile_options( -rdynamic -Wno-unused-command-line-argument )
+		add_link_options( -rdynamic )
 	endif()
 endif()
 
-cet_report_compiler_flags()
-
-set(CETLIB_LIBS cetlib cetlib_except)
+#cet_report_compiler_flags()
 
 # macros for art_dictionary and simple_plugin
 include(ArtDictionary)

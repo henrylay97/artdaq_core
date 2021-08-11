@@ -8,6 +8,7 @@
 #include "cetlib/ProvideMakePluginMacros.h"
 #include "cetlib/ostream_handle.h"
 #include "fhiclcpp/ParameterSet.h"
+#include "fhiclcpp/types/ConfigurationTable.h"
 #include "messagefacility/MessageService/ELdestination.h"
 #include "messagefacility/Utilities/ELseverityLevel.h"
 #include "messagefacility/Utilities/exception.h"

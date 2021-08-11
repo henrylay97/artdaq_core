@@ -3,6 +3,7 @@
 
 #include <boost/thread/mutex.hpp>
 
+#include <atomic>
 #include <cmath>
 #include <cstdint>
 #include <vector>

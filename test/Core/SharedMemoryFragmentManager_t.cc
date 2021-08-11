@@ -134,11 +134,11 @@ BOOST_AUTO_TEST_CASE(DataFlow)
 
 	TLOG(TLVL_DEBUG) << "Checking Test Fragment Header Contents";
 	BOOST_REQUIRE_EQUAL(sts, 0);
-	BOOST_REQUIRE_EQUAL(header.word_count, fragSize);
-	BOOST_REQUIRE_EQUAL(header.sequence_id, 0x10);
-	BOOST_REQUIRE_EQUAL(header.fragment_id, 0x20);
-	BOOST_REQUIRE_EQUAL(header.type, type);
-	BOOST_REQUIRE_EQUAL(header.timestamp, 0x30);
+	BOOST_REQUIRE_EQUAL(static_cast<size_t>(header.word_count), fragSize);
+	BOOST_REQUIRE_EQUAL(static_cast<size_t>(header.sequence_id), 0x10);
+	BOOST_REQUIRE_EQUAL(static_cast<size_t>(header.fragment_id), 0x20);
+	BOOST_REQUIRE_EQUAL(static_cast<size_t>(header.type), type);
+	BOOST_REQUIRE_EQUAL(static_cast<size_t>(header.timestamp), 0x30);
 
 	TLOG(TLVL_DEBUG) << "Reading Test Fragment data";
 	artdaq::Fragment frag2(header.word_count);
