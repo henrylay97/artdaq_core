@@ -18,7 +18,11 @@ BOOST_AUTO_TEST_CASE(genFileFileNameFlags)
 	auto pstr = artdaq::generateMessageFacilityConfiguration("configureMessageFacility_t", true, true, "-%N-%H-%T-%U-%%-%?N-%?L-");
 
 	fhicl::ParameterSet pset;
+#ifdef SIMPLER_PSET_MAKE
+        BOOST_REQUIRE_NO_THROW(pset = fhicl::ParameterSet::make(pstr));
+#else
 	BOOST_REQUIRE_NO_THROW(fhicl::make_ParameterSet(pstr, pset));
+#endif
 	mf::StartMessageFacility(pset, "configureMessageFacility_t");
 
 	mf::LogInfo("Test") << "Test Message";

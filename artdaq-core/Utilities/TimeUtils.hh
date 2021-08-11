@@ -40,7 +40,7 @@ inline double GetElapsedTime(std::chrono::steady_clock::time_point then, std::ch
 /// <returns>Microseconds in time interval</returns>
 inline size_t GetElapsedTimeMicroseconds(std::chrono::steady_clock::time_point then, std::chrono::steady_clock::time_point now = std::chrono::steady_clock::now())
 {
-	return static_cast<size_t>(GetElapsedTime(then, now) * 1000000);
+	return static_cast<size_t>(std::chrono::duration_cast<std::chrono::microseconds>(now - then).count());
 }
 
 /// <summary>
@@ -51,7 +51,7 @@ inline size_t GetElapsedTimeMicroseconds(std::chrono::steady_clock::time_point t
 /// <returns>Milliseconds in time interval</returns>
 inline size_t GetElapsedTimeMilliseconds(std::chrono::steady_clock::time_point then, std::chrono::steady_clock::time_point now = std::chrono::steady_clock::now())
 {
-	return static_cast<size_t>(GetElapsedTime(then, now) * 1000);
+	return static_cast<size_t>(std::chrono::duration_cast<std::chrono::milliseconds>(now - then).count());
 }
 
 /**
