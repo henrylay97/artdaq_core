@@ -18,17 +18,17 @@
 namespace BFS = boost::filesystem;
 
 namespace {
-  fhicl::ParameterSet make_pset(std::string const& config_str)
-  {
+fhicl::ParameterSet make_pset(std::string const& config_str)
+{
 #ifdef SIMPLER_PSET_MAKE
-    return fhicl::ParameterSet::make(config_str);
+	return fhicl::ParameterSet::make(config_str);
 #else
-    fhicl::ParameterSet tmp_pset;
-    fhicl::make_ParameterSet(config_str, tmp_pset);
-    return tmp_pset;
+	fhicl::ParameterSet tmp_pset;
+	fhicl::make_ParameterSet(config_str, tmp_pset);
+	return tmp_pset;
 #endif
-  }
 }
+}  // namespace
 
 std::string artdaq::generateMessageFacilityConfiguration(char const* progname, bool useConsole, bool printDebug, char const* fileExtraName)
 {
@@ -151,7 +151,7 @@ std::string artdaq::generateMessageFacilityConfiguration(char const* progname, b
 	fhicl::ParameterSet tmp_pset;
 	try
 	{
-                tmp_pset = make_pset(pstr);
+		tmp_pset = make_pset(pstr);
 	}
 	catch (cet::exception const& ex)
 	{
@@ -253,7 +253,7 @@ void artdaq::configureMessageFacility(char const* progname, bool useConsole, boo
 	fhicl::ParameterSet pset;
 	try
 	{
-                pset = make_pset(pstr);
+		pset = make_pset(pstr);
 	}
 	catch (cet::exception const&)
 	{
@@ -263,7 +263,7 @@ void artdaq::configureMessageFacility(char const* progname, bool useConsole, boo
 	fhicl::ParameterSet trace_pset;
 	if (!pset.get_if_present<fhicl::ParameterSet>("TRACE", trace_pset))
 	{
-                auto trace_dflt_pset = make_pset("TRACE:{TRACE_MSGMAX:0 TRACE_LIMIT_MS:[10,500,1500]}");
+		auto trace_dflt_pset = make_pset("TRACE:{TRACE_MSGMAX:0 TRACE_LIMIT_MS:[10,500,1500]}");
 		pset.put<fhicl::ParameterSet>("TRACE", trace_dflt_pset.get<fhicl::ParameterSet>("TRACE"));
 		trace_pset = pset.get<fhicl::ParameterSet>("TRACE");
 	}

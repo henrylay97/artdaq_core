@@ -19,7 +19,7 @@ BOOST_AUTO_TEST_CASE(genFileFileNameFlags)
 
 	fhicl::ParameterSet pset;
 #ifdef SIMPLER_PSET_MAKE
-        BOOST_REQUIRE_NO_THROW(pset = fhicl::ParameterSet::make(pstr));
+	BOOST_REQUIRE_NO_THROW(pset = fhicl::ParameterSet::make(pstr));
 #else
 	BOOST_REQUIRE_NO_THROW(fhicl::make_ParameterSet(pstr, pset));
 #endif
