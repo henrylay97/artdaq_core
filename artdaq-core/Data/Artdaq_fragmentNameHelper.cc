@@ -55,7 +55,7 @@ ArtdaqFragmentNameHelper::GetInstanceNameForFragment(artdaq::Fragment const& fra
 	auto primary_type = type_map_.find(fragment.type());
 	if (primary_type != type_map_end)
 	{
-		TLOG(TLVL_TRACE) << "Found matching instance name " << primary_type->second << " for Fragment type " << fragment.type();
+		TLOG(TLVL_TRACE) << "Found matching instance name " << primary_type->second << " for Fragment type " << static_cast<int>(fragment.type());
 		instance_name = primary_type->second;
 		if (fragment.type() == artdaq::Fragment::ContainerFragmentType)
 		{
@@ -69,7 +69,7 @@ ArtdaqFragmentNameHelper::GetInstanceNameForFragment(artdaq::Fragment const& fra
 	}
 	else
 	{
-		TLOG(TLVL_TRACE) << "Could not find match for Fragment type " << fragment.type() << ", returning " << unidentified_instance_name_;
+		TLOG(TLVL_TRACE) << "Could not find match for Fragment type " << static_cast<int>(fragment.type()) << ", returning " << unidentified_instance_name_;
 		instance_name = unidentified_instance_name_;
 		success_code = false;
 	}

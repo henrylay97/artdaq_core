@@ -84,6 +84,7 @@ struct artdaq::detail::RawFragmentHeader
 	static std::map<type_t, std::string> MakeVerboseSystemTypeMap()
 	{
 		return std::map<type_t, std::string>{
+		    {type_t(INVALID_TYPE), "INVALID"},
 		    {type_t(EndOfDataFragmentType), "EndOfData"},
 		    {type_t(DataFragmentType), "Data"},
 		    {type_t(InitFragmentType), "Init"},
@@ -101,29 +102,12 @@ struct artdaq::detail::RawFragmentHeader
 	 */
 	static std::string SystemTypeToString(type_t type)
 	{
-		switch (type)
+		auto map = MakeVerboseSystemTypeMap();
+		if (map.count(type))
 		{
-			case INVALID_TYPE:
-				return "INVALID";
-			case EndOfDataFragmentType:
-				return "EndOfData";
-			case DataFragmentType:
-				return "Data";
-			case InitFragmentType:
-				return "Init";
-			case EndOfRunFragmentType:
-				return "EndOfRun";
-			case EndOfSubrunFragmentType:
-				return "EndOfSubrun";
-			case ShutdownFragmentType:
-				return "Shutdown";
-			case EmptyFragmentType:
-				return "Empty";
-			case ContainerFragmentType:
-				return "Container";
-			default:
-				return "Unknown";
+			return map[type];
 		}
+		return "Unknown";
 	}
 
 	// Each of the following invalid values is chosen based on the

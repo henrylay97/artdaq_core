@@ -15,21 +15,12 @@
 
 cmake_minimum_required (VERSION 3.16)
 
-find_package(cetbuildtools)
+find_package(cetmodules)
+set(CET_CETBUILDTOOLS_COMPAT TRUE)
+include(Compatibility)
+set(CET_WARN_DEPRECATED)
 
-project(artdaq_core VERSION 3.07.05)
-# cetbuildtools contains our cmake modules
-SET ( CETBUILDTOOLS_VERSION $ENV{CETBUILDTOOLS_VERSION} )
-IF (NOT CETBUILDTOOLS_VERSION)
-    MESSAGE (FATAL_ERROR "ERROR: setup cetbuildtools to get the cmake modules")
-ENDIF()
-
-# Modules moved from canvas to canvas_root_io when canvas_root_io was introduced
-set(CMAKE_MODULE_PATH
-  $ENV{CANVAS_ROOT_IO_DIR}/Modules
-  $ENV{CANVAS_DIR}/Modules
-	$ENV{CETBUILDTOOLS_DIR}/Modules
-	${CMAKE_MODULE_PATH})
+project(artdaq_core VERSION 3.08.00)
 
 include(CetCMakeEnv)
 cet_cmake_env()
@@ -42,7 +33,6 @@ cet_set_compiler_flags(DIAGS VIGILANT
 
 # these are minimum required versions, not the actual product versions
 find_ups_boost(v1_53_0)
-find_ups_product (cetbuildtools)
 find_ups_product( canvas v1_00_00 )
 find_ups_product( cetlib v1_08_00 )
 find_ups_product( cetpkgsupport v1_08_03 )
@@ -125,13 +115,9 @@ add_subdirectory(test)
 # source
 add_subdirectory(artdaq-core)
 
-# ups - table and config files
-add_subdirectory(ups)
-
 # doc - Documentation
 if ( NOT DEFINED ENV{DISABLE_DOXYGEN} )
 add_subdirectory(doc)
 endif()
 
-# packaging utility
-include(UseCPack)
+cet_cmake_config()

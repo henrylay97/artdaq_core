@@ -15,6 +15,7 @@ BOOST_AUTO_TEST_CASE(Constructors)
 	artdaq::SimpleLookupPolicy e("PATH");
 	artdaq::SimpleLookupPolicy np("", artdaq::SimpleLookupPolicy::ArgType::PATH_STRING);
 	artdaq::SimpleLookupPolicy p("/tmp", artdaq::SimpleLookupPolicy::ArgType::PATH_STRING);
+	std::unique_ptr<cet::filepath_maker> pp(new artdaq::SimpleLookupPolicy("PATH"));
 	BOOST_REQUIRE(true);  // No exceptions
 }
 
@@ -29,14 +30,7 @@ BOOST_AUTO_TEST_CASE(AbsoluteFilePath)
 
 BOOST_AUTO_TEST_CASE(FallbackPath)
 {
-	auto coreDir = getenv("ARTDAQ_CORE_DIR");
-	std::string coreDirStr = "";
-	if (coreDir != nullptr)
-	{
-		coreDirStr = std::string(coreDir);
-	}
-
-	artdaq::SimpleLookupPolicy p("/tmp:.:" + coreDirStr + "/test/Utilities/fcl", artdaq::SimpleLookupPolicy::ArgType::PATH_STRING);
+	artdaq::SimpleLookupPolicy p("/tmp:.", artdaq::SimpleLookupPolicy::ArgType::PATH_STRING);
 	p("LookupTarget.fcl");
 	BOOST_REQUIRE_EXCEPTION(p("ThisFileDoesNotExist.fcl"), cet::exception, [](cet::exception const& e) { return e.category() == "search_path"; });
 }

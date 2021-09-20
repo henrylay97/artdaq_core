@@ -6,8 +6,6 @@
 #define TRACE_NAME "SharedMemoryEventReceiver"
 #include "tracemf.h"
 
-using std::string;
-
 artdaq::SharedMemoryEventReceiver::SharedMemoryEventReceiver(uint32_t shm_key, uint32_t broadcast_shm_key)
     : current_read_buffer_(-1)
     , initialized_(false)
