@@ -29,9 +29,6 @@ public:
 		 */
 	FragmentGenerator() = default;
 
-	/**
-		 * \brief Default Destructor
-		 */
 	virtual ~FragmentGenerator() = default;
 
 	/**

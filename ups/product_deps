@@ -22,14 +22,9 @@ old_style_config_vars
 #
 product			version		optional
 canvas_root_io	v1_09_04	s112
-canvas_root_io	v1_09_03	s111
 canvas_root_io	v1_07_03	s110
-canvas_root_io	v1_09_02	s109
-canvas_root_io	v1_09_01	s108
-canvas_root_io	v1_07_02	s106
-canvas_root_io	v1_07_01	s105
-TRACE			v3_17_01
-cetbuildtools	v8_13_04	-	only_for_build
+TRACE			v3_17_03
+cetmodules		v2_26_00	-	only_for_build
 end_product_list
 
 # -nq- means there is no qualifier
@@ -42,47 +37,12 @@ e20:s112:prof	e20:prof		-nq-	-std=c++17
 e19:s112:debug	e19:debug		-nq-	-std=c++17
 e19:s112:prof	e19:prof		-nq-	-std=c++17
 
-c7:s111:debug	c7:debug		-nq-	-std=c++17
-c7:s111:prof	c7:prof			-nq-	-std=c++17
-e20:s111:debug	e20:debug		-nq-	-std=c++17
-e20:s111:prof	e20:prof		-nq-	-std=c++17
-e19:s111:debug	e19:debug		-nq-	-std=c++17
-e19:s111:prof	e19:prof		-nq-	-std=c++17
-
 c7:s110:debug	c7:debug		-nq-	-std=c++17
 c7:s110:prof	c7:prof			-nq-	-std=c++17
 e20:s110:debug	e20:debug		-nq-	-std=c++17
 e20:s110:prof	e20:prof		-nq-	-std=c++17
 e19:s110:debug	e19:debug		-nq-	-std=c++17
 e19:s110:prof	e19:prof		-nq-	-std=c++17
-
-c7:s109:debug	c7:debug		-nq-	-std=c++17
-c7:s109:prof	c7:prof			-nq-	-std=c++17
-e20:s109:debug	e20:debug		-nq-	-std=c++17
-e20:s109:prof	e20:prof		-nq-	-std=c++17
-e19:s109:debug	e19:debug		-nq-	-std=c++17
-e19:s109:prof	e19:prof		-nq-	-std=c++17
-
-c7:s108:debug	c7:debug		-nq-	-std=c++17
-c7:s108:prof	c7:prof			-nq-	-std=c++17
-e20:s108:debug	e20:debug		-nq-	-std=c++17
-e20:s108:prof	e20:prof		-nq-	-std=c++17
-e19:s108:debug	e19:debug		-nq-	-std=c++17
-e19:s108:prof	e19:prof		-nq-	-std=c++17
-
-c7:s106:debug	c7:debug		-nq-	-std=c++17
-c7:s106:prof	c7:prof			-nq-	-std=c++17
-e20:s106:debug	e20:debug		-nq-	-std=c++17
-e20:s106:prof	e20:prof		-nq-	-std=c++17
-e19:s106:debug	e19:debug		-nq-	-std=c++17
-e19:s106:prof	e19:prof		-nq-	-std=c++17
-
-c7:s105:debug	c7:debug		-nq-	-std=c++17
-c7:s105:prof	c7:prof			-nq-	-std=c++17
-e20:s105:debug	e20:debug		-nq-	-std=c++17
-e20:s105:prof	e20:prof		-nq-	-std=c++17
-e19:s105:debug	e19:debug		-nq-	-std=c++17
-e19:s105:prof	e19:prof		-nq-	-std=c++17
 
 end_qualifier_list
 

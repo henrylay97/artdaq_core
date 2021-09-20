@@ -2,6 +2,8 @@
 #include <iostream>
 #include <utility>
 
+#include "tracemf.h"
+
 namespace artdaq {
 StatisticsCollection& StatisticsCollection::getInstance()
 {
@@ -23,6 +25,7 @@ StatisticsCollection::StatisticsCollection()
 	}
 	catch (const boost::exception& e)
 	{
+		TLOG(TLVL_ERROR) << "Caught boost::exception starting Statistics Collection thread: " << boost::diagnostic_information(e) << ", errno=" << errno;
 		std::cerr << "Caught boost::exception starting Statistics Collection thread: " << boost::diagnostic_information(e) << ", errno=" << errno << std::endl;
 		exit(5);
 	}

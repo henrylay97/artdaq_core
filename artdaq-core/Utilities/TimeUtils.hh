@@ -55,6 +55,25 @@ inline size_t GetElapsedTimeMilliseconds(std::chrono::steady_clock::time_point t
 }
 
 /**
+		 * \brief Get the current time of day as a pair of seconds and nanoseconds (from clock_gettime(CLOCK_REALTIME, ...) system call)
+		 * \return Pair of seconds, nanoseconds wallclock time
+		 */
+struct timespec get_realtime_clock();
+
+/// <summary>
+/// Get the elapsed time between two struct timespec instances.
+///
+/// Note that struct timespec instances from get_realtime_clock are subject to clock adjustments and should not be relied on as precision timers!
+/// </summary>
+/// <param name="then">Timespec representing beginning of interval</param>
+/// <param name="now">Timespec representing end of interval. Defaults to get_realtime_clock()</param>
+/// <returns>Elapseed time between then and now as double, in seconds</returns>
+inline constexpr double GetElapsedTime(struct timespec const& then, struct timespec now = get_realtime_clock())
+{
+	return now.tv_sec - then.tv_sec + ((now.tv_nsec - then.tv_nsec) / 1000000000.0);
+}
+
+/**
 	   * \brief Converts a Unix time to its string representation, in UTC
 	   * \param inputUnixTime A time_t Unix time variable
 	   * \return std::string representation of Unix time, in UTC
@@ -80,12 +99,6 @@ std::string convertUnixTimeToString(struct timespec const& inputUnixTime);
 		* \return The current time of day in microseconds
 		*/
 uint64_t gettimeofday_us();
-
-/**
-		 * \brief Get the current time of day as a pair of seconds and nanoseconds (from clock_gettime(CLOCK_REALTIME, ...) system call)
-		 * \return Pair of seconds, nanoseconds wallclock time
-		 */
-struct timespec get_realtime_clock();
 
 /**
 		* \brief Converts a Unix time to double

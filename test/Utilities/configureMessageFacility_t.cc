@@ -32,7 +32,7 @@ BOOST_AUTO_TEST_CASE(generateMessageFacilityConfigurationTest)
 	setenv("ARTDAQ_LOG_ROOT", "/tmp", 1);
 
 	setenv("ARTDAQ_LOG_FHICL", "/this/file/doesn't/exist.fcl", 1);
-	BOOST_REQUIRE_EXCEPTION(artdaq::generateMessageFacilityConfiguration("configureMessageFacility_t"), cet::exception, [](cet::exception const& e) { return e.category() == "configureMessageFacility"; });
+	BOOST_REQUIRE_EXCEPTION(artdaq::generateMessageFacilityConfiguration("configureMessageFacility_t"), cet::exception, [](cet::exception const& e) { return e.category() == "ConfigureMessageFacility"; });
 	unsetenv("ARTDAQ_LOG_FHICL");
 
 	artdaq::generateMessageFacilityConfiguration("configureMessageFacility_t");
