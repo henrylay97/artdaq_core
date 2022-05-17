@@ -121,7 +121,7 @@ struct QuickVec
 	    , data_(reinterpret_cast<TT_*>(QV_MEMALIGN(QV_ALIGN, other.capacity() * sizeof(TT_))))  // NOLINT(cppcoreguidelines-pro-type-reinterpret-cast)
 	    , capacity_(other.capacity())
 	{
-		TRACEN("QuickVec", 10, "QuickVec std::vector ctor b4 memcpy this=%p data_=%p &other[0]=%p size_=%d other.size()=%d", (void*)this, (void*)data_, (void*)&other[0], size_, other.size());  // NOLINT
+		TRACEN("QuickVec", 40, "QuickVec std::vector ctor b4 memcpy this=%p data_=%p &other[0]=%p size_=%d other.size()=%d", (void*)this, (void*)data_, (void*)&other[0], size_, other.size());  // NOLINT
 		memcpy(data_, (void*)&other[0], size_ * sizeof(TT_));                                                                                                                                    // NOLINT
 	}
 
@@ -140,7 +140,7 @@ struct QuickVec
 	    , data_(reinterpret_cast<TT_*>(QV_MEMALIGN(QV_ALIGN, other.capacity() * sizeof(TT_))))  // NOLINT(cppcoreguidelines-pro-type-reinterpret-cast)
 	    , capacity_(other.capacity_)
 	{
-		TRACEN("QuickVec", 10, "QuickVec copy ctor b4 memcpy this=%p data_=%p other.data_=%p size_=%d other.size_=%d", (void*)this, (void*)data_, (void*)other.data_, size_, other.size_);  // NOLINT
+		TRACEN("QuickVec", 40, "QuickVec copy ctor b4 memcpy this=%p data_=%p other.data_=%p size_=%d other.size_=%d", (void*)this, (void*)data_, (void*)other.data_, size_, other.size_);  // NOLINT
 		memcpy(data_, other.data_, size_ * sizeof(TT_));
 	}
 
@@ -151,7 +151,7 @@ struct QuickVec
 	 */
 	QUICKVEC& operator=(const QuickVec& other)  //= delete; // non copyable
 	{
-		TRACEN("QuickVec", 10, "QuickVec copy assign b4 resize/memcpy this=%p data_=%p other.data_=%p size_=%d other.size_=%d", (void*)this, (void*)data_, (void*)other.data_, size_, other.size_);  // NOLINT
+		TRACEN("QuickVec", 40, "QuickVec copy assign b4 resize/memcpy this=%p data_=%p other.data_=%p size_=%d other.size_=%d", (void*)this, (void*)data_, (void*)other.data_, size_, other.size_);  // NOLINT
 		resize(other.size_);
 		memcpy(data_, other.data_, size_ * sizeof(TT_));
 		return *this;
@@ -166,7 +166,7 @@ struct QuickVec
 	    , data_(std::move(other.data_))
 	    , capacity_(other.capacity_)
 	{
-		TRACEN("QuickVec", 10, "QuickVec move ctor this=%p data_=%p other.data_=%p", (void*)this, (void*)data_, (void*)other.data_);  // NOLINT
+		TRACEN("QuickVec", 40, "QuickVec move ctor this=%p data_=%p other.data_=%p", (void*)this, (void*)data_, (void*)other.data_);  // NOLINT
 		other.data_ = nullptr;
 	}
 
@@ -177,7 +177,7 @@ struct QuickVec
 	 */
 	QUICKVEC& operator=(QuickVec&& other) noexcept  // assign movable
 	{
-		TRACEN("QuickVec", 10, "QuickVec move assign this=%p data_=%p other.data_=%p", (void*)this, (void*)data_, (void*)other.data_);  // NOLINT
+		TRACEN("QuickVec", 40, "QuickVec move assign this=%p data_=%p other.data_=%p", (void*)this, (void*)data_, (void*)other.data_);  // NOLINT
 		size_ = other.size_;
 		//delete [] data_;
 		free(data_);  // NOLINT(cppcoreguidelines-no-malloc) TODO: #24439
@@ -347,7 +347,7 @@ inline QUICKVEC::QuickVec(size_t sz)
     , data_(reinterpret_cast<TT_*>(QV_MEMALIGN(QV_ALIGN, sz * sizeof(TT_))))  // NOLINT(cppcoreguidelines-pro-type-reinterpret-cast)
     , capacity_(sz)
 {
-	TRACEN("QuickVec", 15, "QuickVec %p ctor sz=%d data_=%p", (void*)this, size_, (void*)data_);  // NOLINT
+	TRACEN("QuickVec", 45, "QuickVec %p ctor sz=%d data_=%p", (void*)this, size_, (void*)data_);  // NOLINT
 }
 
 QUICKVEC_TEMPLATE
@@ -356,7 +356,7 @@ inline QUICKVEC::QuickVec(size_t sz, TT_ val)
     , data_(reinterpret_cast<TT_*>(QV_MEMALIGN(QV_ALIGN, sz * sizeof(TT_))))  // NOLINT(cppcoreguidelines-pro-type-reinterpret-cast)
     , capacity_(sz)
 {
-	TRACEN("QuickVec", 15, "QuickVec %p ctor sz=%d/v data_=%p", (void*)this, size_, (void*)data_);  // NOLINT
+	TRACEN("QuickVec", 45, "QuickVec %p ctor sz=%d/v data_=%p", (void*)this, size_, (void*)data_);  // NOLINT
 	for (iterator ii = begin(); ii != end(); ++ii) *ii = val;
 	//bzero( &data_[0], (sz<4)?(sz*sizeof(TT_)):(4*sizeof(TT_)) );
 }
@@ -364,11 +364,11 @@ inline QUICKVEC::QuickVec(size_t sz, TT_ val)
 QUICKVEC_TEMPLATE
 inline QUICKVEC::~QuickVec() noexcept
 {
-	TRACEN("QuickVec", 15, "QuickVec %p dtor start data_=%p size_=%d", (void*)this, (void*)data_, size_);  // NOLINT
+	TRACEN("QuickVec", 45, "QuickVec %p dtor start data_=%p size_=%d", (void*)this, (void*)data_, size_);  // NOLINT
 
 	free(data_);  // NOLINT(cppcoreguidelines-no-malloc) TODO: #24439
 
-	TRACEN("QuickVec", 15, "QuickVec %p dtor return", (void*)this);  // NOLINT
+	TRACEN("QuickVec", 45, "QuickVec %p dtor return", (void*)this);  // NOLINT
 }
 
 QUICKVEC_TEMPLATE
@@ -418,7 +418,7 @@ inline void QUICKVEC::reserve(size_t size)
 		//data_ = new TT_[size];
 		data_ = reinterpret_cast<TT_*>(QV_MEMALIGN(QV_ALIGN, size * sizeof(TT_)));  // NOLINT(cppcoreguidelines-pro-type-reinterpret-cast)
 		memcpy(data_, old, size_ * sizeof(TT_));
-		TRACEN("QuickVec", 13, "QUICKVEC::reserve after memcpy this=%p old=%p data_=%p capacity=%d", (void*)this, (void*)old, (void*)data_, (int)size);  // NOLINT
+		TRACEN("QuickVec", 43, "QUICKVEC::reserve after memcpy this=%p old=%p data_=%p capacity=%d", (void*)this, (void*)old, (void*)data_, (int)size);  // NOLINT
 
 		free(old);  // NOLINT(cppcoreguidelines-no-malloc) TODO: #24439
 		capacity_ = size;
@@ -437,7 +437,7 @@ inline void QUICKVEC::resize(size_t size)
 		TT_* old = data_;
 		data_ = reinterpret_cast<TT_*>(QV_MEMALIGN(QV_ALIGN, size * sizeof(TT_)));  // NOLINT(cppcoreguidelines-pro-type-reinterpret-cast)
 		memcpy(data_, old, size_ * sizeof(TT_));
-		TRACEN("QuickVec", 13, "QUICKVEC::resize after memcpy this=%p old=%p data_=%p size=%d", (void*)this, (void*)old, (void*)data_, (int)size);  // NOLINT
+		TRACEN("QuickVec", 43, "QUICKVEC::resize after memcpy this=%p old=%p data_=%p size=%d", (void*)this, (void*)old, (void*)data_, (int)size);  // NOLINT
 
 		free(old);  // NOLINT(cppcoreguidelines-no-malloc) TODO: #24439
 		size_ = capacity_ = size;
@@ -476,7 +476,7 @@ inline void QUICKVEC::resize(size_type size, TT_ val)
 	resize(size);
 	if (size > old_size)
 	{
-		TRACEN("QuickVec", 13, "QUICKVEC::resize initializing %zu elements", size - old_size);  // NOLINT
+		TRACEN("QuickVec", 43, "QUICKVEC::resize initializing %zu elements", size - old_size);  // NOLINT
 		for (iterator ii = begin() + old_size; ii != end(); ++ii) *ii = val;
 	}
 }
@@ -537,11 +537,11 @@ inline QUICKVEC_TN::iterator QUICKVEC::erase(const_iterator first, const_iterato
 QUICKVEC_TEMPLATE
 inline void QUICKVEC::swap(QuickVec& other) noexcept
 {
-	TRACEN("QuickVec", 12, "QUICKVEC::swap this=%p enter data_=%p other.data_=%p", (void*)this, (void*)data_, (void*)other.data_);  // NOLINT
+	TRACEN("QuickVec", 42, "QUICKVEC::swap this=%p enter data_=%p other.data_=%p", (void*)this, (void*)data_, (void*)other.data_);  // NOLINT
 	std::swap(data_, other.data_);
 	std::swap(size_, other.size_);
 	std::swap(capacity_, other.capacity_);
-	TRACEN("QuickVec", 12, "QUICKVEC::swap return data_=%p other.data_=%p", (void*)data_, (void*)other.data_);  // NOLINT
+	TRACEN("QuickVec", 42, "QUICKVEC::swap return data_=%p other.data_=%p", (void*)data_, (void*)other.data_);  // NOLINT
 }
 
 QUICKVEC_TEMPLATE

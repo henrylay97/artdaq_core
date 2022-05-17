@@ -14,15 +14,15 @@ artdaq::SharedMemoryEventReceiver::SharedMemoryEventReceiver(uint32_t shm_key, u
     , data_(shm_key)
     , broadcasts_(broadcast_shm_key)
 {
-	TLOG(TLVL_TRACE) << "SharedMemoryEventReceiver CONSTRUCTOR";
+	TLOG(TLVL_DEBUG + 33) << "SharedMemoryEventReceiver CONSTRUCTOR";
 }
 
 bool artdaq::SharedMemoryEventReceiver::ReadyForRead(bool broadcast, size_t timeout_us)
 {
-	TLOG(TLVL_TRACE) << "ReadyForRead BEGIN timeout_us=" << timeout_us;
+	TLOG(TLVL_DEBUG + 33) << "ReadyForRead BEGIN timeout_us=" << timeout_us;
 	if (current_read_buffer_ != -1 && (current_data_source_ != nullptr) && (current_header_ != nullptr))
 	{
-		TLOG(TLVL_TRACE) << "ReadyForRead Returning true because already reading buffer";
+		TLOG(TLVL_DEBUG + 33) << "ReadyForRead Returning true because already reading buffer";
 		return true;
 	}
 
@@ -48,7 +48,7 @@ bool artdaq::SharedMemoryEventReceiver::ReadyForRead(bool broadcast, size_t time
 			current_read_buffer_ = buf;
 			current_data_source_->ResetReadPos(buf);
 			current_header_ = reinterpret_cast<detail::RawEventHeader*>(current_data_source_->GetReadPos(buf));  // NOLINT(cppcoreguidelines-pro-type-reinterpret-cast)
-			TLOG(TLVL_TRACE) << "ReadyForRead Found buffer, returning true. event hdr sequence_id=" << current_header_->sequence_id;
+			TLOG(TLVL_DEBUG + 33) << "ReadyForRead Found buffer, returning true. event hdr sequence_id=" << current_header_->sequence_id;
 
 			// Ignore any Init fragments after the first
 			if (current_data_source_ == &broadcasts_)
@@ -73,7 +73,7 @@ bool artdaq::SharedMemoryEventReceiver::ReadyForRead(bool broadcast, size_t time
 
 		if (broadcasts_.IsEndOfData() || data_.IsEndOfData())
 		{
-			TLOG(TLVL_TRACE) << "End-Of-Data condition detected, returning false";
+			TLOG(TLVL_DEBUG + 33) << "End-Of-Data condition detected, returning false";
 			return false;
 		}
 
@@ -83,13 +83,13 @@ bool artdaq::SharedMemoryEventReceiver::ReadyForRead(bool broadcast, size_t time
 		if (sleep_time > max_sleep) sleep_time = max_sleep;
 		usleep(sleep_time);
 	}
-	TLOG(TLVL_TRACE) << "ReadyForRead returning false";
+	TLOG(TLVL_DEBUG + 33) << "ReadyForRead returning false";
 	return false;
 }
 
 artdaq::detail::RawEventHeader* artdaq::SharedMemoryEventReceiver::ReadHeader(bool& err)
 {
-	TLOG(TLVL_TRACE) << "ReadHeader BEGIN";
+	TLOG(TLVL_DEBUG + 33) << "ReadHeader BEGIN";
 	if (current_read_buffer_ != -1 && (current_data_source_ != nullptr))
 	{
 		err = !current_data_source_->CheckBuffer(current_read_buffer_, SharedMemoryManager::BufferSemaphoreFlags::Reading);
@@ -102,7 +102,7 @@ artdaq::detail::RawEventHeader* artdaq::SharedMemoryEventReceiver::ReadHeader(bo
 			return nullptr;
 		}
 	}
-	TLOG(TLVL_TRACE) << "Already have buffer, returning stored header";
+	TLOG(TLVL_DEBUG + 33) << "Already have buffer, returning stored header";
 	return current_header_;
 }
 
@@ -222,7 +222,7 @@ std::string artdaq::SharedMemoryEventReceiver::toString()
 
 void artdaq::SharedMemoryEventReceiver::ReleaseBuffer()
 {
-	TLOG(TLVL_TRACE) << "ReleaseBuffer BEGIN";
+	TLOG(TLVL_DEBUG + 33) << "ReleaseBuffer BEGIN";
 	try
 	{
 		if (current_data_source_ != nullptr)
@@ -241,5 +241,5 @@ void artdaq::SharedMemoryEventReceiver::ReleaseBuffer()
 	current_read_buffer_ = -1;
 	current_header_ = nullptr;
 	current_data_source_ = nullptr;
-	TLOG(TLVL_TRACE) << "ReleaseBuffer END";
+	TLOG(TLVL_DEBUG + 33) << "ReleaseBuffer END";
 }

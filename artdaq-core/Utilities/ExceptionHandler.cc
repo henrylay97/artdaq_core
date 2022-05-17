@@ -23,11 +23,11 @@ inline void PrintExceptionStackTrace()
 
 	while ((pos = message.find('\n', prev)) != std::string::npos)
 	{
-		TLOG(TLVL_DEBUG) << message.substr(prev, pos - prev);
+		TLOG(TLVL_DEBUG + 32) << message.substr(prev, pos - prev);
 		prev = pos + 1;
 	}
 
-	TLOG(TLVL_DEBUG) << message.substr(prev);
+	TLOG(TLVL_DEBUG + 32) << message.substr(prev);
 }
 #else
 /**

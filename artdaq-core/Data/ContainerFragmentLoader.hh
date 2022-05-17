@@ -139,12 +139,12 @@ inline void artdaq::ContainerFragmentLoader::addSpace_(size_t bytes)
 	artdaq_Fragment_.resizeBytesWithCushion(bytes + currSize, 1.3);
 	reset_index_ptr_();  // Must reset index_ptr after resize operation!
 
-	TLOG(TLVL_TRACE, "ContainerFragmentLoader") << "addSpace_: dataEnd_ is now at " << static_cast<void*>(dataEnd_()) << " (oldSizeBytes/deltaBytes: " << currSize << "/" << bytes << ")";
+	TLOG(TLVL_DEBUG + 33, "ContainerFragmentLoader") << "addSpace_: dataEnd_ is now at " << static_cast<void*>(dataEnd_()) << " (oldSizeBytes/deltaBytes: " << currSize << "/" << bytes << ")";
 }
 
 inline void artdaq::ContainerFragmentLoader::addFragment(artdaq::Fragment& frag)
 {
-	TLOG(TLVL_TRACE, "ContainerFragmentLoader") << "addFragment: Adding Fragment with payload size " << frag.dataSizeBytes() << " to Container";
+	TLOG(TLVL_DEBUG + 33, "ContainerFragmentLoader") << "addFragment: Adding Fragment with payload size " << frag.dataSizeBytes() << " to Container";
 	if (metadata()->fragment_type == Fragment::EmptyFragmentType)
 		metadata()->fragment_type = frag.type();
 	else if (frag.type() != metadata()->fragment_type)
@@ -153,13 +153,13 @@ inline void artdaq::ContainerFragmentLoader::addFragment(artdaq::Fragment& frag)
 		throw cet::exception("WrongFragmentType") << "ContainerFragmentLoader::addFragment: Trying to add a fragment of different type than what's already been added!";  // NOLINT(cert-err60-cpp)
 	}
 
-	TLOG(TLVL_TRACE, "ContainerFragmentLoader") << "addFragment: Payload Size is " << artdaq_Fragment_.dataSizeBytes() << ", lastFragmentIndex is " << lastFragmentIndex() << ", and frag.size is " << frag.sizeBytes();
+	TLOG(TLVL_DEBUG + 33, "ContainerFragmentLoader") << "addFragment: Payload Size is " << artdaq_Fragment_.dataSizeBytes() << ", lastFragmentIndex is " << lastFragmentIndex() << ", and frag.size is " << frag.sizeBytes();
 	if (artdaq_Fragment_.dataSizeBytes() < (lastFragmentIndex() + frag.sizeBytes() + sizeof(size_t) * (metadata()->block_count + 2)))
 	{
 		addSpace_((lastFragmentIndex() + frag.sizeBytes() + sizeof(size_t) * (metadata()->block_count + 2)) - artdaq_Fragment_.dataSizeBytes());
 	}
 	frag.setSequenceID(artdaq_Fragment_.sequenceID());
-	TLOG(TLVL_TRACE, "ContainerFragmentLoader") << "addFragment, copying " << frag.sizeBytes() << " bytes from " << static_cast<void*>(frag.headerAddress()) << " to " << static_cast<void*>(dataEnd_());
+	TLOG(TLVL_DEBUG + 33, "ContainerFragmentLoader") << "addFragment, copying " << frag.sizeBytes() << " bytes from " << static_cast<void*>(frag.headerAddress()) << " to " << static_cast<void*>(dataEnd_());
 	memcpy(dataEnd_(), frag.headerAddress(), frag.sizeBytes());
 	metadata()->has_index = 0;
 
@@ -180,12 +180,12 @@ inline void artdaq::ContainerFragmentLoader::addFragment(artdaq::FragmentPtr& fr
 
 inline void artdaq::ContainerFragmentLoader::addFragments(artdaq::FragmentPtrs& frags)
 {
-	TLOG(TLVL_TRACE, "ContainerFragmentLoader") << "addFragments: Adding " << frags.size() << " Fragments to Container";
+	TLOG(TLVL_DEBUG + 33, "ContainerFragmentLoader") << "addFragments: Adding " << frags.size() << " Fragments to Container";
 
 	size_t total_size = 0;
 	for (auto& frag : frags) { total_size += frag->sizeBytes(); }
 
-	TLOG(TLVL_TRACE, "ContainerFragmentLoader") << "addFragments: Payload Size is " << artdaq_Fragment_.dataSizeBytes() << ", lastFragmentIndex is " << lastFragmentIndex() << ", and size to add is " << total_size;
+	TLOG(TLVL_DEBUG + 33, "ContainerFragmentLoader") << "addFragments: Payload Size is " << artdaq_Fragment_.dataSizeBytes() << ", lastFragmentIndex is " << lastFragmentIndex() << ", and size to add is " << total_size;
 	if (artdaq_Fragment_.dataSizeBytes() < (lastFragmentIndex() + total_size + sizeof(size_t) * (metadata()->block_count + 1 + frags.size())))
 	{
 		addSpace_((lastFragmentIndex() + total_size + sizeof(size_t) * (metadata()->block_count + 1 + frags.size())) - artdaq_Fragment_.dataSizeBytes());
@@ -204,7 +204,7 @@ inline void artdaq::ContainerFragmentLoader::addFragments(artdaq::FragmentPtrs& 
 		}
 
 		frag->setSequenceID(artdaq_Fragment_.sequenceID());
-		TLOG(TLVL_TRACE, "ContainerFragmentLoader") << "addFragments, copying " << frag->sizeBytes() << " bytes from " << static_cast<void*>(frag->headerAddress()) << " to " << static_cast<void*>(dataEnd_());
+		TLOG(TLVL_DEBUG + 33, "ContainerFragmentLoader") << "addFragments, copying " << frag->sizeBytes() << " bytes from " << static_cast<void*>(frag->headerAddress()) << " to " << static_cast<void*>(dataEnd_());
 		memcpy(data_ptr, frag->headerAddress(), frag->sizeBytes());
 		data_ptr = static_cast<uint8_t*>(data_ptr) + frag->sizeBytes();
 	}
