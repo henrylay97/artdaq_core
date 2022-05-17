@@ -81,7 +81,7 @@ public:
 	 */
 	Metadata const* UpgradeMetadata(MetadataV0 const* in) const
 	{
-		TLOG(TLVL_DEBUG, "ContainerFragment") << "Upgrading ContainerFragment::MetadataV0 into new ContainerFragment::Metadata";
+		TLOG(TLVL_DEBUG + 32, "ContainerFragment") << "Upgrading ContainerFragment::MetadataV0 into new ContainerFragment::Metadata";
 		assert(in->block_count < std::numeric_limits<Metadata::count_t>::max());
 		Metadata md;
 		md.block_count = in->block_count;
@@ -258,7 +258,7 @@ protected:
 	 */
 	const size_t* create_index_() const
 	{
-		TLOG(TLVL_TRACE, "ContainerFragment") << "Creating new index for ContainerFragment";
+		TLOG(TLVL_DEBUG + 33, "ContainerFragment") << "Creating new index for ContainerFragment";
 		index_ptr_owner_ = std::make_unique<std::vector<size_t>>(metadata()->block_count + 1);
 
 		auto current = reinterpret_cast<uint8_t const*>(artdaq_Fragment_.dataBegin());  // NOLINT(cppcoreguidelines-pro-type-reinterpret-cast)
@@ -279,11 +279,11 @@ protected:
 	 */
 	void reset_index_ptr_() const
 	{
-		TLOG(TLVL_TRACE, "ContainerFragment") << "Request to reset index_ptr recieved. has_index=" << metadata()->has_index << ", Check word = " << std::hex
+		TLOG(TLVL_DEBUG + 33, "ContainerFragment") << "Request to reset index_ptr recieved. has_index=" << metadata()->has_index << ", Check word = " << std::hex
 		                                      << *(reinterpret_cast<size_t const*>(artdaq_Fragment_.dataBeginBytes() + metadata()->index_offset) + metadata()->block_count);         // NOLINT(cppcoreguidelines-pro-type-reinterpret-cast,cppcoreguidelines-pro-bounds-pointer-arithmetic)
 		if (metadata()->has_index && *(reinterpret_cast<size_t const*>(artdaq_Fragment_.dataBeginBytes() + metadata()->index_offset) + metadata()->block_count) == CONTAINER_MAGIC)  // NOLINT(cppcoreguidelines-pro-type-reinterpret-cast,cppcoreguidelines-pro-bounds-pointer-arithmetic)
 		{
-			TLOG(TLVL_TRACE, "ContainerFragment") << "Setting index_ptr to found valid index";
+			TLOG(TLVL_DEBUG + 33, "ContainerFragment") << "Setting index_ptr to found valid index";
 			index_ptr_ = reinterpret_cast<size_t const*>(artdaq_Fragment_.dataBeginBytes() + metadata()->index_offset);  // NOLINT(cppcoreguidelines-pro-type-reinterpret-cast,cppcoreguidelines-pro-bounds-pointer-arithmetic)
 		}
 		else

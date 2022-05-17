@@ -1,7 +1,7 @@
 # The parent line must be the first non-comment line in the file
 # This line defines the product name and version
 parent artdaq_core
-defaultqual	e20:s106
+defaultqual	e20:s110
 
 # These optional lines define the installed directories where
 # headers, libraries, and executables will be found
@@ -21,15 +21,39 @@ old_style_config_vars
 
 #
 product			version		optional
+canvas_root_io	v1_10_02	s116
+canvas_root_io	v1_10_01	s115
+canvas_root_io	v1_10_00	s114
 canvas_root_io	v1_09_04	s112
 canvas_root_io	v1_07_03	s110
-TRACE			v3_17_03
-cetmodules		v2_26_00	-	only_for_build
+TRACE			v3_17_04
+cetmodules		v3_08_00	-	only_for_build
 end_product_list
 
 # -nq- means there is no qualifier
 # a "-" means the dependent product is not required by the parent and will not be setup
 qualifier		canvas_root_io	TRACE	notes
+c7:s116:debug	c7:debug		-nq-	-std=c++17
+c7:s116:prof	c7:prof			-nq-	-std=c++17
+e20:s116:debug	e20:debug		-nq-	-std=c++17
+e20:s116:prof	e20:prof		-nq-	-std=c++17
+e19:s116:debug	e19:debug		-nq-	-std=c++17
+e19:s116:prof	e19:prof		-nq-	-std=c++17
+
+c7:s115:debug	c7:debug		-nq-	-std=c++17
+c7:s115:prof	c7:prof			-nq-	-std=c++17
+e20:s115:debug	e20:debug		-nq-	-std=c++17
+e20:s115:prof	e20:prof		-nq-	-std=c++17
+e19:s115:debug	e19:debug		-nq-	-std=c++17
+e19:s115:prof	e19:prof		-nq-	-std=c++17
+
+c7:s114:debug	c7:debug		-nq-	-std=c++17
+c7:s114:prof	c7:prof			-nq-	-std=c++17
+e20:s114:debug	e20:debug		-nq-	-std=c++17
+e20:s114:prof	e20:prof		-nq-	-std=c++17
+e19:s114:debug	e19:debug		-nq-	-std=c++17
+e19:s114:prof	e19:prof		-nq-	-std=c++17
+
 c7:s112:debug	c7:debug		-nq-	-std=c++17
 c7:s112:prof	c7:prof			-nq-	-std=c++17
 e20:s112:debug	e20:debug		-nq-	-std=c++17

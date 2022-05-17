@@ -6,8 +6,8 @@ namespace artdaq {
 ArtdaqFragmentNameHelper::ArtdaqFragmentNameHelper(std::string unidentified_instance_name, std::vector<std::pair<artdaq::Fragment::type_t, std::string>> extraTypes)
     : FragmentNameHelper(unidentified_instance_name, extraTypes)
 {
-	TLOG(TLVL_DEBUG) << "ArtdaqFragmentNameHelper CONSTRUCTOR START";
-	TLOG(TLVL_DEBUG) << "ArtdaqFragmentNameHelper CONSTRUCTOR END";
+	TLOG(TLVL_DEBUG + 32) << "ArtdaqFragmentNameHelper CONSTRUCTOR START";
+	TLOG(TLVL_DEBUG + 32) << "ArtdaqFragmentNameHelper CONSTRUCTOR END";
 }
 
 ArtdaqFragmentNameHelper::~ArtdaqFragmentNameHelper() = default;
@@ -27,7 +27,7 @@ std::set<std::string> ArtdaqFragmentNameHelper::GetAllProductInstanceNames() con
 		if (output.count(instance_name) == 0u)
 		{
 			output.insert(instance_name);
-			TLOG(TLVL_TRACE) << "Adding product instance name \"" << map_iter.second << "\" to list of expected names";
+			TLOG(TLVL_DEBUG + 33) << "Adding product instance name \"" << map_iter.second << "\" to list of expected names";
 		}
 	}
 
@@ -55,7 +55,7 @@ ArtdaqFragmentNameHelper::GetInstanceNameForFragment(artdaq::Fragment const& fra
 	auto primary_type = type_map_.find(fragment.type());
 	if (primary_type != type_map_end)
 	{
-		TLOG(TLVL_TRACE) << "Found matching instance name " << primary_type->second << " for Fragment type " << static_cast<int>(fragment.type());
+		TLOG(TLVL_DEBUG + 33) << "Found matching instance name " << primary_type->second << " for Fragment type " << static_cast<int>(fragment.type());
 		instance_name = primary_type->second;
 		if (fragment.type() == artdaq::Fragment::ContainerFragmentType)
 		{
@@ -69,7 +69,7 @@ ArtdaqFragmentNameHelper::GetInstanceNameForFragment(artdaq::Fragment const& fra
 	}
 	else
 	{
-		TLOG(TLVL_TRACE) << "Could not find match for Fragment type " << static_cast<int>(fragment.type()) << ", returning " << unidentified_instance_name_;
+		TLOG(TLVL_DEBUG + 33) << "Could not find match for Fragment type " << static_cast<int>(fragment.type()) << ", returning " << unidentified_instance_name_;
 		instance_name = unidentified_instance_name_;
 		success_code = false;
 	}

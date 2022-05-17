@@ -166,11 +166,11 @@ ELGenFileOutput::ELGenFileOutput(Parameters const& pset)
 	}
 
 	size_t pos = 0;
-	TLOG(TLVL_DEBUG) << "filePattern is: " << filePattern;
+	TLOG(TLVL_DEBUG + 32) << "filePattern is: " << filePattern;
 	while (filePattern.find('%', pos) != std::string::npos)
 	{
 		pos = filePattern.find('%', pos) + 1;
-		TLOG(5, 1) << "Found % at " << (pos - 1) << ", next char: " << filePattern[pos] << ".";
+		TLOG(35, 1) << "Found % at " << (pos - 1) << ", next char: " << filePattern[pos] << ".";
 		switch (filePattern[pos])
 		{
 			case '%':  // "%%"
@@ -244,10 +244,10 @@ ELGenFileOutput::ELGenFileOutput(Parameters const& pset)
 			default:
 				break;
 		}
-		TLOG(TLVL_DEBUG + 3) << "filePattern is now: " << filePattern;
+		TLOG(TLVL_DEBUG + 35) << "filePattern is now: " << filePattern;
 	}
 	std::string fileName = baseDir + "/" + filePattern;
-	TLOG(TLVL_DEBUG) << "fileName is: " << fileName;
+	TLOG(TLVL_DEBUG + 32) << "fileName is: " << fileName;
 
 	output_ = std::make_unique<cet::ostream_handle>(fileName.c_str(), append ? std::ios::app : std::ios::trunc);
 }

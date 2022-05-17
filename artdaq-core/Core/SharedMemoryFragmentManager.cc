@@ -11,7 +11,7 @@ artdaq::SharedMemoryFragmentManager::SharedMemoryFragmentManager(uint32_t shm_ke
 
 bool artdaq::SharedMemoryFragmentManager::ReadyForWrite(bool overwrite)
 {
-	TLOG(12) << "ReadyForWrite: active_buffer is " << active_buffer_;
+	TLOG(TLVL_DEBUG + 40) << "ReadyForWrite: active_buffer is " << active_buffer_;
 	if (active_buffer_ != -1)
 	{
 		return true;
@@ -67,14 +67,14 @@ int artdaq::SharedMemoryFragmentManager::WriteFragment(Fragment&& fragment, bool
 		return -3;
 	}
 
-	TLOG(13) << "Sending fragment with seqID=" << fragment.sequenceID() << " using buffer " << active_buffer_;
+	TLOG(TLVL_DEBUG + 41) << "Sending fragment with seqID=" << fragment.sequenceID() << " using buffer " << active_buffer_;
 	artdaq::RawDataType* fragAddr = fragment.headerAddress();
 	size_t fragSize = fragment.size() * sizeof(artdaq::RawDataType);
 
 	auto sts = Write(active_buffer_, fragAddr, fragSize);
 	if (sts == fragSize)
 	{
-		TLOG(13) << "Done sending Fragment with seqID=" << fragment.sequenceID() << " using buffer " << active_buffer_;
+		TLOG(TLVL_DEBUG + 41) << "Done sending Fragment with seqID=" << fragment.sequenceID() << " using buffer " << active_buffer_;
 		MarkBufferFull(active_buffer_);
 		active_buffer_ = -1;
 		return 0;
@@ -88,10 +88,10 @@ int artdaq::SharedMemoryFragmentManager::WriteFragment(Fragment&& fragment, bool
 // (below) are called directly
 int artdaq::SharedMemoryFragmentManager::ReadFragment(Fragment& fragment)
 {
-	TLOG(14) << "ReadFragment BEGIN";
+	TLOG(TLVL_DEBUG + 42) << "ReadFragment BEGIN";
 	detail::RawFragmentHeader tmpHdr;
 
-	TLOG(14) << "Reading Fragment Header";
+	TLOG(TLVL_DEBUG + 42) << "Reading Fragment Header";
 	auto sts = ReadFragmentHeader(tmpHdr);
 	if (sts != 0)
 	{
@@ -99,7 +99,7 @@ int artdaq::SharedMemoryFragmentManager::ReadFragment(Fragment& fragment)
 	}
 	fragment.resize(tmpHdr.word_count - tmpHdr.num_words());
 	memcpy(fragment.headerAddress(), &tmpHdr, tmpHdr.num_words() * sizeof(artdaq::RawDataType));
-	TLOG(14) << "Reading Fragment Body - of frag w/ seqID=" << tmpHdr.sequence_id;
+	TLOG(TLVL_DEBUG + 42) << "Reading Fragment Body - of frag w/ seqID=" << tmpHdr.sequence_id;
 	return ReadFragmentData(fragment.headerAddress() + tmpHdr.num_words(), tmpHdr.word_count - tmpHdr.num_words());  // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
 }
 
@@ -107,7 +107,7 @@ int artdaq::SharedMemoryFragmentManager::ReadFragmentHeader(detail::RawFragmentH
 {
 	if (!IsValid())
 	{
-		TLOG(22) << "ReadFragmentHeader: !IsValid(), returning -3";
+		TLOG(TLVL_DEBUG + 43) << "ReadFragmentHeader: !IsValid(), returning -3";
 		return -3;
 	}
 
@@ -116,7 +116,7 @@ int artdaq::SharedMemoryFragmentManager::ReadFragmentHeader(detail::RawFragmentH
 
 	if (active_buffer_ == -1)
 	{
-		TLOG(22) << "ReadFragmentHeader: active_buffer==-1, returning -1";
+		TLOG(TLVL_DEBUG + 43) << "ReadFragmentHeader: active_buffer==-1, returning -1";
 		return -1;
 	}
 
@@ -129,7 +129,7 @@ int artdaq::SharedMemoryFragmentManager::ReadFragmentHeader(detail::RawFragmentH
 		return -2;
 	}
 
-	TLOG(22) << "ReadFragmentHeader: read active_buffer_=" << active_buffer_ << " sequence_id=" << header.sequence_id;
+	TLOG(TLVL_DEBUG + 43) << "ReadFragmentHeader: read active_buffer_=" << active_buffer_ << " sequence_id=" << header.sequence_id;
 	return 0;
 }
 

@@ -279,7 +279,7 @@ void artdaq::configureMessageFacility(char const* progname, bool useConsole, boo
 
 	mf::StartMessageFacility(pset, progname);
 
-	TLOG(TLVL_TRACE) << "Message Facility Config input is: " << pstr;
+	TLOG(TLVL_DEBUG + 33) << "Message Facility Config input is: " << pstr;
 	TLOG(TLVL_INFO) << "Message Facility Application " << progname << " configured with: " << pset.to_string();
 }
 
