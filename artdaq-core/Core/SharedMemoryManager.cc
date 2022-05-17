@@ -265,10 +265,10 @@ bool artdaq::SharedMemoryManager::Attach(size_t timeout_usec)
 			buffer_mutexes_ = std::vector<std::mutex>(shm_ptr_->buffer_count);
 
 			TLOG(TLVL_ATTACH) << "Initialization Complete: "
-			                 << "key: 0x" << std::hex << shm_key_
-			                 << ", manager ID: " << std::dec << manager_id_
-			                 << ", Buffer size: " << shm_ptr_->buffer_size
-			                 << ", Buffer count: " << shm_ptr_->buffer_count;
+			                  << "key: 0x" << std::hex << shm_key_
+			                  << ", manager ID: " << std::dec << manager_id_
+			                  << ", Buffer size: " << shm_ptr_->buffer_size
+			                  << ", Buffer count: " << shm_ptr_->buffer_count;
 			return true;
 		}
 
@@ -320,7 +320,7 @@ int artdaq::SharedMemoryManager::GetBufferForReading()
 			sem_id = buf->sem_id.load();
 
 			TLOG(TLVL_GETBUFFER + 1) << "GetBufferForReading: Buffer " << buffer << ": sem=" << FlagToString(sem)
-			         << " (expected " << FlagToString(BufferSemaphoreFlags::Full) << "), sem_id=" << sem_id << ", seq_id=" << buf->sequence_id << " )";
+			                         << " (expected " << FlagToString(BufferSemaphoreFlags::Full) << "), sem_id=" << sem_id << ", seq_id=" << buf->sequence_id << " )";
 			if (sem == BufferSemaphoreFlags::Full && (sem_id == -1 || sem_id == manager_id_) && (shm_ptr_->destructive_read_mode || buf->sequence_id > last_seen_id_))
 			{
 				if (buf->sequence_id < seqID)
@@ -642,7 +642,7 @@ bool artdaq::SharedMemoryManager::ReadyForRead()
 
 #ifndef __OPTIMIZE__
 		TLOG(TLVL_READREADY + 2) << "0x" << std::hex << shm_key_ << std::dec << " ReadyForRead: Buffer " << buffer << ": sem=" << FlagToString(buf->sem) << " (expected " << FlagToString(BufferSemaphoreFlags::Full) << "), sem_id=" << buf->sem_id << " )"
-		         << " seq_id=" << buf->sequence_id << " >? " << last_seen_id_;
+		                         << " seq_id=" << buf->sequence_id << " >? " << last_seen_id_;
 #endif
 
 		if (buf->sem == BufferSemaphoreFlags::Full && (buf->sem_id == -1 || buf->sem_id == manager_id_) && (shm_ptr_->destructive_read_mode || buf->sequence_id > last_seen_id_))
@@ -673,7 +673,7 @@ bool artdaq::SharedMemoryManager::ReadyForWrite(bool overwrite)
 	for (auto ii = 0; ii < shm_ptr_->buffer_count; ++ii)
 	{
 		auto buffer = (wp + ii) % shm_ptr_->buffer_count;
-		TLOG(TLVL_WRITEREADY+ 1) << "0x" << std::hex << shm_key_ << std::dec << " ReadyForWrite: Checking if buffer " << buffer << " is stale.";
+		TLOG(TLVL_WRITEREADY + 1) << "0x" << std::hex << shm_key_ << std::dec << " ReadyForWrite: Checking if buffer " << buffer << " is stale.";
 		ResetBuffer(buffer);
 		auto buf = getBufferInfo_(buffer);
 		if (buf == nullptr)
@@ -682,9 +682,9 @@ bool artdaq::SharedMemoryManager::ReadyForWrite(bool overwrite)
 		}
 		if ((buf->sem == BufferSemaphoreFlags::Empty && buf->sem_id == -1) || (overwrite && buf->sem != BufferSemaphoreFlags::Writing))
 		{
-			TLOG(TLVL_WRITEREADY+1) << "0x" << std::hex << shm_key_
-			         << std::dec
-			         << " WriteReadyCount: Buffer " << ii << " is either empty or available for overwrite.";
+			TLOG(TLVL_WRITEREADY + 1) << "0x" << std::hex << shm_key_
+			                          << std::dec
+			                          << " WriteReadyCount: Buffer " << ii << " is either empty or available for overwrite.";
 			return true;
 		}
 	}
@@ -812,7 +812,7 @@ void artdaq::SharedMemoryManager::ResetWritePos(int buffer)
 	touchBuffer_(buf);
 	buf->writePos = 0;
 
-	TLOG(TLVL_POS+ 1) << "ResetWritePos(" << buffer << ") ended.";
+	TLOG(TLVL_POS + 1) << "ResetWritePos(" << buffer << ") ended.";
 }
 
 void artdaq::SharedMemoryManager::IncrementReadPos(int buffer, size_t read)
@@ -868,9 +868,9 @@ bool artdaq::SharedMemoryManager::IncrementWritePos(int buffer, size_t written)
 		TLOG(TLVL_ERROR) << "Requested write size is larger than the buffer size! (sz=" << std::hex << shm_ptr_->buffer_size << ", cur + req=" << std::dec << buf->writePos + written << ")";
 		return false;
 	}
-	TLOG(TLVL_POS+ 1) << "IncrementWritePos: buffer= " << buffer << ", writePos=" << buf->writePos << ", bytes written=" << written;
+	TLOG(TLVL_POS + 1) << "IncrementWritePos: buffer= " << buffer << ", writePos=" << buf->writePos << ", bytes written=" << written;
 	buf->writePos += written;
-	TLOG(TLVL_POS+1) << "IncrementWritePos: buffer= " << buffer << ", New writePos is " << buf->writePos;
+	TLOG(TLVL_POS + 1) << "IncrementWritePos: buffer= " << buffer << ", New writePos is " << buf->writePos;
 	if (written == 0)
 	{
 		Detach(true, "LogicError", "Cannot increment Write pos by 0!");
@@ -946,7 +946,7 @@ void artdaq::SharedMemoryManager::MarkBufferFull(int buffer, int destination)
 
 void artdaq::SharedMemoryManager::MarkBufferEmpty(int buffer, bool force, bool detachOnException)
 {
-	TLOG(TLVL_POS +3 ) << "MarkBufferEmpty BEGIN, buffer=" << buffer << ", force=" << force << ", manager_id_=" << manager_id_;
+	TLOG(TLVL_POS + 3) << "MarkBufferEmpty BEGIN, buffer=" << buffer << ", force=" << force << ", manager_id_=" << manager_id_;
 	if (buffer >= shm_ptr_->buffer_count)
 	{
 		Detach(true, "ArgumentOutOfRange", "The specified buffer does not exist!");
@@ -975,13 +975,12 @@ void artdaq::SharedMemoryManager::MarkBufferEmpty(int buffer, bool force, bool d
 		shmBuf->sem = BufferSemaphoreFlags::Empty;
 		if (shm_ptr_->reader_pos == static_cast<unsigned>(buffer) && !shm_ptr_->destructive_read_mode)
 		{
-			TLOG(TLVL_POS+3) << "MarkBufferEmpty Broadcast mode; incrementing reader_pos from " << shm_ptr_->reader_pos << " to " << (buffer + 1) % shm_ptr_->buffer_count;
+			TLOG(TLVL_POS + 3) << "MarkBufferEmpty Broadcast mode; incrementing reader_pos from " << shm_ptr_->reader_pos << " to " << (buffer + 1) % shm_ptr_->buffer_count;
 			shm_ptr_->reader_pos = (buffer + 1) % shm_ptr_->buffer_count;
 		}
 	}
 	shmBuf->sem_id = -1;
-	TLOG(TLVL_POS+3) << "MarkBufferEmpty END, buffer=" << buffer << ", force=" << force;
-	
+	TLOG(TLVL_POS + 3) << "MarkBufferEmpty END, buffer=" << buffer << ", force=" << force;
 }
 
 bool artdaq::SharedMemoryManager::ResetBuffer(int buffer)
