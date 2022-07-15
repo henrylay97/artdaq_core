@@ -25,8 +25,8 @@ class ELGenFileOutput : public ELdestination
 {
 public:
 	/**
-   * \brief Parameters used to configure GenFileOutput
-   */
+	 * \brief Parameters used to configure GenFileOutput
+	 */
 	struct Config
 	{
 		/// ELDestination common configuration parameters
@@ -44,19 +44,19 @@ public:
 		fhicl::Atom<std::string> timePattern = fhicl::Atom<std::string>{
 		    fhicl::Name{"timestamp_pattern"}, fhicl::Comment{"Pattern to use for %t strftime replacement"}, "%Y%m%d%H%M%S"};
 		/**
-     * \brief "pattern" (Default: "%N-%?H%t-%p.log"): Pattern to use for file naming.
-     *
-     * " Supported parameters are:\n"
-     * %%: Print a % sign
-     * %N: Print the executable name, as retrieved from /proc/$pid/exe
-     * %?N: Print the executable name only if it does not already appear in the parsed format. Format is parsed left-to-right.
-     * These options add a seperator AFTER if they are filled and if they are not the last token in the file pattern, before the last '.' character.
-     * %H: Print the hostname, without any domain specifiers (i.e. work.fnal.gov will become work)
-     * %?H: Print the hostname only if it does not already appear in the parsed format.
-     * %p: Print the PID of the application configuring MessageFacility
-     * %t: Print the timestamp using the format specified by timestamp_pattern
-     * %T: Print the timestamp in ISO format
-     */
+		 * \brief "pattern" (Default: "%N-%?H%t-%p.log"): Pattern to use for file naming.
+		 *
+		 * " Supported parameters are:\n"
+		 * %%: Print a % sign
+		 * %N: Print the executable name, as retrieved from /proc/$pid/exe
+		 * %?N: Print the executable name only if it does not already appear in the parsed format. Format is parsed left-to-right.
+		 * These options add a seperator AFTER if they are filled and if they are not the last token in the file pattern, before the last '.' character.
+		 * %H: Print the hostname, without any domain specifiers (i.e. work.fnal.gov will become work)
+		 * %?H: Print the hostname only if it does not already appear in the parsed format.
+		 * %p: Print the PID of the application configuring MessageFacility
+		 * %t: Print the timestamp using the format specified by timestamp_pattern
+		 * %T: Print the timestamp in ISO format
+		 */
 		fhicl::Atom<std::string> filePattern = fhicl::Atom<std::string>{fhicl::Name{"pattern"}, fhicl::Comment{"Pattern to use for file naming.\n"
 		                                                                                                       " Supported parameters are:\n"
 		                                                                                                       " %%: Print a % sign\n"
@@ -77,21 +77,21 @@ public:
 
 public:
 	/**
-		 * \brief ELGenFileOutput Constructor
-		 * \param pset Validated ParameterSet used to configure GenFileOutput
-		 */
+	 * \brief ELGenFileOutput Constructor
+	 * \param pset Validated ParameterSet used to configure GenFileOutput
+	 */
 	explicit ELGenFileOutput(Parameters const& pset);
 
 	/**
-		 * \brief Serialize a MessageFacility message to the output stream
-		 * \param o Stringstream object containing message data
-		 * \param e MessageFacility object containing header information
-		 */
+	 * \brief Serialize a MessageFacility message to the output stream
+	 * \param o Stringstream object containing message data
+	 * \param e MessageFacility object containing header information
+	 */
 	void routePayload(const std::ostringstream& o, const ErrorObj& e) override;
 
 	/**
-		 * \brief Flush any text in the ostream buffer to disk
-		 */
+	 * \brief Flush any text in the ostream buffer to disk
+	 */
 	void flush() override;
 
 private:
@@ -177,8 +177,7 @@ ELGenFileOutput::ELGenFileOutput(Parameters const& pset)
 				filePattern = filePattern.replace(pos - 1, 2, "%");
 				pos--;
 				break;
-			case '?':
-			{
+			case '?': {
 				char next = filePattern[pos + 1];
 				switch (next)
 				{

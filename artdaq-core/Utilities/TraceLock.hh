@@ -12,11 +12,11 @@ class TraceLock
 {
 public:
 	/**
-		 * \brief Construct a TraceLock
-		 * \param mutex Mutex to hold lock on
-		 * \param level Level to TRACE (in the TraceLock TRACE_NAME)
-		 * \param description Description of lock (to be printed in TRACE calls)
-		 */
+	 * \brief Construct a TraceLock
+	 * \param mutex Mutex to hold lock on
+	 * \param level Level to TRACE (in the TraceLock TRACE_NAME)
+	 * \param description Description of lock (to be printed in TRACE calls)
+	 */
 	TraceLock(MUTEX& mutex, int level, std::string const& description)
 	    : lock_(mutex)
 	    , description_(description)
@@ -26,8 +26,8 @@ public:
 	}
 
 	/**
-		 * \brief Release the TraceLock
-		 */
+	 * \brief Release the TraceLock
+	 */
 	virtual ~TraceLock()
 	{
 		TLOG_ARB(level_, "TraceLock") << "Releasing lock " << description_ << ", lock=" << (void*)&lock_;  // NOLINT(google-readability-casting)

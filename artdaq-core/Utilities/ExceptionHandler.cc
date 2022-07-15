@@ -3,9 +3,9 @@
 #include "ExceptionHandler.hh"
 #include "ExceptionStackTrace.hh"
 
+#include "TRACE/tracemf.h"
 #include "canvas/Utilities/Exception.h"
 #include "cetlib_except/exception.h"
-#include "TRACE/tracemf.h"
 
 #include <boost/exception/all.hpp>
 namespace artdaq {
@@ -13,7 +13,7 @@ namespace artdaq {
 #ifdef EXCEPTIONSTACKTRACE
 /**
  * @brief Print the Exception Stack Trace
-*/
+ */
 inline void PrintExceptionStackTrace()
 {
 	auto message = artdaq::debug::getStackTraceCollector().print_stacktrace();
@@ -32,7 +32,7 @@ inline void PrintExceptionStackTrace()
 #else
 /**
  * @brief Print the Exception Stack Trace
-*/
+ */
 inline void PrintExceptionStackTrace()
 {}
 #endif

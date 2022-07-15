@@ -158,10 +158,10 @@ struct artdaq::detail::RawFragmentHeaderV1
 	void setUserType(uint8_t utype);
 
 	/**
-	* \brief Sets the type field to the specified system type
-	* \param stype The type code to set
-	* \exception cet::exception if stype is not in the allowed range for system types
-	*/
+	 * \brief Sets the type field to the specified system type
+	 * \param stype The type code to set
+	 * \exception cet::exception if stype is not in the allowed range for system types
+	 */
 	void setSystemType(uint8_t stype);
 
 	/**

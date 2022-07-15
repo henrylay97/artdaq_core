@@ -10,7 +10,7 @@ BOOST_AUTO_TEST_SUITE(ExceptionStackTrace_test)
 
 /**
  * @brief Print the Exception Stack Trace
-*/
+ */
 void PrintExceptionStackTrace()
 {
 	auto message = artdaq::debug::getStackTraceCollector().print_stacktrace();

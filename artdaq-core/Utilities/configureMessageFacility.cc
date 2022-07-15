@@ -71,7 +71,7 @@ std::string artdaq::generateMessageFacilityConfiguration(char const* progname, b
 	}
 
 	std::ostringstream ss;
-	//ss << "debugModules:[\"*\"] "
+	// ss << "debugModules:[\"*\"] "
 	ss << "  destinations : { ";
 
 	if (useConsole)
@@ -144,7 +144,7 @@ std::string artdaq::generateMessageFacilityConfiguration(char const* progname, b
 
 	std::string pstr(ss.str());
 
-	//Canonicalize string:
+	// Canonicalize string:
 	fhicl::ParameterSet tmp_pset;
 	try
 	{
@@ -162,18 +162,18 @@ void artdaq::configureTRACE(fhicl::ParameterSet& trace_pset)
 {
 	/* The following code handles this example fhicl:
 	   TRACE:{
-		 TRACE_NUMENTS:500000
-		 TRACE_ARGSMAX:10
-		 TRACE_MSGMAX:0
-		 TRACE_FILE:"/tmp/trace_buffer_%u"   # this is the default
-		 TRACE_LIMIT_MS:[8,80,800]
-		 TRACE_MODE:0xf
-		 TRACE_NAMLVLSET:{
-		   #name:[lvlsmskM,lvlsmskS[,lvlsmskT]]   lvlsmskT is optional
-		   name0:[0x1f,0x7]
-		   name1:[0x2f,0xf]
-		   name2:[0x3f,0x7,0x1]
-		 }
+	     TRACE_NUMENTS:500000
+	     TRACE_ARGSMAX:10
+	     TRACE_MSGMAX:0
+	     TRACE_FILE:"/tmp/trace_buffer_%u"   # this is the default
+	     TRACE_LIMIT_MS:[8,80,800]
+	     TRACE_MODE:0xf
+	     TRACE_NAMLVLSET:{
+	       #name:[lvlsmskM,lvlsmskS[,lvlsmskT]]   lvlsmskT is optional
+	       name0:[0x1f,0x7]
+	       name1:[0x2f,0xf]
+	       name2:[0x3f,0x7,0x1]
+	     }
 	   }
 	*/
 	std::vector<std::string> names = trace_pset.get_names();

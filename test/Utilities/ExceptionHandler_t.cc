@@ -4,9 +4,9 @@
 #include "cetlib/quiet_unit_test.hpp"
 
 #define TRACE_NAME "ExceptionHandler_t"
+#include "TRACE/tracemf.h"
 #include "canvas/Utilities/Exception.h"
 #include "cetlib_except/exception.h"
-#include "TRACE/tracemf.h"
 
 #include <boost/exception/all.hpp>
 

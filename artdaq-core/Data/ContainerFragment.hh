@@ -96,10 +96,10 @@ public:
 
 	/**
 	 * \param f The Fragment object to use for data storage
-	 * 
+	 *
 	 * The constructor simply sets its const private member "artdaq_Fragment_"
 	 * to refer to the artdaq::Fragment object
-	*/
+	 */
 	explicit ContainerFragment(Fragment const& f)
 	    : artdaq_Fragment_(f), index_ptr_(nullptr), index_ptr_owner_(nullptr), metadata_(nullptr) {}
 

@@ -7,9 +7,9 @@
 #ifndef QuickVec_hh
 #define QuickVec_hh
 
-//extern "C" {
+// extern "C" {
 //#include <stdint.h>
-//}
+// }
 
 #include <cstring>  // memcpy
 //#include <strings.h>		// bzero
@@ -179,7 +179,7 @@ struct QuickVec
 	{
 		TRACEN("QuickVec", 40, "QuickVec move assign this=%p data_=%p other.data_=%p", (void*)this, (void*)data_, (void*)other.data_);  // NOLINT
 		size_ = other.size_;
-		//delete [] data_;
+		// delete [] data_;
 		free(data_);  // NOLINT(cppcoreguidelines-no-malloc) TODO: #24439
 		data_ = std::move(other.data_);
 		capacity_ = other.capacity_;
@@ -211,7 +211,7 @@ struct QuickVec
 	/**
 	 * \brief Accesses the current capacity of the QuickVec
 	 * \return The current capacity of the QuickVec
-	 * 
+	 *
 	 * Accesses the current capcity of the QuickVec. Like a vector,
 	 * the capacity of a QuickVec object is defined as the maximum size
 	 * it can hold before it must reallocate more memory.
@@ -245,7 +245,7 @@ struct QuickVec
 	/**
 	 * \brief Allocates memory for the QuickVec so that its capacity is at least size
 	 * \param size The new capacity of the QuickVec
-	 * 
+	 *
 	 * Allocates memory for the QuickVec so that its capacity is at least size.
 	 * If the QuickVec is already at or above size in capacity, no allocation is performed.
 	 */
@@ -254,7 +254,7 @@ struct QuickVec
 	/**
 	 * \brief Resizes the QuickVec
 	 * \param size New size of the QuickVec
-	 * 
+	 *
 	 * If size is smaller than the current size of the QuickVec, then it will change its
 	 * size_ parameter (no reallocation, capacity does not change). If size is greater than
 	 * the capacity of the QuickVec, a reallocation will occur.
@@ -265,7 +265,7 @@ struct QuickVec
 	 * \brief Resizes the QuickVec and requests additional capacity
 	 * \param size New size of the QuickVec
 	 * \param growthFactor Factor to use when allocating additional capacity
-	 * 
+	 *
 	 * This method updates the size of the QuickVec.  If the new size is within the current
 	 * capacity, no realloction takes place.  If not, then the reallocation reserves
 	 * additional capacity as a cushion against future needs to reallocate, based
@@ -286,7 +286,7 @@ struct QuickVec
 	 * \param nn Number of copies of val to insert
 	 * \param val Value to insert
 	 * \return Iterator to first inserted element
-	 * 
+	 *
 	 * Inserts an element (or copies thereof) into the QuickVec.
 	 * Note that since the underlying data structure resembles a std::vector,
 	 * insert operations are very inefficient!
@@ -299,7 +299,7 @@ struct QuickVec
 	 * \param first const_iterator to first element to insert
 	 * \param last const_iterator to last element to insert
 	 * \return Iterator to first inserted element
-	 * 
+	 *
 	 * Inserts elements into the QuickVec.
 	 * Note that since the underlying data structure resembles a std::vector,
 	 * insert operations are very inefficient!
@@ -311,7 +311,7 @@ struct QuickVec
 	 * \param first First element to erase
 	 * \param last Last element to erase
 	 * \return iterator to first element after erase range
-	 * 
+	 *
 	 * Erases elements in given range from the QuickVec.
 	 * Note that since the underlying data structure resembles a std::vector,
 	 * erase operations are very inefficient! (O(n))
@@ -358,7 +358,7 @@ inline QUICKVEC::QuickVec(size_t sz, TT_ val)
 {
 	TRACEN("QuickVec", 45, "QuickVec %p ctor sz=%d/v data_=%p", (void*)this, size_, (void*)data_);  // NOLINT
 	for (iterator ii = begin(); ii != end(); ++ii) *ii = val;
-	//bzero( &data_[0], (sz<4)?(sz*sizeof(TT_)):(4*sizeof(TT_)) );
+	// bzero( &data_[0], (sz<4)?(sz*sizeof(TT_)):(4*sizeof(TT_)) );
 }
 
 QUICKVEC_TEMPLATE
@@ -415,7 +415,7 @@ inline void QUICKVEC::reserve(size_t size)
 	if (size > capacity_)  // reallocation if true
 	{
 		TT_* old = data_;
-		//data_ = new TT_[size];
+		// data_ = new TT_[size];
 		data_ = reinterpret_cast<TT_*>(QV_MEMALIGN(QV_ALIGN, size * sizeof(TT_)));  // NOLINT(cppcoreguidelines-pro-type-reinterpret-cast)
 		memcpy(data_, old, size_ * sizeof(TT_));
 		TRACEN("QuickVec", 43, "QUICKVEC::reserve after memcpy this=%p old=%p data_=%p capacity=%d", (void*)this, (void*)old, (void*)data_, (int)size);  // NOLINT

@@ -11,14 +11,14 @@ namespace artdaq {
  */
 namespace TimeUtils {
 /**
-		* We shall use artdaq::detail::seconds as our "standard" duration
-		* type. Note that this differs from std::chrono::seconds, which has
-		* a representation in some integer type of at least 35 bits.
-		*
-		* daqrate::duration dur(1.0) represents a duration of 1 second.
-		* daqrate::duration dur2(0.001) represents a duration of 1
-		* millisecond.
-		*/
+ * We shall use artdaq::detail::seconds as our "standard" duration
+ * type. Note that this differs from std::chrono::seconds, which has
+ * a representation in some integer type of at least 35 bits.
+ *
+ * daqrate::duration dur(1.0) represents a duration of 1 second.
+ * daqrate::duration dur2(0.001) represents a duration of 1
+ * millisecond.
+ */
 typedef std::chrono::duration<double, std::ratio<1>> seconds;
 
 /// <summary>
@@ -55,9 +55,9 @@ inline size_t GetElapsedTimeMilliseconds(std::chrono::steady_clock::time_point t
 }
 
 /**
-		 * \brief Get the current time of day as a pair of seconds and nanoseconds (from clock_gettime(CLOCK_REALTIME, ...) system call)
-		 * \return Pair of seconds, nanoseconds wallclock time
-		 */
+ * \brief Get the current time of day as a pair of seconds and nanoseconds (from clock_gettime(CLOCK_REALTIME, ...) system call)
+ * \return Pair of seconds, nanoseconds wallclock time
+ */
 struct timespec get_realtime_clock();
 
 /// <summary>
@@ -74,51 +74,51 @@ inline constexpr double GetElapsedTime(struct timespec const& then, struct times
 }
 
 /**
-	   * \brief Converts a Unix time to its string representation, in UTC
-	   * \param inputUnixTime A time_t Unix time variable
-	   * \return std::string representation of Unix time, in UTC
-	   */
+ * \brief Converts a Unix time to its string representation, in UTC
+ * \param inputUnixTime A time_t Unix time variable
+ * \return std::string representation of Unix time, in UTC
+ */
 std::string convertUnixTimeToString(time_t inputUnixTime);
 
 /**
-		* \brief Converts a Unix time to its string representation, in UTC
-		* \param inputUnixTime A struct timeval Unix time variable
-		* \return std::string representation of Unix time, in UTC
-		*/
+ * \brief Converts a Unix time to its string representation, in UTC
+ * \param inputUnixTime A struct timeval Unix time variable
+ * \return std::string representation of Unix time, in UTC
+ */
 std::string convertUnixTimeToString(struct timeval const& inputUnixTime);
 
 /**
-		* \brief Converts a Unix time to its string representation, in UTC
-		* \param inputUnixTime A struct timespec Unix time variable
-		* \return std::string representation of Unix time, in UTC
-		*/
+ * \brief Converts a Unix time to its string representation, in UTC
+ * \param inputUnixTime A struct timespec Unix time variable
+ * \return std::string representation of Unix time, in UTC
+ */
 std::string convertUnixTimeToString(struct timespec const& inputUnixTime);
 
 /**
-		* \brief Get the current time of day in microseconds (from gettimeofday system call)
-		* \return The current time of day in microseconds
-		*/
+ * \brief Get the current time of day in microseconds (from gettimeofday system call)
+ * \return The current time of day in microseconds
+ */
 uint64_t gettimeofday_us();
 
 /**
-		* \brief Converts a Unix time to double
-		* \param inputUnixTime A time_t Unix time variable
-		* \return double representation of Unix time (seconds since epoch)
-		*/
+ * \brief Converts a Unix time to double
+ * \param inputUnixTime A time_t Unix time variable
+ * \return double representation of Unix time (seconds since epoch)
+ */
 double convertUnixTimeToSeconds(time_t inputUnixTime);
 
 /**
-		* \brief Converts a Unix time to double
-		* \param inputUnixTime A struct timeval Unix time variable
-		* \return double representation of Unix time (in seconds)
-		*/
+ * \brief Converts a Unix time to double
+ * \param inputUnixTime A struct timeval Unix time variable
+ * \return double representation of Unix time (in seconds)
+ */
 double convertUnixTimeToSeconds(struct timeval const& inputUnixTime);
 
 /**
-		* \brief Converts a Unix time to double
-		* \param inputUnixTime A struct timespec Unix time variable
-		* \return double representation of Unix time (in seconds)
-		*/
+ * \brief Converts a Unix time to double
+ * \param inputUnixTime A struct timespec Unix time variable
+ * \return double representation of Unix time (in seconds)
+ */
 double convertUnixTimeToSeconds(struct timespec const& inputUnixTime);
 }  // namespace TimeUtils
 }  // namespace artdaq
