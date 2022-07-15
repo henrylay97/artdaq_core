@@ -215,11 +215,11 @@ BOOST_AUTO_TEST_CASE(Exceptions)
 	BOOST_REQUIRE_EXCEPTION(artdaq::ContainerFragmentLoader cfl2(f2), cet::exception, [&](cet::exception e) { return e.category() == "InvalidFragment"; });
 
 	//// Adding a Fragment to a full Container is an exception
-	//for (int ii = 0; ii < artdaq::CONTAINER_FRAGMENT_COUNT_MAX; ++ii)
+	// for (int ii = 0; ii < artdaq::CONTAINER_FRAGMENT_COUNT_MAX; ++ii)
 	//{
 	//	cfl.addFragment(f2);
-	//}
-	//BOOST_REQUIRE_EXCEPTION(cfl.addFragment(f2), cet::exception, [&](cet::exception e) { return e.category() == "ContainerFull"; });
+	// }
+	// BOOST_REQUIRE_EXCEPTION(cfl.addFragment(f2), cet::exception, [&](cet::exception e) { return e.category() == "ContainerFull"; });
 
 	// Adding a Fragment of different type to a Container is an exception
 	artdaq::Fragment f3(0);

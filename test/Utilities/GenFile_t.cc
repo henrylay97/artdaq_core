@@ -4,9 +4,9 @@
 #define BOOST_TEST_MODULE GenFile_t
 #include "cetlib/quiet_unit_test.hpp"
 
-#include "messagefacility/MessageLogger/MessageLogger.h"
 #include "fhiclcpp/ParameterSet.h"
 #include "fhiclcpp/make_ParameterSet.h"
+#include "messagefacility/MessageLogger/MessageLogger.h"
 
 #include <boost/filesystem.hpp>
 

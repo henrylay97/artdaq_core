@@ -12,17 +12,17 @@
 
 namespace artdaq {
 /**
-	 * \brief artdaq implementation details namespace
-	 */
+ * \brief artdaq implementation details namespace
+ */
 namespace detail {
 
 /**
-	 * \brief The header information used to identify key properties of the RawEvent object
-	 * 
-	 * RawEventHeader is the artdaq generic event header. It contains
-	 * the information necessary for routing of raw events inside the
-	 * artdaq code, but is not intended for use by any experiment.
-	 */
+ * \brief The header information used to identify key properties of the RawEvent object
+ *
+ * RawEventHeader is the artdaq generic event header. It contains
+ * the information necessary for routing of raw events inside the
+ * artdaq code, but is not intended for use by any experiment.
+ */
 struct RawEventHeader
 {
 	static constexpr uint8_t CURRENT_VERSION = 0;  ///< Current version of the RawEventHeader
@@ -41,19 +41,19 @@ struct RawEventHeader
 	uint8_t version;            ///< Version number of the RawEventHeader
 
 	/**
-		 * \brief Default constructor. Provided for ROOT compatibility
-		 */
+	 * \brief Default constructor. Provided for ROOT compatibility
+	 */
 	RawEventHeader()
 	    : run_id(0), subrun_id(0), event_id(0), sequence_id(0), timestamp(0), is_complete(false), version(CURRENT_VERSION) {}
 
 	/**
-		 * \brief Constructs the RawEventHeader struct with the given parameters
-		 * \param run The current Run number
-		 * \param subrun The current Subrun number
-		 * \param event The current event number
-		 * \param seq The current Sequence ID
-		 * \param ts The current Timestamp
-		 */
+	 * \brief Constructs the RawEventHeader struct with the given parameters
+	 * \param run The current Run number
+	 * \param subrun The current Subrun number
+	 * \param event The current event number
+	 * \param seq The current Sequence ID
+	 * \param ts The current Timestamp
+	 */
 	RawEventHeader(run_id_t run,
 	               subrun_id_t subrun,
 	               event_id_t event,
@@ -71,17 +71,17 @@ struct RawEventHeader
 	/**
 	 * @brief Print a RawEventHeader to the given stream
 	 * @param os Output stream to print to
-	*/
+	 */
 	void print(std::ostream& os) const;
 };
 
 #if HIDE_FROM_ROOT
 /**
-	 * \brief Prints the RawEventHeader to the given stream
-	 * \param os Stream to print RawEventHeader to
-	 * \param evh RawEventHeader to print
-	 * \return Stream reference
-	 */
+ * \brief Prints the RawEventHeader to the given stream
+ * \param os Stream to print RawEventHeader to
+ * \param evh RawEventHeader to print
+ * \return Stream reference
+ */
 inline std::ostream& operator<<(std::ostream& os, RawEventHeader const& evh)
 {
 	evh.print(os);
@@ -91,12 +91,12 @@ inline std::ostream& operator<<(std::ostream& os, RawEventHeader const& evh)
 #endif
 }  // namespace detail
 /**
-	 * \brief RawEvent is the artdaq view of a generic event, containing a header and zero or more Fragments.
-	 * 
-	 * RawEvent should be a class, not a struct; it should be enforcing
-	 * invariants (the contained Fragments should all have the correct
-	 * event id).
-	 */
+ * \brief RawEvent is the artdaq view of a generic event, containing a header and zero or more Fragments.
+ *
+ * RawEvent should be a class, not a struct; it should be enforcing
+ * invariants (the contained Fragments should all have the correct
+ * event id).
+ */
 class RawEvent
 {
 public:
@@ -107,120 +107,120 @@ public:
 	typedef detail::RawEventHeader::timestamp_t timestamp_t;      ///< Field size should be the same as the Fragment::timestamp field
 
 	/**
-		 * \brief Constructs a RawEvent with the given parameters
-		 * \param run The current Run number
-		 * \param subrun The current Subrun number
-		 * \param event The current Event number
-		 * \param seq The current sequence_id
-		 * \param ts The timestamp for the event
-		 */
+	 * \brief Constructs a RawEvent with the given parameters
+	 * \param run The current Run number
+	 * \param subrun The current Subrun number
+	 * \param event The current Event number
+	 * \param seq The current sequence_id
+	 * \param ts The timestamp for the event
+	 */
 	RawEvent(run_id_t run, subrun_id_t subrun, event_id_t event, sequence_id_t seq, timestamp_t ts);
 
 	/**
-		 * \brief Constructs a RawEvent using the given RawEventHeader
-		 * \param hdr Header to use for initializing RawEvent
-		 */
+	 * \brief Constructs a RawEvent using the given RawEventHeader
+	 * \param hdr Header to use for initializing RawEvent
+	 */
 	explicit RawEvent(detail::RawEventHeader hdr);
 
 #if HIDE_FROM_ROOT
 	/**
-		 * \brief Insert the given (pointer to a) Fragment into this RawEvent.
-		 * \param pfrag The FragmentPtr to insert into the RawEvent
-		 * \exception cet::exception if pfrag is nullptr
-		 * 
-		 * Insert the given (pointer to a) Fragment into this
-		 * RawEvent. This takes ownership of the Fragment referenced by
-		 * the FragmentPtr, unless an exception is thrown.
-		 */
+	 * \brief Insert the given (pointer to a) Fragment into this RawEvent.
+	 * \param pfrag The FragmentPtr to insert into the RawEvent
+	 * \exception cet::exception if pfrag is nullptr
+	 *
+	 * Insert the given (pointer to a) Fragment into this
+	 * RawEvent. This takes ownership of the Fragment referenced by
+	 * the FragmentPtr, unless an exception is thrown.
+	 */
 	void insertFragment(FragmentPtr&& pfrag);
 
 	/**
-		 * \brief Mark the event as complete
-		 */
+	 * \brief Mark the event as complete
+	 */
 	void markComplete();
 
 	/**
-		 * \brief Return the number of fragments this RawEvent contains.
-		 * \return The number of Fragment objects in this RawEvent
-		 */
+	 * \brief Return the number of fragments this RawEvent contains.
+	 * \return The number of Fragment objects in this RawEvent
+	 */
 	size_t numFragments() const;
 
 	/**
-		 * \brief Return the sum of the word counts of all fragments in this RawEvent.
-		 * \return The sum of the word counts of all Fragment objects in this RawEvent
-		 */
+	 * \brief Return the sum of the word counts of all fragments in this RawEvent.
+	 * \return The sum of the word counts of all Fragment objects in this RawEvent
+	 */
 	size_t wordCount() const;
 
 	/**
-		 * \brief Retrieve the run number from the RawEventHeader
-		 * \return The run number stored in the RawEventHeader
-		 */
+	 * \brief Retrieve the run number from the RawEventHeader
+	 * \return The run number stored in the RawEventHeader
+	 */
 	run_id_t runID() const;
 
 	/**
-		 * \brief Retrieve the subrun number from the RawEventHeader
-		 * \return The subrun number stored in the RawEventHeader
-		 */
+	 * \brief Retrieve the subrun number from the RawEventHeader
+	 * \return The subrun number stored in the RawEventHeader
+	 */
 	subrun_id_t subrunID() const;
 
 	/**
-		 * \brief Retrieve the event number from the RawEventHeader
-		 * \return The event number stored in the RawEventHeader
-		 */
+	 * \brief Retrieve the event number from the RawEventHeader
+	 * \return The event number stored in the RawEventHeader
+	 */
 	event_id_t eventID() const;
 
 	/**
-		 * \brief Retrieve the sequence id from the RawEventHeader
-		 * \return The sequence id stored in the RawEventHeader
-		 */
+	 * \brief Retrieve the sequence id from the RawEventHeader
+	 * \return The sequence id stored in the RawEventHeader
+	 */
 	sequence_id_t sequenceID() const;
 
 	/**
 	 * @brief Retrieve the timestamp from the RawEventHeader
 	 * @return The timestamp stored in the RawEventHeader
-	*/
+	 */
 	timestamp_t timestamp() const;
 
 	/**
-		 * \brief Retrieve the value of the complete flag from the RawEventHeader
-		 * \return The value of RawEventHeader::is_complete
-		 */
+	 * \brief Retrieve the value of the complete flag from the RawEventHeader
+	 * \return The value of RawEventHeader::is_complete
+	 */
 	bool isComplete() const;
 
 	/**
-		 * \brief Print summary information about this RawEvent to the given stream.
-		 * \param os The target stream for summary information
-		 */
+	 * \brief Print summary information about this RawEvent to the given stream.
+	 * \param os The target stream for summary information
+	 */
 	void print(std::ostream& os) const;
 
 	/**
-		 * \brief Release all the Fragments from this RawEvent
-		 * \return A pointer to a Fragments object (owns the Fragment data contained)
-		 * 
-		 * Release all the Fragments from this RawEvent, returning them to
-		 * the caller through a unique_ptr that manages a vector into which
-		 * the Fragments have been moved.
-		 */
+	 * \brief Release all the Fragments from this RawEvent
+	 * \return A pointer to a Fragments object (owns the Fragment data contained)
+	 *
+	 * Release all the Fragments from this RawEvent, returning them to
+	 * the caller through a unique_ptr that manages a vector into which
+	 * the Fragments have been moved.
+	 */
 	std::unique_ptr<Fragments> releaseProduct();
 
 	/**
-		 * \brief Fills in a list of unique fragment types from this event
-		 * \param type_list Any Fragment types not included in this list will be added
-		 */
+	 * \brief Fills in a list of unique fragment types from this event
+	 * \param type_list Any Fragment types not included in this list will be added
+	 */
 	void fragmentTypes(std::vector<Fragment::type_t>& type_list);
 
 	/**
-		 * \brief Release Fragments from the RawEvent
-		 * \param type The type of Fragments to release
-		 * \return A pointer to a Fragments object (owns the Fragment data contained)
-		 * 
-		* Release the Fragments from this RawEvent with the specified
-		* fragment type, returning them to the caller through a unique_ptr
-		* that manages a vector into which the Fragments have been moved.
-		* PLEASE NOTE that releaseProduct and releaseProduct(type_t) can not
-		* both be used on the same RawEvent since each one gives up
-		* ownership of the fragments within the event.
-		 */
+	 * \brief Release Fragments from the RawEvent
+	 * \param type The type of Fragments to release
+	 * \return A pointer to a Fragments object (owns the Fragment data contained)
+	 *
+	 * Release the Fragments from this RawEvent with the specified
+	 * fragment type, returning them to the caller through a unique_ptr
+	 * that manages a vector into which the Fragments have been moved.
+	 * PLEASE NOTE that releaseProduct and releaseProduct(type_t) can not
+	 * both be used on the same RawEvent since each one gives up
+	 * ownership of the fragments within the event.
+	 */
 	std::unique_ptr<Fragments> releaseProduct(Fragment::type_t type);
 
 #endif
@@ -277,7 +277,7 @@ inline std::unique_ptr<Fragments> RawEvent::releaseProduct()
 	std::unique_ptr<Fragments> result(new Fragments);
 	result->reserve(fragments_.size());
 	// 03/08/2016 ELF: Moving to range-for for STL compatibility
-	//for (size_t i = 0, sz = fragments_.size(); i < sz; ++i) {
+	// for (size_t i = 0, sz = fragments_.size(); i < sz; ++i) {
 	for (auto& i : fragments_)
 	{
 		result->emplace_back(std::move(*i));
@@ -292,7 +292,7 @@ inline std::unique_ptr<Fragments> RawEvent::releaseProduct()
 inline void RawEvent::fragmentTypes(std::vector<Fragment::type_t>& type_list)
 {
 	// 03/08/2016 ELF: Moving to range-for for STL compatibility
-	//for (size_t i = 0, sz = fragments_.size(); i < sz; ++i) {
+	// for (size_t i = 0, sz = fragments_.size(); i < sz; ++i) {
 	for (auto& i : fragments_)
 	{
 		auto fragType = i->type();  // fragments_[i]->type();
@@ -301,8 +301,8 @@ inline void RawEvent::fragmentTypes(std::vector<Fragment::type_t>& type_list)
 			type_list.push_back(fragType);
 		}
 	}
-	//std::sort(type_list.begin(), type_list.end());
-	//std::unique(type_list.begin(), type_list.end());
+	// std::sort(type_list.begin(), type_list.end());
+	// std::unique(type_list.begin(), type_list.end());
 }
 
 inline std::unique_ptr<Fragments>
@@ -326,11 +326,11 @@ RawEvent::releaseProduct(Fragment::type_t fragment_type)
 }
 
 /**
-	 * \brief Prints the RawEvent to the given stream
-	 * \param os Stream to print RawEvent to
-	 * \param ev RawEvent to print
-	 * \return Stream reference
-	 */
+ * \brief Prints the RawEvent to the given stream
+ * \param os Stream to print RawEvent to
+ * \param ev RawEvent to print
+ * \return Stream reference
+ */
 inline std::ostream& operator<<(std::ostream& os, RawEvent const& ev)
 {
 	ev.print(os);

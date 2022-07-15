@@ -2,10 +2,10 @@
 
 #include <memory>
 
+#include "TRACE/tracemf.h"
 #include "artdaq-core/Core/SharedMemoryFragmentManager.hh"
 #include "artdaq-core/Data/Fragment.hh"
 #include "artdaq-core/Utilities/configureMessageFacility.hh"
-#include "TRACE/tracemf.h"
 
 #define BOOST_TEST_MODULE(SharedMemoryFragmentManager_t)
 #include "SharedMemoryTestShims.hh"
@@ -195,7 +195,7 @@ BOOST_AUTO_TEST_CASE(WholeFragment)
 	TLOG(TLVL_DEBUG) << "Checking Test Fragment Data Contents";
 	for (size_t ii = 0; ii < fragSizeWords; ++ii)
 	{
-		//TLOG(TLVL_DEBUG) << *(frag.dataBegin() + ii) << " =?= " << *(recvdFrag.dataBegin() + ii) ;
+		// TLOG(TLVL_DEBUG) << *(frag.dataBegin() + ii) << " =?= " << *(recvdFrag.dataBegin() + ii) ;
 		BOOST_REQUIRE_EQUAL(ii, *(recvdFrag.dataBegin() + ii));
 	}
 	TLOG(TLVL_DEBUG) << "SharedMemoryFragmentManager WholeFragment test complete";

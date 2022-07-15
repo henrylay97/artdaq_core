@@ -32,46 +32,46 @@ namespace artdaq {
 //#define DATAVEC_T std::vector<RawDataType>
 
 /**
-	 * \brief The RawDataType (currently a 64-bit integer) is the basic unit of data representation within _artdaq_
-	 *
-	 * The RawDataType (currently a 64-bit integer) is the basic unit of data representation within _artdaq_
-	 * Copied from RawFragmentHeader into Fragment
-	 */
+ * \brief The RawDataType (currently a 64-bit integer) is the basic unit of data representation within _artdaq_
+ *
+ * The RawDataType (currently a 64-bit integer) is the basic unit of data representation within _artdaq_
+ * Copied from RawFragmentHeader into Fragment
+ */
 typedef detail::RawFragmentHeader::RawDataType RawDataType;
 
 class Fragment;
 /**
-	* \brief A std::vector of Fragment objects
-	*/
+ * \brief A std::vector of Fragment objects
+ */
 typedef std::vector<Fragment> Fragments;
 
 /**
-	* \brief A std::unique_ptr to a Fragment object
-	*
-	* To reduce move or copy operations, most artdaq processing is done
-	* using FragmentPtr objects.
-	*/
+ * \brief A std::unique_ptr to a Fragment object
+ *
+ * To reduce move or copy operations, most artdaq processing is done
+ * using FragmentPtr objects.
+ */
 typedef std::unique_ptr<Fragment> FragmentPtr;
 
 /**
-	* \brief A std::list of FragmentPtrs
-	*/
+ * \brief A std::list of FragmentPtrs
+ */
 typedef std::list<FragmentPtr> FragmentPtrs;
 
 /**
-	 * \brief Comparator for Fragment objects, based on their sequence_id
-	 * \param i First Fragment to compare
-	 * \param j Second Fragment to comapre
-	 * \return i.sequenceID() < j.sequenceID()
-	 */
+ * \brief Comparator for Fragment objects, based on their sequence_id
+ * \param i First Fragment to compare
+ * \param j Second Fragment to comapre
+ * \return i.sequenceID() < j.sequenceID()
+ */
 bool fragmentSequenceIDCompare(const Fragment& i, const Fragment& j);
 
 /**
-	 * \brief Prints the given Fragment to the stream
-	 * \param os Stream to print Fragment to
-	 * \param f Fragment to print
-	 * \return Reference to the stream
-	 */
+ * \brief Prints the given Fragment to the stream
+ * \param os Stream to print Fragment to
+ * \param f Fragment to print
+ * \return Reference to the stream
+ */
 std::ostream& operator<<(std::ostream& os, Fragment const& f);
 }  // namespace artdaq
 
@@ -93,9 +93,9 @@ public:
 	/**
 	 * \brief For byte representation
 	 *
-	* JCF, 3/25/14
-	* Add interface functions which allow users to work with the
-	* underlying data (a vector of RawDataTypes) in byte representation
+	 * JCF, 3/25/14
+	 * Add interface functions which allow users to work with the
+	 * underlying data (a vector of RawDataTypes) in byte representation
 	 */
 	typedef uint8_t byte_t;
 
@@ -288,21 +288,21 @@ public:
 	std::string typeString() const;
 
 	/**
-	* \brief Sequence ID of the Fragment, from the Fragment header
-	* \return Sequence ID of the Fragment
-	*/
+	 * \brief Sequence ID of the Fragment, from the Fragment header
+	 * \return Sequence ID of the Fragment
+	 */
 	sequence_id_t sequenceID() const;
 
 	/**
-	* \brief Fragment ID of the Fragment, from the Fragment header
-	* \return Fragment ID of the Fragment
-	*/
+	 * \brief Fragment ID of the Fragment, from the Fragment header
+	 * \return Fragment ID of the Fragment
+	 */
 	fragment_id_t fragmentID() const;
 
 	/**
-	* \brief Timestamp of the Fragment, from the Fragment header
-	* \return Timestamp of the Fragment
-	*/
+	 * \brief Timestamp of the Fragment, from the Fragment header
+	 * \return Timestamp of the Fragment
+	 */
 	timestamp_t timestamp() const;
 
 	/**
@@ -347,10 +347,10 @@ public:
 	struct timespec atime() const;
 
 	/**
-	  * \brief Get the difference between the current time and the last access time of the Fragment.
-	  * \param touch Whether to also perform a touch operation
-	  * \return struct timespec representing the difference between current time and the last access time
-	  */
+	 * \brief Get the difference between the current time and the last access time of the Fragment.
+	 * \param touch Whether to also perform a touch operation
+	 * \return struct timespec representing the difference between current time and the last access time
+	 */
 	struct timespec getLatency(bool touch);
 
 	/**
@@ -455,12 +455,12 @@ public:
 	void resizeBytesWithCushion(std::size_t szbytes, double growthFactor = 1.3);
 
 	/**
-	* \brief Resize the data payload to hold sz bytes (padded by the
+	 * \brief Resize the data payload to hold sz bytes (padded by the
 	 * 8-byte RawDataTypes, so, e.g., requesting 14 bytes will actually
 	 * get you 16). Initialize new elements (if any) with val.
-	* \param szbytes The new size of the payload portion of the Fragment, in bytes
-	* \param val Value with which to initialize any new elements
-	*/
+	 * \param szbytes The new size of the payload portion of the Fragment, in bytes
+	 * \param val Value with which to initialize any new elements
+	 */
 	void resizeBytes(std::size_t szbytes, byte_t val);
 
 	/**
@@ -513,20 +513,20 @@ public:
 	}
 
 	/**
-	* \brief Wrapper around reinterpret_cast
-	* \tparam T Type of output pointer
-	* \param in input pointer
-	* \return Pointer cast to type T
-	* \exception cet::exception if new pointer does not point to same address as old pointer
-	*
-	*  JCF, 1/21/15
-	* There's actually not an ironclad guarantee in the C++ standard
-	* that the pointer reinterpret_cast<> returns has the same address
-	* as the pointer that was casted. It IS tested in the artdaq-core
-	* test suite, but since any uncaught, unexpected behavior from
-	* reinterpret_cast could be disastrous, I've wrapped it in this
-	* function and added a check just to be completely safe.
-	*/
+	 * \brief Wrapper around reinterpret_cast
+	 * \tparam T Type of output pointer
+	 * \param in input pointer
+	 * \return Pointer cast to type T
+	 * \exception cet::exception if new pointer does not point to same address as old pointer
+	 *
+	 *  JCF, 1/21/15
+	 * There's actually not an ironclad guarantee in the C++ standard
+	 * that the pointer reinterpret_cast<> returns has the same address
+	 * as the pointer that was casted. It IS tested in the artdaq-core
+	 * test suite, but since any uncaught, unexpected behavior from
+	 * reinterpret_cast could be disastrous, I've wrapped it in this
+	 * function and added a check just to be completely safe.
+	 */
 	template<typename T>
 	T reinterpret_cast_checked(RawDataType* in)
 	{
@@ -551,13 +551,13 @@ public:
 	byte_t* dataBeginBytes() { return reinterpret_cast_checked<byte_t*>(&*dataBegin()); }
 
 	/**
-	* \brief Return Fragment::byte_t* pointing at the end of the payload
-	* \return byte_t pointer to end of data payload
-	*
-	* JCF, 3/25/14 -- one nice thing about returning a pointer rather
-	* than an iterator is that we don't need to take the address of the
-	* dereferenced iterator (e.g., via &*dataEnd() ) to get ahold of the memory
-	*/
+	 * \brief Return Fragment::byte_t* pointing at the end of the payload
+	 * \return byte_t pointer to end of data payload
+	 *
+	 * JCF, 3/25/14 -- one nice thing about returning a pointer rather
+	 * than an iterator is that we don't need to take the address of the
+	 * dereferenced iterator (e.g., via &*dataEnd() ) to get ahold of the memory
+	 */
 	byte_t* dataEndBytes() { return reinterpret_cast_checked<byte_t*>(&*dataEnd()); }
 
 	/**
@@ -580,48 +580,48 @@ public:
 	const_iterator dataBegin() const;
 
 	/**
-	* \brief Returns a const_iterator to the end of the data payload
-	* \return A const_iterator to the end of the data payload
-	*/
+	 * \brief Returns a const_iterator to the end of the data payload
+	 * \return A const_iterator to the end of the data payload
+	 */
 	const_iterator dataEnd() const;
 
 	/**
-	* \brief Return const Fragment::byte_t* pointing at the beginning of the payload
-	* \return const byte_t pointer to beginning of data payload
-	*
-	* JCF, 3/25/14 -- one nice thing about returning a pointer rather
-	* than an iterator is that we don't need to take the address of the
-	* dereferenced iterator (e.g., via &*dataEnd() ) to get ahold of the memory
-	*/
+	 * \brief Return const Fragment::byte_t* pointing at the beginning of the payload
+	 * \return const byte_t pointer to beginning of data payload
+	 *
+	 * JCF, 3/25/14 -- one nice thing about returning a pointer rather
+	 * than an iterator is that we don't need to take the address of the
+	 * dereferenced iterator (e.g., via &*dataEnd() ) to get ahold of the memory
+	 */
 	const byte_t* dataBeginBytes() const
 	{
 		return reinterpret_cast_checked<const byte_t*>(&*dataBegin());
 	}
 
 	/**
-	* \brief Return const Fragment::byte_t* pointing at the end of the payload
-	* \return const byte_t pointer to end of data payload
-	*
-	* JCF, 3/25/14 -- one nice thing about returning a pointer rather
-	* than an iterator is that we don't need to take the address of the
-	* dereferenced iterator (e.g., via &*dataEnd() ) to get ahold of the memory
-	*/
+	 * \brief Return const Fragment::byte_t* pointing at the end of the payload
+	 * \return const byte_t pointer to end of data payload
+	 *
+	 * JCF, 3/25/14 -- one nice thing about returning a pointer rather
+	 * than an iterator is that we don't need to take the address of the
+	 * dereferenced iterator (e.g., via &*dataEnd() ) to get ahold of the memory
+	 */
 	const byte_t* dataEndBytes() const
 	{
 		return reinterpret_cast_checked<const byte_t*>(&*dataEnd());
 	}
 
 	/**
-	* \brief Return an const_iterator to the beginning of the header (should be used
-	* for serialization only: use setters for preference).
-	* \return an const_iterator to the beginning of the header
-	*/
+	 * \brief Return an const_iterator to the beginning of the header (should be used
+	 * for serialization only: use setters for preference).
+	 * \return an const_iterator to the beginning of the header
+	 */
 	const_iterator headerBegin() const;  // See note for non-const, above.
 
 	/**
-	* \brief Return a const Fragment::byte_t pointer pointing to the beginning of the header
-	* \return const byte_t pointer to the beginning of the header
-	*/
+	 * \brief Return a const Fragment::byte_t pointer pointing to the beginning of the header
+	 * \return const byte_t pointer to the beginning of the header
+	 */
 	const byte_t* headerBeginBytes() const
 	{
 		return reinterpret_cast_checked<const byte_t*>(&*headerBegin());
@@ -736,9 +736,9 @@ public:
 	                            timestamp_t timestamp = Fragment::InvalidTimestamp);
 
 	/**
-     * \brief Get a copy of the RawFragmentHeader from this Fragment
-     * \return Copy of the RawFragmentHeader of this Fragment, upgraded to the latest version
-     */
+	 * \brief Get a copy of the RawFragmentHeader from this Fragment
+	 * \return Copy of the RawFragmentHeader of this Fragment, upgraded to the latest version
+	 */
 	detail::RawFragmentHeader const fragmentHeader() const;
 #endif
 
@@ -1166,15 +1166,13 @@ artdaq::Fragment::headerSizeWords() const
 			case 0xFFFF:
 				TLOG(51, "Fragment") << "Cannot get header size of InvalidVersion Fragment";
 				break;
-			case 0:
-			{
+			case 0: {
 				TLOG(52, "Fragment") << "Getting size of RawFragmentHeaderV0";
 				auto old_hdr = reinterpret_cast_checked<detail::RawFragmentHeaderV0 const*>(&vals_[0]);
 				return old_hdr->num_words();
 				break;
 			}
-			case 1:
-			{
+			case 1: {
 				TLOG(52, "Fragment") << "Getting size of RawFragmentHeaderV1";
 				auto old_hdr = reinterpret_cast_checked<detail::RawFragmentHeaderV1 const*>(&vals_[0]);
 				return old_hdr->num_words();
@@ -1199,8 +1197,7 @@ artdaq::Fragment::fragmentHeaderPtr()
 			case 0xFFFF:
 				TLOG(51, "Fragment") << "Not upgrading InvalidVersion Fragment";
 				break;
-			case 0:
-			{
+			case 0: {
 				TLOG(52, "Fragment") << "Upgrading RawFragmentHeaderV0 (non const)";
 				auto old_hdr = reinterpret_cast_checked<detail::RawFragmentHeaderV0*>(&vals_[0]);
 				auto new_hdr = old_hdr->upgrade();
@@ -1215,8 +1212,7 @@ artdaq::Fragment::fragmentHeaderPtr()
 				hdr = reinterpret_cast_checked<detail::RawFragmentHeader*>(&vals_[0]);  // Update hdr in case vals_->insert call invalidated pointers
 				break;
 			}
-			case 1:
-			{
+			case 1: {
 				TLOG(52, "Fragment") << "Upgrading RawFragmentHeaderV1 (non const)";
 				auto old_hdr = reinterpret_cast_checked<detail::RawFragmentHeaderV1*>(&vals_[0]);
 				auto new_hdr = old_hdr->upgrade();
@@ -1250,16 +1246,14 @@ artdaq::Fragment::fragmentHeader() const
 			case 0xFFFF:
 				TLOG(51, "Fragment") << "Not upgrading InvalidVersion Fragment";
 				break;
-			case 0:
-			{
+			case 0: {
 				TLOG(52, "Fragment") << "Upgrading RawFragmentHeaderV0 (const)";
 				auto old_hdr = reinterpret_cast_checked<detail::RawFragmentHeaderV0 const*>(&vals_[0]);
 				hdr = old_hdr->upgrade();
 
 				break;
 			}
-			case 1:
-			{
+			case 1: {
 				TLOG(52, "Fragment") << "Upgrading RawFragmentHeaderV1 (const)";
 				auto old_hdr = reinterpret_cast_checked<detail::RawFragmentHeaderV1 const*>(&vals_[0]);
 				hdr = old_hdr->upgrade();

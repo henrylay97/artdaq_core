@@ -40,10 +40,10 @@ public:
 	{
 	}
 
-	//default
+	// default
 	Trace(Trace&&) = default;  ///< Default Move Constructor
 
-	//deleted
+	// deleted
 	Trace(const Trace&) = delete;             ///< Copy Constructor is deleted
 	Trace& operator=(const Trace&) = delete;  ///< Copy Assignment operator is deleted
 	Trace& operator=(Trace&&) = delete;       ///< Move Assignment operator is deleted
@@ -114,11 +114,11 @@ public:
 	 */
 	void resolve();
 
-	//default
+	// default
 	StackTrace(StackTrace&&) = default;             ///< Default Move Constructor
 	StackTrace& operator=(StackTrace&&) = default;  ///< Default move assignment operator
 
-	//deleted
+	// deleted
 	StackTrace(const StackTrace&) = delete;             ///< Copy Constructor is deleted
 	StackTrace& operator=(const StackTrace&) = delete;  ///< Copy assignment operator is deleted
 
@@ -166,7 +166,7 @@ public:
 	StackTraceCollector()
 	    : stack_traces_{}, stack_traces_mutex_{} {}
 
-	//deleted
+	// deleted
 	StackTraceCollector(const StackTraceCollector&) = delete;             ///< Copy Constructor is deleted
 	StackTraceCollector& operator=(const StackTraceCollector&) = delete;  ///< Copy Assignment is deleted
 	StackTraceCollector(StackTraceCollector&&) = delete;                  ///< Move Constructor is deleted

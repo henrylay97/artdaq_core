@@ -305,7 +305,7 @@ void MonitoredQuantity::setNewTimeWindowForRecentResults(DURATION_T interval)
 	}
 	// call the reset method to populate the correct initial values
 	// for the internal sample data
-	//reset();
+	// reset();
 }
 
 bool MonitoredQuantity::

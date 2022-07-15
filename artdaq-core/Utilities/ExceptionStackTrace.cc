@@ -54,7 +54,7 @@ void Trace::resolve()
 			offset_ = static_cast<uintptr_t>(stoull(offstr, 0, 16));
 		}
 	}
-	else  //slow parse
+	else  // slow parse
 	{
 		if (std::regex_search(symbol_, m, std::regex{"(.*)\\("}) && m.size() == 2)
 			filename_ = m[1];

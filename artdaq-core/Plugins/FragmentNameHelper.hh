@@ -8,8 +8,8 @@
 #include <cetlib/BasicPluginFactory.h>
 #include <cetlib/compiler_macros.h>
 
-#include "artdaq-core/Data/Fragment.hh"
 #include "artdaq-core/Data/ContainerFragment.hh"
+#include "artdaq-core/Data/Fragment.hh"
 
 #ifndef EXTERN_C_FUNC_DECLARE_START
 #define EXTERN_C_FUNC_DECLARE_START \
@@ -44,7 +44,7 @@ public:
 	 * @brief FragmentNameHelper Constructor
 	 * @param unidentified_instance_name Name to use for unidentified Fragments
 	 * @param extraTypes Additional types to register
-	*/
+	 */
 	FragmentNameHelper(std::string unidentified_instance_name, std::vector<std::pair<artdaq::Fragment::type_t, std::string>> extraTypes)
 	    : type_map_()
 	    , unidentified_instance_name_(unidentified_instance_name)
@@ -82,8 +82,8 @@ public:
 	std::string GetUnidentifiedInstanceName() const { return unidentified_instance_name_; }
 
 	/**
-			 * \brief Returns the basic translation for the specified type. Must be implemented by derived classes
-			 */
+	 * \brief Returns the basic translation for the specified type. Must be implemented by derived classes
+	 */
 	virtual std::string GetInstanceNameForType(artdaq::Fragment::type_t type_id) const
 	{
 		if (type_map_.count(type_id) > 0) { return type_map_.at(type_id); }
@@ -91,11 +91,11 @@ public:
 	}
 
 	/**
-			 * \brief Returns the full set of product instance names which may be present in the data, based on
-			 *        the types that have been specified in the SetBasicTypes() and AddExtraType() methods.  This
-			 *        *does* include "container" types, if the container type mapping is part of the basic types.
-			 *  Must be implemented by derived classes
-			 */
+	 * \brief Returns the full set of product instance names which may be present in the data, based on
+	 *        the types that have been specified in the SetBasicTypes() and AddExtraType() methods.  This
+	 *        *does* include "container" types, if the container type mapping is part of the basic types.
+	 *  Must be implemented by derived classes
+	 */
 	virtual std::set<std::string> GetAllProductInstanceNames() const
 	{
 		std::set<std::string> output;
@@ -124,12 +124,12 @@ public:
 	}
 
 	/**
-			 * \brief Returns the product instance name for the specified fragment, based on the types that have
-			 *        been specified in the SetBasicTypes() and AddExtraType() methods.  This *does* include the
-			 *        use of "container" types, if the container type mapping is part of the basic types.  If no
-			 *        mapping is found, the specified unidentified_instance_name should be returned.
-			 * Must be implemented by derived classes
-			 */
+	 * \brief Returns the product instance name for the specified fragment, based on the types that have
+	 *        been specified in the SetBasicTypes() and AddExtraType() methods.  This *does* include the
+	 *        use of "container" types, if the container type mapping is part of the basic types.  If no
+	 *        mapping is found, the specified unidentified_instance_name should be returned.
+	 * Must be implemented by derived classes
+	 */
 	virtual std::pair<bool, std::string>
 	GetInstanceNameForFragment(artdaq::Fragment const& fragment) const
 	{
@@ -178,7 +178,7 @@ private:
  * @param unidentified_instance_name String to use for when the FragmentNameHelper cannot determine the Fragment name
  * @param extraTypes Additional types to register with the FragmentNameHelper
  * @return FragmentNameHelper shared_ptr handle
-*/
+ */
 inline std::shared_ptr<FragmentNameHelper>
 makeNameHelper(std::string const& plugin_name, std::string const& unidentified_instance_name, std::vector<std::pair<artdaq::Fragment::type_t, std::string>> extraTypes)
 {

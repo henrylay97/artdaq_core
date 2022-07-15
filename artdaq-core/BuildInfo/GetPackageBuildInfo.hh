@@ -9,14 +9,14 @@
  */
 namespace artdaqcore {
 /**
-   * \brief Wrapper around the artdaqcore::GetPackageBuildInfo::getPackageBuildInfo function
-   */
+ * \brief Wrapper around the artdaqcore::GetPackageBuildInfo::getPackageBuildInfo function
+ */
 struct GetPackageBuildInfo
 {
 	/**
-	   * \brief Gets the version number and build timestmap for artdaq_core
-	   * \return An artdaq::PackageBuildInfo object containing the version number and build timestamp for artdaq_core
-	   */
+	 * \brief Gets the version number and build timestmap for artdaq_core
+	 * \return An artdaq::PackageBuildInfo object containing the version number and build timestamp for artdaq_core
+	 */
 	static artdaq::PackageBuildInfo getPackageBuildInfo();
 };
 }  // namespace artdaqcore

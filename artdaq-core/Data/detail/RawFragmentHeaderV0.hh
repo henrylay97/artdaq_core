@@ -126,16 +126,16 @@ struct artdaq::detail::RawFragmentHeaderV0
 	void setUserType(uint8_t utype);
 
 	/**
-	* \brief Sets the type field to the specified system type
-	* \param stype The type code to set
-	* \exception cet::exception if stype is not in the allowed range for system types
-	*/
+	 * \brief Sets the type field to the specified system type
+	 * \param stype The type code to set
+	 * \exception cet::exception if stype is not in the allowed range for system types
+	 */
 	void setSystemType(uint8_t stype);
 
 	/**
 	 * \brief Upgrades the RawFragmentHeaderV0 to a RawFragmentHeader (Current version)
 	 * \return Current-version RawFragmentHeader
-	 * 
+	 *
 	 * The constraints on RawFragmentHeader upgrades are that no field may shrink in size
 	 * or be deleted. Therefore, there will always be an upgrade path from old RawFragmentHeaders
 	 * to new ones. By convention, all fields are initialized to the Invalid defines, and then

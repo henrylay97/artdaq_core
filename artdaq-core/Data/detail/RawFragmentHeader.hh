@@ -33,7 +33,7 @@ struct artdaq::detail::RawFragmentHeader
 	/**
 	 * \brief The RawDataType (currently an unsigned long long) is the basic unit of data representation within _artdaq_
 	 *
-	 * ELF, 7/30/2020: This typedef apparently cannot be changed without breaking compatibility with older data files. 
+	 * ELF, 7/30/2020: This typedef apparently cannot be changed without breaking compatibility with older data files.
 	                   I have tried and failed to deal with such a change in classes_def.xml.
 	 */
 	typedef unsigned long long RawDataType;
@@ -153,10 +153,10 @@ struct artdaq::detail::RawFragmentHeader
 	void setUserType(uint8_t utype);
 
 	/**
-	* \brief Sets the type field to the specified system type
-	* \param stype The type code to set
-	* \exception cet::exception if stype is not in the allowed range for system types
-	*/
+	 * \brief Sets the type field to the specified system type
+	 * \param stype The type code to set
+	 * \exception cet::exception if stype is not in the allowed range for system types
+	 */
 	void setSystemType(uint8_t stype);
 
 	/**
@@ -179,7 +179,7 @@ struct artdaq::detail::RawFragmentHeader
 	 * @brief Check if two RawFragmentHeader objects are equal
 	 * @param other RawFragmentHeader to compare
 	 * @return Whether the two RawFragmentHeaders are identical
-	*/
+	 */
 	bool operator==(const detail::RawFragmentHeader& other)
 	{
 		return word_count == other.word_count &&

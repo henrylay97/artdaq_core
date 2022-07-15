@@ -4,10 +4,10 @@
 #define BOOST_TEST_MODULE configureMessageFacility_t
 #include "cetlib/quiet_unit_test.hpp"
 
-#include "messagefacility/MessageLogger/MessageLogger.h"
+#include "cetlib_except/exception.h"
 #include "fhiclcpp/ParameterSet.h"
 #include "fhiclcpp/make_ParameterSet.h"
-#include "cetlib_except/exception.h"
+#include "messagefacility/MessageLogger/MessageLogger.h"
 
 #include <boost/filesystem.hpp>
 

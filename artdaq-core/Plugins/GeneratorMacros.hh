@@ -3,17 +3,19 @@
 
 #include "artdaq-core/Plugins/FragmentGenerator.hh"
 
-namespace fhicl { class ParameterSet; }
+namespace fhicl {
+class ParameterSet;
+}
 
 #include <memory>
 #include "cetlib/compiler_macros.h"
 
 namespace artdaq {
 /**
-   * \brief Constructs a FragmentGenerator instance, and returns a pointer to it
-   * \param ps Parameter set for initializing the FragmentGenerator
-   * \return A smart pointer to the FragmentGenerator
-   */
+ * \brief Constructs a FragmentGenerator instance, and returns a pointer to it
+ * \param ps Parameter set for initializing the FragmentGenerator
+ * \return A smart pointer to the FragmentGenerator
+ */
 typedef std::unique_ptr<artdaq::FragmentGenerator> makeFunc_t(fhicl::ParameterSet const& ps);
 }  // namespace artdaq
 
