@@ -11,7 +11,7 @@
 #include "artdaq-core/Core/SharedMemoryManager.hh"
 #include "artdaq-core/Utilities/TraceLock.hh"
 #include "cetlib_except/exception.h"
-#include "tracemf.h"
+#include "TRACE/tracemf.h"
 
 #define TLVL_DETACH 34
 #define TLVL_DESTRUCTOR 35

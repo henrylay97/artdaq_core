@@ -4,7 +4,7 @@
 #include <sys/time.h>
 #include "artdaq-core/Data/Fragment.hh"
 #define TRACE_NAME "SharedMemoryEventReceiver"
-#include "tracemf.h"
+#include "TRACE/tracemf.h"
 
 artdaq::SharedMemoryEventReceiver::SharedMemoryEventReceiver(uint32_t shm_key, uint32_t broadcast_shm_key)
     : current_read_buffer_(-1)

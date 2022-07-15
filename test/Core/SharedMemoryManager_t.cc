@@ -8,7 +8,7 @@
 
 #define TRACE_NAME "SharedMemoryManager_t"
 #include "SharedMemoryTestShims.hh"
-#include "tracemf.h"
+#include "TRACE/tracemf.h"
 
 BOOST_AUTO_TEST_SUITE(SharedMemoryManager_test)
 

@@ -27,7 +27,7 @@ canvas_root_io	v1_10_00	s114
 canvas_root_io	v1_09_04	s112
 canvas_root_io	v1_07_03	s110
 TRACE			v3_17_04
-cetmodules		v3_08_00	-	only_for_build
+cetmodules		v3_16_00	-	only_for_build
 end_product_list
 
 # -nq- means there is no qualifier
@@ -60,13 +60,6 @@ e20:s112:debug	e20:debug		-nq-	-std=c++17
 e20:s112:prof	e20:prof		-nq-	-std=c++17
 e19:s112:debug	e19:debug		-nq-	-std=c++17
 e19:s112:prof	e19:prof		-nq-	-std=c++17
-
-c7:s110:debug	c7:debug		-nq-	-std=c++17
-c7:s110:prof	c7:prof			-nq-	-std=c++17
-e20:s110:debug	e20:debug		-nq-	-std=c++17
-e20:s110:prof	e20:prof		-nq-	-std=c++17
-e19:s110:debug	e19:debug		-nq-	-std=c++17
-e19:s110:prof	e19:prof		-nq-	-std=c++17
 
 end_qualifier_list
 

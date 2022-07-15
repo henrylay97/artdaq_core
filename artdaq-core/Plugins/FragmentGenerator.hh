@@ -1,5 +1,5 @@
-#ifndef artdaq_core_Generators_FragmentGenerator_hh
-#define artdaq_core_Generators_FragmentGenerator_hh
+#ifndef artdaq_core_Plugins_FragmentGenerator_hh
+#define artdaq_core_Plugins_FragmentGenerator_hh
 
 ////////////////////////////////////////////////////////////////////////
 // FragmentGenerator is an abstract class that defines the interface for
@@ -60,4 +60,4 @@ private:
 };
 }  // namespace artdaq
 
-#endif /* artdaq_core_Generators_FragmentGenerator_hh */
+#endif /* artdaq_core_Plugins_FragmentGenerator_hh */

@@ -1,5 +1,5 @@
 #include "artdaq-core/Data/ContainerFragmentLoader.hh"
-#include "artdaq-core/Data/FragmentNameHelper.hh"
+#include "artdaq-core/Plugins/FragmentNameHelper.hh"
 
 #define BOOST_TEST_MODULE(FragmentNameHelper_t)
 #include <cetlib/quiet_unit_test.hpp>

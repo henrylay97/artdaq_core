@@ -21,7 +21,7 @@
 #include "artdaq-core/Data/detail/RawFragmentHeaderV1.hh"
 #include "artdaq-core/Data/dictionarycontrol.hh"
 #if HIDE_FROM_ROOT
-#include "trace.h"  // TRACE
+#include "TRACE/trace.h"  // TRACE
 #endif
 
 /**

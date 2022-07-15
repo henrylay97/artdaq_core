@@ -2,7 +2,7 @@
 #include <iostream>
 #include <utility>
 
-#include "tracemf.h"
+#include "TRACE/tracemf.h"
 
 namespace artdaq {
 StatisticsCollection& StatisticsCollection::getInstance()
