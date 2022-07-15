@@ -3,10 +3,9 @@
 #define BOOST_TEST_MODULE TimeUtils_t
 #include <cmath>
 #include "cetlib/quiet_unit_test.hpp"
-#include "cetlib_except/exception.h"
 
 #define TRACE_NAME "TimeUtils_t"
-#include "tracemf.h"
+#include "TRACE/tracemf.h"
 
 BOOST_AUTO_TEST_SUITE(TimeUtils_test)
 

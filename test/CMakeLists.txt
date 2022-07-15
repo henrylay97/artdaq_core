@@ -8,5 +8,5 @@ cet_test_env("FHICL_FILE_PATH=.")
 
 add_subdirectory(Data)
 add_subdirectory(Core)
-add_subdirectory(Generators)
+add_subdirectory(Plugins)
 add_subdirectory(Utilities)

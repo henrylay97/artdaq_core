@@ -2,7 +2,7 @@
 #define ARTDAQ_CORE_UTILITIES_TRACELOCK_HH 1
 
 #include <mutex>
-#include "tracemf.h"
+#include "TRACE/tracemf.h"
 
 /**
  * \brief The TraceLock class allows a user to debug the acquisition and releasing of locks, by wrapping the unique_lock<std::mutex> API with TRACE calls

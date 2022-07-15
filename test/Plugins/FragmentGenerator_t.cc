@@ -2,7 +2,7 @@
 #include <cetlib/quiet_unit_test.hpp>
 
 #include "artdaq-core/Data/Fragment.hh"
-#include "artdaq-core/Generators/FragmentGenerator.hh"
+#include "artdaq-core/Plugins/FragmentGenerator.hh"
 
 namespace artdaqtest {
 class FragmentGeneratorTest;

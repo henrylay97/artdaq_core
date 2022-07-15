@@ -5,7 +5,7 @@
 
 #include "canvas/Utilities/Exception.h"
 #include "cetlib_except/exception.h"
-#include "tracemf.h"
+#include "TRACE/tracemf.h"
 
 #include <boost/exception/all.hpp>
 namespace artdaq {

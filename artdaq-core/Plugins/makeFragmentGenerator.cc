@@ -1,8 +1,7 @@
-#include "artdaq-core/Generators/makeFragmentGenerator.hh"
+#include "artdaq-core/Plugins/makeFragmentGenerator.hh"
 
-#include "artdaq-core/Generators/GeneratorMacros.hh"
+#include "artdaq-core/Plugins/FragmentGenerator.hh"
 #include "cetlib/BasicPluginFactory.h"
-#include "fhiclcpp/ParameterSet.h"
 
 std::unique_ptr<artdaq::FragmentGenerator>
 artdaq::makeFragmentGenerator(std::string const& generator_plugin_spec,
