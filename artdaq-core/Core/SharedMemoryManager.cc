@@ -441,7 +441,7 @@ int artdaq::SharedMemoryManager::GetBufferForWriting(bool overwrite)
 				continue;
 			}
 			touchBuffer_(buf);
-			TLOG(TLVL_GETBUFFER + 1) << "GetBufferForWriting returning " << buffer;
+			TLOG(TLVL_GETBUFFER + 1) << "GetBufferForWriting returning empty buffer " << buffer;
 			return buffer;
 		}
 	}
@@ -487,7 +487,7 @@ int artdaq::SharedMemoryManager::GetBufferForWriting(bool overwrite)
 					continue;
 				}
 				touchBuffer_(buf);
-				TLOG(TLVL_GETBUFFER + 1) << "GetBufferForWriting returning " << buffer;
+				TLOG(TLVL_GETBUFFER + 1) << "GetBufferForWriting returning full buffer (overwrite mode) " << buffer;
 				return buffer;
 			}
 		}
@@ -531,7 +531,7 @@ int artdaq::SharedMemoryManager::GetBufferForWriting(bool overwrite)
 					continue;
 				}
 				touchBuffer_(buf);
-				TLOG(TLVL_GETBUFFER + 1) << "GetBufferForWriting returning " << buffer;
+				TLOG(TLVL_GETBUFFER + 1) << "GetBufferForWriting clobbering reader on buffer " << buffer << " (overwrite mode)";
 				return buffer;
 			}
 		}
