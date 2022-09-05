@@ -67,10 +67,10 @@ artdaq::Fragment::Fragment(sequence_id_t sequenceID,
 #if HIDE_FROM_ROOT
 void artdaq::Fragment::print(std::ostream& os) const
 {
-	os << " Fragment " << fragmentID()
-	   << ", WordCount " << size()
-	   << ", Event " << sequenceID()
-	   << '\n';
+  os << "Fragment:  " << fragmentID() << '\n'
+     << "WordCount: " << size() << '\n'
+     << "Event:     " << sequenceID() << '\n'
+     << "Timestamp: " << timestamp() << '\n';
 }
 
 artdaq::FragmentPtr
