@@ -70,7 +70,7 @@ void artdaq::Fragment::print(std::ostream& os) const
   os << "Fragment:  " << fragmentID() << '\n'
      << "WordCount: " << size() << '\n'
      << "Event:     " << sequenceID() << '\n'
-     << "Timestamp: " << timestamp() << '\n';
+     << "Timestamp: " << print_timestamp(timestamp()) << '\n';
 }
 
 artdaq::FragmentPtr
@@ -95,5 +95,29 @@ artdaq::Fragment::
 	result->resize(dataSize);
 	memcpy(result->dataAddress(), dataPtr, (dataSize * sizeof(RawDataType)));
 	return result;
+}
+
+std::string artdaq::Fragment::print_timestamp(uint64_t t) {
+  char s[43];
+  if(t >= (uint64_t)10*1000*1000*1000) {
+    sprintf(s, "%lu %03lu %03lu %03lu.%03lu %03lu %03lu [s.ns]",
+	    (t/1000000000000000000) %1000,
+	    (t/1000000000000000)    %1000,
+	    (t/1000000000000)       %1000,
+	    (t/1000000000)          %1000,
+	    (t/1000000)             %1000,
+	    (t/1000)                %1000,
+	    (t)                     %1000
+	    );
+  }
+  else {
+    sprintf(s, "            %lu.%03lu %03lu %03lu [s.ns]",
+	    (t/1000000000)          %1000,
+	    (t/1000000)             %1000,
+	    (t/1000)                %1000,
+	    (t)                     %1000
+	    );
+  }
+  return s;
 }
 #endif
